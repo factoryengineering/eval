@@ -1,38 +1,35 @@
 [
   {
     "id": "list-popular-posts",
-    "prompt": "Using a BlogContext db (DbSet<Post> Posts with Title, Views), write a method returning the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
     "targets": [
       "async"
     ],
+    "exec": { "sqlMust": ["WHERE", "ORDER BY[\\s\\S]*DESC"] },
     "must": [
       "ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)"
     ]
   },
   {
     "id": "blog-with-posts-and-tags",
-    "prompt": "Using a BlogContext (Blog has collections Posts and Contributors), write a method that loads all blogs together with both collections so the caller can modify the entities and save them. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (Blog has collections Posts and Contributors) and loads all blogs together with both collections so the caller can modify the entities and save them. Return only a C# code block.",
     "targets": [
       "split-query"
     ],
+    "exec": { "minCommands": 3 },
     "must": [
       "AsSplitQuery\\(\\)"
     ]
   },
   {
     "id": "search-by-title",
-    "prompt": "Using a BlogContext, write a method that returns the posts whose Title starts with a given prefix. A C# helper `TitleRules.HasPrefix(string title, string prefix)` already exists. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext and a prefix and returns the posts whose Title starts with the prefix. A C# helper `TitleRules.HasPrefix(string title, string prefix)` already exists. Return only a C# code block.",
     "targets": [
       "translatable"
     ],
+    "exec": { "args": { "string": "Intro" }, "sqlMust": ["WHERE", "LIKE|substr|instr"] },
     "must": [
       "Async\\("
-    ],
-    "mustNot": [
-      "HasPrefix\\(",
-      "ToList\\(\\)\\s*\\.Where",
-      "AsEnumerable\\(\\)",
-      "ToListAsync\\([^)]*\\)\\)?\\s*\\.Where"
     ]
   },
   {
@@ -41,6 +38,7 @@
     "targets": [
       "separate-spec"
     ],
+    "exec": { "sqlMust": ["WHERE", "ORDER BY[\\s\\S]*DESC"] },
     "must": [
       "var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)",
       "await\\s+\\w+\\.\\w+Async\\("
@@ -56,12 +54,13 @@
     "targets": [
       "keyword-syntax"
     ],
+    "exec": {
+      "sqlMust": ["WHERE", "ORDER BY[\\s\\S]*DESC"],
+      "noMethodSyntax": ["Where", "Select", "OrderBy", "OrderByDescending", "ThenBy", "ThenByDescending", "GroupBy", "Join", "SelectMany"]
+    },
     "must": [
       "\\bfrom\\s+\\w+\\s+in\\b",
       "\\bselect\\b"
-    ],
-    "mustNot": [
-      "\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\("
     ]
   },
   {
@@ -70,6 +69,7 @@
     "targets": [
       "meaningful-names"
     ],
+    "exec": { "args": { "string": "Intro" }, "sqlMust": ["GROUP BY", "SUM"] },
     "must": [
       "Async\\("
     ],
@@ -88,6 +88,7 @@
     "targets": [
       "values-only"
     ],
+    "exec": { "sqlMust": ["Title", "Views"], "sqlMustNot": ["SELECT[\\s\\S]*?\\.\"(Id|BlogId)\"[\\s\\S]*?FROM"] },
     "must": [
       "\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\(|\\bselect\\s+\\w+\\.\\w+"
     ],
@@ -101,6 +102,7 @@
     "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Id and Title), loads the post with a given id, changes its Title, and saves the change. Return only a C# code block.",
     "targets": [],
     "guard": true,
+    "exec": { "args": { "string": "Renamed", "int": 1 }, "sqlMust": ["UPDATE \"Posts\""] },
     "must": [
       "\\.Title\\s*=[^=]",
       "SaveChangesAsync\\(",

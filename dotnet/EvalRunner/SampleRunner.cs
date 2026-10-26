@@ -16,7 +16,7 @@ namespace EvalRunner;
 
 public record Request(string Id, string Code, string? StringArg = null, int? IntArg = null);
 public record Invocation(string Method, string? Error);
-public record SyntaxFacts(int QueryExpressions, List<string> MethodCalls, List<string> Identifiers);
+public record SyntaxFacts(int QueryExpressions, List<string> MethodCalls, List<string> QueryableOperators, List<string> Identifiers);
 public record Result(string Id, bool Compiled, List<string> Diagnostics, List<string> Forbidden, List<Invocation> Invoked, List<string> Sql, List<string> QueryStrings, SyntaxFacts? Syntax);
 
 public static partial class SampleRunner
@@ -67,7 +67,7 @@ public static partial class SampleRunner
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var errors = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error)
             .Select(d => $"{d.Id}: {d.GetMessage()}").Take(5).ToList();
-        var facts = Facts(tree);
+        var facts = Facts(compilation, tree);
         if (errors.Count > 0) return new(req.Id, false, errors, [], [], [], [], facts);
 
         var forbidden = Forbidden(compilation, tree);
@@ -85,11 +85,16 @@ public static partial class SampleRunner
 
     public static Result Failure(string id, string message) => new(id, false, [message], [], [], [], [], null);
 
-    static SyntaxFacts Facts(SyntaxTree tree)
+    static SyntaxFacts Facts(CSharpCompilation compilation, SyntaxTree tree)
     {
         var root = tree.GetRoot();
-        var calls = root.DescendantNodes().OfType<InvocationExpressionSyntax>()
+        var model = compilation.GetSemanticModel(tree);
+        var invocations = root.DescendantNodes().OfType<InvocationExpressionSyntax>().ToList();
+        var calls = invocations
             .Select(i => i.Expression is MemberAccessExpressionSyntax m ? m.Name.Identifier.ValueText : null).OfType<string>().ToList();
+        var operators = invocations
+            .Where(i => i.Expression is MemberAccessExpressionSyntax && model.GetSymbolInfo(i).Symbol is IMethodSymbol { ContainingType: { Name: "Queryable", ContainingNamespace: { Name: "Linq" } } })
+            .Select(i => ((MemberAccessExpressionSyntax)i.Expression).Name.Identifier.ValueText).ToList();
         var ids = new List<string>();
         foreach (var n in root.DescendantNodes())
             switch (n)
@@ -103,7 +108,7 @@ public static partial class SampleRunner
                 case LetClauseSyntax l: ids.Add(l.Identifier.ValueText); break;
                 case ForEachStatementSyntax fe: ids.Add(fe.Identifier.ValueText); break;
             }
-        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, ids.Where(i => i.Length > 0 && i != "_").ToList());
+        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, operators, ids.Where(i => i.Length > 0 && i != "_").ToList());
     }
 
     static List<string> Forbidden(CSharpCompilation compilation, SyntaxTree tree)

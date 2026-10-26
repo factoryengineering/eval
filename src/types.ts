@@ -24,6 +24,7 @@ export interface ExecSpec {
   sqlMust?: string[];
   sqlMustNot?: string[];
   minCommands?: number;
+  noMethodSyntax?: string[];
 }
 
 export interface EvalCase {

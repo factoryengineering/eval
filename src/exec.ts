@@ -12,7 +12,7 @@ export interface ExecResult {
   invoked: { method: string; error: string | null }[];
   sql: string[];
   queryStrings: string[];
-  syntax: { queryExpressions: number; methodCalls: string[]; identifiers: string[] } | null;
+  syntax: { queryExpressions: number; methodCalls: string[]; queryableOperators: string[]; identifiers: string[] } | null;
 }
 
 const failure = (id: string, message: string): ExecResult =>
@@ -68,6 +68,8 @@ export function execFailures(c: EvalCase, r: ExecResult): string[] {
   for (const p of x.sqlMust ?? []) if (!new RegExp(p, 'i').test(sql)) failures.push(`sql missing /${p}/`);
   for (const p of x.sqlMustNot ?? []) if (new RegExp(p, 'i').test(sql)) failures.push(`sql forbidden /${p}/`);
   if (x.minCommands !== undefined && r.sql.length < x.minCommands) failures.push(`sql commands ${r.sql.length} < ${x.minCommands}`);
+  const banned = (x.noMethodSyntax ?? []).filter((op) => r.syntax?.queryableOperators.includes(op));
+  if (banned.length) failures.push(`method syntax on a queryable: ${banned.join(', ')}`);
   return failures;
 }
 

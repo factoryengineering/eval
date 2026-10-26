@@ -21,6 +21,9 @@ test('execFailures reports compile, forbidden, runtime and sql problems in prior
   assert.deepEqual(execFailures(c({ sqlMustNot: ['"Id"'] }), ok), []);
   assert.deepEqual(execFailures(c({ sqlMustNot: ['"Title"'] }), ok), ['sql forbidden /"Title"/']);
   assert.deepEqual(execFailures(c({ minCommands: 3 }), ok), ['sql commands 1 < 3']);
+  const syntax = { queryExpressions: 0, methodCalls: [], identifiers: [], queryableOperators: ['Where', 'Select'] };
+  assert.deepEqual(execFailures(c({ noMethodSyntax: ['Where', 'GroupBy'] }), { ...ok, syntax }), ['method syntax on a queryable: Where']);
+  assert.deepEqual(execFailures(c({ noMethodSyntax: ['Where'] }), { ...ok, syntax: { ...syntax, queryableOperators: [] } }), []);
 });
 
 test('runEval uses the injected async grader', async () => {

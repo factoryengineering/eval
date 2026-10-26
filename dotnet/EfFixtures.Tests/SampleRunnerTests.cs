@@ -103,6 +103,29 @@ public class SampleRunnerTests
     }
 
     [Fact]
+    public async Task CountsOnlyMethodSyntaxOperatorsAppliedToQueryables()
+    {
+        var r = await Run("""
+            public async Task<List<string>> Titles(BlogContext db)
+            {
+                var query = db.Posts.Where(p => p.Views > 1).OrderBy(p => p.Views);
+                var posts = await query.ToListAsync();
+                return posts.Select(p => p.Title).ToList();
+            }
+            """);
+        Assert.Equal(["OrderBy", "Where"], r.Syntax!.QueryableOperators.Order());
+        var keyword = await Run("""
+            public async Task<List<string>> Titles(BlogContext db)
+            {
+                var query = from p in db.Posts where p.Views > 1 orderby p.Views select p.Title;
+                var titles = await query.ToListAsync();
+                return titles.Select(t => t.ToUpper()).ToList();
+            }
+            """);
+        Assert.Empty(keyword.Syntax!.QueryableOperators);
+    }
+
+    [Fact]
     public async Task ExtractsDeclaredIdentifiers()
     {
         var r = await Run("""

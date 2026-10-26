@@ -1,0 +1,55 @@
+{
+  "list-popular-posts": {
+    "good": "public async Task<List<string>> PopularTitles(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularTitlesQuery = from post in blogContext.Posts where post.Views > 100 orderby post.Views descending select post.Title;\n    return await popularTitlesQuery.ToListAsync(cancellationToken);\n}",
+    "bad": {
+      "token-not-passed": "public async Task<List<string>> PopularTitles(BlogContext blogContext)\n{\n    var popularTitlesQuery = from post in blogContext.Posts where post.Views > 100 orderby post.Views descending select post.Title;\n    return await popularTitlesQuery.ToListAsync();\n}",
+      "sorted-in-memory": "public async Task<List<string>> PopularTitles(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var allQuery = from post in blogContext.Posts select post;\n    var all = await allQuery.ToListAsync(cancellationToken);\n    return all.Where(post => post.Views > 100).OrderByDescending(post => post.Views).Select(post => post.Title).ToList();\n}"
+    }
+  },
+  "blog-with-posts-and-tags": {
+    "good": "public async Task<List<Blog>> LoadBlogs(BlogContext blogContext)\n{\n    var blogsQuery = blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors).AsSplitQuery();\n    return await blogsQuery.ToListAsync();\n}",
+    "bad": {
+      "single-query": "public async Task<List<Blog>> LoadBlogs(BlogContext blogContext)\n{\n    var blogsQuery = blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors);\n    return await blogsQuery.ToListAsync();\n}",
+      "split-but-one-collection": "public async Task<List<Blog>> LoadBlogs(BlogContext blogContext)\n{\n    var blogsQuery = blogContext.Blogs.Include(blog => blog.Posts).AsSplitQuery();\n    return await blogsQuery.ToListAsync();\n}"
+    }
+  },
+  "search-by-title": {
+    "good": "public async Task<List<Post>> FindByPrefix(BlogContext blogContext, string prefix)\n{\n    var matchesQuery = from post in blogContext.Posts where post.Title.StartsWith(prefix) select post;\n    return await matchesQuery.ToListAsync();\n}",
+    "bad": {
+      "helper-in-predicate": "public async Task<List<Post>> FindByPrefix(BlogContext blogContext, string prefix)\n{\n    var matchesQuery = from post in blogContext.Posts where TitleRules.HasPrefix(post.Title, prefix) select post;\n    return await matchesQuery.ToListAsync();\n}",
+      "filter-after-materialising": "public async Task<List<Post>> FindByPrefix(BlogContext blogContext, string prefix)\n{\n    var allQuery = from post in blogContext.Posts select post;\n    var all = await allQuery.ToListAsync();\n    return all.Where(post => post.Title.StartsWith(prefix)).ToList();\n}"
+    }
+  },
+  "spec-then-execute": {
+    "good": "public async Task<List<string>> PopularTitles(BlogContext blogContext)\n{\n    var popularTitlesQuery = from post in blogContext.Posts where post.Views > 100 orderby post.Views descending select post.Title;\n    return await popularTitlesQuery.ToListAsync();\n}",
+    "bad": {
+      "inline-await": "public async Task<List<string>> PopularTitles(BlogContext blogContext)\n{\n    return await (from post in blogContext.Posts where post.Views > 100 orderby post.Views descending select post.Title).ToListAsync();\n}"
+    }
+  },
+  "keyword-filter-order-project": {
+    "good": "public async Task<List<(string Title, int Views)>> Popular(BlogContext blogContext)\n{\n    var popularQuery = from post in blogContext.Posts where post.Views > 100 orderby post.Views descending select new { post.Title, post.Views };\n    var popular = await popularQuery.ToListAsync();\n    return popular.Select(item => (item.Title, item.Views)).ToList();\n}",
+    "bad": {
+      "method-syntax": "public async Task<List<(string Title, int Views)>> Popular(BlogContext blogContext)\n{\n    var popularQuery = blogContext.Posts.Where(post => post.Views > 100).OrderByDescending(post => post.Views).Select(post => new { post.Title, post.Views });\n    var popular = await popularQuery.ToListAsync();\n    return popular.Select(item => (item.Title, item.Views)).ToList();\n}"
+    }
+  },
+  "names-grouped-totals": {
+    "good": "public async Task<List<(int BlogId, int TotalViews)>> TotalViewsPerBlog(BlogContext blogContext, string searchTerm)\n{\n    var totalsQuery = from post in blogContext.Posts where post.Title.Contains(searchTerm) group post by post.BlogId into blogPosts select new { BlogId = blogPosts.Key, TotalViews = blogPosts.Sum(blogPost => blogPost.Views) };\n    var totals = await totalsQuery.ToListAsync();\n    return totals.Select(total => (total.BlogId, total.TotalViews)).ToList();\n}",
+    "bad": {
+      "single-letter-names": "public async Task<List<(int BlogId, int TotalViews)>> TotalViewsPerBlog(BlogContext blogContext, string searchTerm)\n{\n    var totalsQuery = from p in blogContext.Posts where p.Title.Contains(searchTerm) group p by p.BlogId into g select new { BlogId = g.Key, TotalViews = g.Sum(x => x.Views) };\n    var totals = await totalsQuery.ToListAsync();\n    return totals.Select(t => (t.BlogId, t.TotalViews)).ToList();\n}",
+      "grouped-in-memory": "public async Task<List<(int BlogId, int TotalViews)>> TotalViewsPerBlog(BlogContext blogContext, string searchTerm)\n{\n    var matchesQuery = from post in blogContext.Posts where post.Title.Contains(searchTerm) select post;\n    var matches = await matchesQuery.ToListAsync();\n    return matches.GroupBy(match => match.BlogId).Select(group => (group.Key, group.Sum(match => match.Views))).ToList();\n}"
+    }
+  },
+  "read-only-values": {
+    "good": "public async Task<List<(string Title, int Views)>> ListPosts(BlogContext blogContext)\n{\n    var postsQuery = from post in blogContext.Posts select new { post.Title, post.Views };\n    var posts = await postsQuery.ToListAsync();\n    return posts.Select(item => (item.Title, item.Views)).ToList();\n}",
+    "bad": {
+      "entities": "public async Task<List<Post>> ListPosts(BlogContext blogContext)\n{\n    var postsQuery = from post in blogContext.Posts select post;\n    return await postsQuery.ToListAsync();\n}",
+      "no-tracking": "public async Task<List<(string Title, int Views)>> ListPosts(BlogContext blogContext)\n{\n    var postsQuery = blogContext.Posts.AsNoTracking().Select(post => new { post.Title, post.Views });\n    var posts = await postsQuery.ToListAsync();\n    return posts.Select(item => (item.Title, item.Views)).ToList();\n}"
+    }
+  },
+  "load-entity-for-edit": {
+    "good": "public async Task Rename(BlogContext blogContext, int postId, string newTitle)\n{\n    var postQuery = from post in blogContext.Posts where post.Id == postId select post;\n    var matchingPost = await postQuery.SingleAsync();\n    matchingPost.Title = newTitle;\n    await blogContext.SaveChangesAsync();\n}",
+    "bad": {
+      "no-save": "public async Task Rename(BlogContext blogContext, int postId, string newTitle)\n{\n    var matchingPost = await blogContext.Posts.SingleAsync(post => post.Id == postId);\n    matchingPost.Title = newTitle;\n}"
+    }
+  }
+}
