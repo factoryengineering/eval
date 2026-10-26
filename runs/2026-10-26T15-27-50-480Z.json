@@ -1,0 +1,172 @@
+{
+  "summary": {
+    "runId": "2026-10-26T15-27-50-480Z",
+    "at": "2026-10-26T15:27:50.480Z",
+    "skillHash": "c079ade92107",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "translatable",
+        "withRate": 0.6,
+        "withoutRate": 0,
+        "delta": 0.6,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 2440,
+        "output": 1357,
+        "estimated": true,
+        "calls": 10
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 222,
+      "outputTokens": 142,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<IReadOnlyList<PostSummary>> GetPostsWithTitlePrefixAsync(\n    BlogContext blogContext,\n    string titlePrefix,\n    CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Id, post.Title);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n    return postSummaries\n        .Where(postSummary => TitleRules.HasPrefix(postSummary.Title, titlePrefix))\n        .ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 156,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(int Id, string Title)>> GetPostsByTitlePrefixAsync(BlogContext blogContext, string prefix, CancellationToken cancellationToken)\n{\n    var titlePattern = prefix + \"%\";\n\n    var prefixMatchesQuery =\n        from post in blogContext.Posts\n        where EF.Functions.Like(post.Title, titlePattern)\n        select new { post.Id, post.Title };\n\n    var prefixMatches = await prefixMatchesQuery.ToListAsync(cancellationToken);\n\n    return prefixMatches\n        .Where(match => TitleRules.HasPrefix(match.Title, prefix))\n        .Select(match => (match.Id, match.Title))\n        .ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 222,
+      "outputTokens": 101,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(BlogContext blogContext, string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithPrefix = (from post in blogContext.Posts\n                           where TitleRules.HasPrefix(post.Title, titlePrefix)\n                           select post).ToListAsync(cancellationToken);\n\n    return await postsWithPrefix;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(BlogContext blogContext, string titlePrefix, CancellationToken cancellationToken)\n{\n    var matchingPosts = await (\n        from post in blogContext.Posts\n        where TitleRules.HasPrefix(post.Title, titlePrefix)\n        select post\n    ).ToListAsync(cancellationToken);\n\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 222,
+      "outputTokens": 168,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int Id, string Title);\n\npublic class PostQueries(BlogContext blogContext)\n{\n    public async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n    {\n        var postSummaryQuery =\n            from post in blogContext.Posts\n            where post.Title.StartsWith(titlePrefix)\n            select new PostSummary(post.Id, post.Title);\n\n        var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n        return postSummaries\n            .Where(postSummary => TitleRules.HasPrefix(postSummary.Title, titlePrefix))\n            .ToList();\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 120,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(BlogContext blogContext, string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsByTitlePrefixQuery =\n        from post in blogContext.Posts\n        where EF.Functions.Like(post.Title, titlePrefix + \"%\")\n        select new PostSummary(post.Id, post.Title);\n\n    return await postsByTitlePrefixQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 222,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var matchingPosts =\n        from post in blogContext.Posts\n        where TitleRules.HasPrefix(post.Title, titlePrefix)\n        select post;\n\n    return await matchingPosts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 142,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic class PostQueries(BlogContext context)\n{\n    public async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(string prefix, CancellationToken cancellationToken)\n    {\n        var titlePattern = prefix + \"%\";\n\n        var postsQuery =\n            from post in context.Posts\n            where EF.Functions.Like(post.Title, titlePattern)\n            orderby post.Title\n            select new PostSummary(post.Id, post.Title);\n\n        return await postsQuery.ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 222,
+      "outputTokens": 167,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> GetPostsWithTitlePrefixAsync(BlogContext blogContext, string titlePrefix, CancellationToken cancellationToken)\n{\n    var postSummaries = from post in blogContext.Posts\n                        select new PostSummary(post.Id, post.Title);\n\n    var allPostSummaries = await postSummaries.ToListAsync(cancellationToken);\n\n    var matchingPostSummaries = from summary in allPostSummaries\n                                where TitleRules.HasPrefix(summary.Title, titlePrefix)\n                                select summary;\n\n    return matchingPostSummaries.ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 182,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> GetPostsWithTitlePrefixAsync(\n        BlogContext blogContext,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var escapedPrefix = prefix.Replace(\"\\\\\", \"\\\\\\\\\").Replace(\"%\", \"\\\\%\").Replace(\"_\", \"\\\\_\");\n        var titlePattern = escapedPrefix + \"%\";\n\n        var postsWithTitlePrefixQuery =\n            from post in blogContext.Posts\n            where EF.Functions.Like(post.Title, titlePattern, \"\\\\\")\n            select new PostSummary(post.Id, post.Title);\n\n        return await postsWithTitlePrefixQuery.ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    }
+  ]
+}

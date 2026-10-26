@@ -484,3 +484,6 @@ $RECYCLE.BIN/
 *.swp
 node_modules/
 dist/
+
+# Stage 3 evidence: keep eval logs and skill snapshots tracked
+!/logs/

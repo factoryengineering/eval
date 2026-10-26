@@ -1,0 +1,178 @@
+{
+  "summary": {
+    "runId": "2026-10-26T15-26-33-402Z",
+    "at": "2026-10-26T15:26:33.402Z",
+    "skillHash": "c079ade92107",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "translatable",
+        "withRate": 0,
+        "withoutRate": 0,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      }
+    ],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 2450,
+        "output": 1230,
+        "estimated": true,
+        "calls": 10
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 223,
+      "outputTokens": 126,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<IReadOnlyList<PostSummary>> GetPostsWithValidSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummariesQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Id, post.Title);\n\n    var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n\n    return postSummaries.Where(postSummary => Slug.IsValid(postSummary.Title)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 267,
+      "outputTokens": 120,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostTitle(int Id, string Title);\n\npublic async Task<List<PostTitle>> GetPostsWithSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitleQuery = from post in blogContext.Posts\n                         select new PostTitle(post.Id, post.Title);\n\n    var postTitles = await postTitleQuery.ToListAsync(cancellationToken);\n\n    return postTitles.Where(postTitle => Slug.IsValid(postTitle.Title)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 223,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsWithValidSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var allPosts = await blogContext.Posts.ToListAsync(cancellationToken);\n    var validSlugPosts = allPosts.Where(post => Slug.IsValid(post.Title)).ToList();\n    return validSlugPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 267,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPostsWithValidSlugTitlesAsync(CancellationToken cancellationToken)\n{\n    // Slug.IsValid is C#, so it cannot be translated to SQL. Project only the\n    // columns needed, then apply the C# predicate in memory.\n    var postTitles = from post in blogContext.Posts\n                     select new PostSummary(post.Id, post.Title);\n\n    var allPostTitles = await postTitles.ToListAsync(cancellationToken);\n\n    return allPostTitles.Where(postTitle => Slug.IsValid(postTitle.Title)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 223,
+      "outputTokens": 129,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int Id, string Title);\n\npublic async Task<IReadOnlyList<PostSummary>> GetPostsWithValidSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery = from post in blogContext.Posts\n                           select new PostSummary(post.Id, post.Title);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n    return postSummaries.Where(postSummary => Slug.IsValid(postSummary.Title)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 267,
+      "outputTokens": 169,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(int Id, string Title)>> GetPostsWithValidSlugTitlesAsync(CancellationToken cancellationToken)\n{\n    var postTitlesQuery = from post in blogContext.Posts\n                          select new { post.Id, post.Title };\n\n    // Slug.IsValid is a C# method and cannot be translated to SQL, so the filter runs in memory after the titles are fetched.\n    var postTitles = await postTitlesQuery.ToListAsync(cancellationToken);\n\n    var validSlugPosts = from postTitle in postTitles\n                         where Slug.IsValid(postTitle.Title)\n                         select (postTitle.Id, postTitle.Title);\n\n    return validSlugPosts.ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 223,
+      "outputTokens": 175,
+      "estimated": true,
+      "output": "```csharp\npublic record PostTitle(int Id, string Title);\n\npublic class PostRepository(BlogContext blogContext)\n{\n    public async Task<List<PostTitle>> GetPostsWithValidSlugTitlesAsync(CancellationToken cancellationToken)\n    {\n        var postTitleQuery = from post in blogContext.Posts\n                             select new PostTitle(post.Id, post.Title);\n\n        var postTitles = await postTitleQuery.ToListAsync(cancellationToken);\n\n        var validSlugPostTitleQuery = from postTitle in postTitles\n                                      where Slug.IsValid(postTitle.Title)\n                                      select postTitle;\n\n        return validSlugPostTitleQuery.ToList();\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 267,
+      "outputTokens": 118,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Post>> GetPostsWithSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    // Slug.IsValid is a C# method, so it cannot be translated to SQL. Materialize first, then filter in memory.\n    var allPosts = from post in blogContext.Posts\n                   select post;\n\n    var posts = await allPosts.ToListAsync(cancellationToken);\n\n    return posts.Where(post => Slug.IsValid(post.Title)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 223,
+      "outputTokens": 84,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsWithValidSlugTitlesAsync(CancellationToken cancellationToken)\n{\n    var allPosts = await blogContext.Posts\n        .ToListAsync(cancellationToken);\n\n    var validSlugPosts = allPosts\n        .Where(post => Slug.IsValid(post.Title))\n        .ToList();\n\n    return validSlugPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /IsValid/"
+      ],
+      "inputTokens": 267,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsWithSlugTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in blogContext.Posts\n        select post;\n\n    var allPosts = await postsQuery.ToListAsync(cancellationToken);\n\n    return allPosts.Where(post => Slug.IsValid(post.Title)).ToList();\n}\n```\n"
+    }
+  ]
+}

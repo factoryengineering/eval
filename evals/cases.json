@@ -2,48 +2,98 @@
   {
     "id": "list-popular-posts",
     "prompt": "Using a BlogContext db (DbSet<Post> Posts with Title, Views), write a method returning the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
-    "targets": ["project", "async"],
-    "must": ["Select\\(|select\\s", "ToListAsync\\("]
+    "targets": [
+      "async"
+    ],
+    "must": [
+      "ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)"
+    ]
   },
   {
     "id": "blog-with-posts-and-tags",
-    "prompt": "Using a BlogContext db where Blog has collections Posts and Contributors, write a query loading all blogs with both collections. Return only a C# code block.",
-    "targets": ["split-query"],
-    "must": ["AsSplitQuery\\(\\)"]
+    "prompt": "Using a BlogContext (Blog has collections Posts and Contributors), write a method that loads all blogs together with both collections so the caller can modify the entities and save them. Return only a C# code block.",
+    "targets": [
+      "split-query"
+    ],
+    "must": [
+      "AsSplitQuery\\(\\)"
+    ]
   },
   {
     "id": "search-by-title",
-    "prompt": "Using a BlogContext db, write a method that finds posts whose Title contains a search term, case-insensitively. Return only a C# code block.",
-    "targets": ["translatable", "async"],
-    "must": ["Async\\("],
-    "mustNot": ["ToList\\(\\)\\s*\\.Where", "AsEnumerable\\(\\)\\s*\\.Where"]
+    "prompt": "Using a BlogContext, write a method that returns the posts whose Title starts with a given prefix. A C# helper `TitleRules.HasPrefix(string title, string prefix)` already exists. Return only a C# code block.",
+    "targets": [
+      "translatable"
+    ],
+    "must": [
+      "Async\\("
+    ],
+    "mustNot": [
+      "HasPrefix\\(",
+      "ToList\\(\\)\\s*\\.Where",
+      "AsEnumerable\\(\\)",
+      "ToListAsync\\([^)]*\\)\\)?\\s*\\.Where"
+    ]
   },
   {
     "id": "spec-then-execute",
     "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
-    "targets": ["separate-spec"],
-    "must": ["var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)", "await\\s+\\w+\\.\\w+Async\\("],
-    "mustNot": ["await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)", "IQueryable<[^>]*>\\s+\\w+\\s*="]
+    "targets": [
+      "separate-spec"
+    ],
+    "must": [
+      "var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)",
+      "await\\s+\\w+\\.\\w+Async\\("
+    ],
+    "mustNot": [
+      "await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)",
+      "IQueryable<[^>]*>\\s+\\w+\\s*="
+    ]
   },
   {
     "id": "keyword-filter-order-project",
     "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the Title and Views of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
-    "targets": ["keyword-syntax"],
-    "must": ["\\bfrom\\s+\\w+\\s+in\\b", "\\bselect\\b"],
-    "mustNot": ["\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\("]
+    "targets": [
+      "keyword-syntax"
+    ],
+    "must": [
+      "\\bfrom\\s+\\w+\\s+in\\b",
+      "\\bselect\\b"
+    ],
+    "mustNot": [
+      "\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\("
+    ]
   },
   {
     "id": "names-grouped-totals",
     "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with BlogId, Title and Views) and returns the total Views per BlogId for posts whose Title contains a search term. Return only a C# code block.",
-    "targets": ["meaningful-names"],
-    "must": ["Async\\("],
-    "mustNot": ["\\bfrom\\s+[a-z]\\s+in\\b", "\\b[a-z]\\s*=>", "\\(\\s*[a-z]\\s*\\)\\s*=>", "\\binto\\s+[a-z]\\b", "\\b[a-z]\\.[A-Z]", "\\b(db|ctx|qry|res|tmp|cnt|dto|conn|cfg)\\b"]
+    "targets": [
+      "meaningful-names"
+    ],
+    "must": [
+      "Async\\("
+    ],
+    "mustNot": [
+      "\\bfrom\\s+[a-z]\\s+in\\b",
+      "\\b[a-z]\\s*=>",
+      "\\(\\s*[a-z]\\s*\\)\\s*=>",
+      "\\binto\\s+[a-z]\\b",
+      "\\b[a-z]\\.[A-Z]",
+      "\\b(db|ctx|qry|res|tmp|cnt|dto|conn|cfg)\\b"
+    ]
   },
   {
     "id": "read-only-values",
     "prompt": "Write a read-only method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and lists each post's Title and Views. Return only a C# code block.",
-    "targets": ["values-only"],
-    "must": ["\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\(|\\bselect\\s+\\w+\\.\\w+"],
-    "mustNot": ["AsNoTracking", "\\bselect\\s+\\w+\\s*;"]
+    "targets": [
+      "values-only"
+    ],
+    "must": [
+      "\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\(|\\bselect\\s+\\w+\\.\\w+"
+    ],
+    "mustNot": [
+      "AsNoTracking",
+      "\\bselect\\s+\\w+\\s*;"
+    ]
   }
 ]

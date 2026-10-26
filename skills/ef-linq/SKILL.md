@@ -3,8 +3,7 @@ name: ef-linq
 description: Write Entity Framework Core LINQ queries.
 ---
 Rules for EF Core LINQ queries:
-- [project] Project to only the needed columns with `Select(...)` instead of loading whole entities.
-- [translatable] Keep `Where` predicates translatable to SQL: no custom C# methods, and never call `ToList()` before filtering.
+- [translatable] Filter only in the database: never call user-defined C# helper methods in a query, and never filter results after `ToList()` or `ToListAsync()`. Use built-in translatable members such as `StartsWith`.
 - [async] Use async terminals such as `ToListAsync(cancellationToken)` and pass the `CancellationToken`.
 - [split-query] Use `AsSplitQuery()` when `Include`-ing more than one collection.
 - [separate-spec] Assign the query to a `var`, then execute it in a separate statement with `await`.

@@ -1,0 +1,3 @@
+{"at":"2026-10-26T13:23:19.096Z","skillHash":"d2151feef2ee","note":"Initial 5-line skill"}
+{"at":"2026-10-26T15:25:28.970Z","skillHash":"c079ade92107","note":"Iter 1: delete redundant project line; reword translatable to cover ToListAsync and name EF.Functions"}
+{"at":"2026-10-26T15:27:57.654Z","skillHash":"74acfcbbdcff","note":"Iter 2: translatable bans user-defined helpers and post-materialization filtering, names StartsWith"}
