@@ -43,7 +43,7 @@
     "id": "read-only-values",
     "prompt": "Write a read-only method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and lists each post's Title and Views. Return only a C# code block.",
     "targets": ["values-only"],
-    "must": ["\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+"],
+    "must": ["\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\(|\\bselect\\s+\\w+\\.\\w+"],
     "mustNot": ["AsNoTracking", "\\bselect\\s+\\w+\\s*;"]
   }
 ]
