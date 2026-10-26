@@ -2,18 +2,32 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { grade } from '../src/grade.js';
 import { runEval } from '../src/runner.js';
-import { parseSkill, renderSkill } from '../src/skill.js';
+import { annotate, parseSkill, renderSkill } from '../src/skill.js';
 import { compare } from '../src/store.js';
 import type { Config, EvalCase } from '../src/types.js';
 
 const skill = '# s\n- [a] Use `Alpha()`.\n- [b] Use `Beta()`.\n';
 const cases: EvalCase[] = [{ id: 'c', prompt: 'p', targets: ['a'], must: ['Alpha'] }];
-const config: Config = { skill: '', cases: '', trials: 2, minDelta: 0.3, models: [{ id: 'm', provider: 'mock', model: 'm' }] };
+const config: Config = { skill: '', ids: '', cases: '', trials: 2, minDelta: 0.3, models: [{ id: 'm', provider: 'mock', model: 'm' }] };
 
 test('parseSkill finds ids and renderSkill omits/strips them', () => {
   assert.deepEqual(parseSkill(skill).lines.map((l) => l.id), ['a', 'b']);
   assert.equal(renderSkill(skill, 'a').includes('Alpha'), false);
   assert.equal(renderSkill(skill).includes('[a]'), false);
+});
+
+test('annotate tags clean bullets from the sidecar and renders back to the exact shipped text', () => {
+  const clean = '# s\n- Use `Alpha()`.\n- Use `Beta()`.\n';
+  const ids = { a: 'Use `Alpha()`.', b: 'Use `Beta()`.' };
+  const tagged = annotate(clean, ids);
+  assert.deepEqual(parseSkill(tagged).lines.map((l) => l.id), ['a', 'b']);
+  assert.equal(renderSkill(tagged), clean);
+  assert.equal(renderSkill(tagged, 'a'), '# s\n- Use `Beta()`.\n');
+});
+
+test('annotate fails loudly when the skill and sidecar drift apart', () => {
+  assert.throws(() => annotate('- Use X.\n- Extra.\n', { x: 'Use X.' }), /no id for skill line: Extra\./);
+  assert.throws(() => annotate('- Use X.\n', { x: 'Use X.', y: 'Gone.' }), /id y not found in skill/);
 });
 
 test('grade reports missing and forbidden patterns', () => {

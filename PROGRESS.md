@@ -148,6 +148,13 @@ Across all 5 models `scope` is load bearing on 3 (haiku, sonnet, swe-2) and `exc
 
 - **Reasoning:** every line passes 100% with the skill on every model, and the Iteration 9 conclusion (`values-only` does not break tracked-entity writes) holds from a neutral directory, now on 5 models. 31 of 35 line-model cells are load bearing; every line is load bearing on at least 3 of 5 models (`values-only` is weakest: haiku, sonnet and luna, with the SWE models already avoiding `AsNoTracking()` unprompted). The first neutral re-run is kept in `runs/` as superseded evidence.
 
+### Iteration 13 - REFACTOR: remove ids from the shipped skill (skill hash 6ecabd3f5378, behavior unchanged)
+- **Baseline:** the deployed `SKILL.md` carried `[id]` tags that the agent would read as text. They are not instructions and no eval covers them (dead weight, against the load-bearing rule).
+- **Hypothesis:** moving id -> text to a sidecar (`evals/skill-lines.json`) and tagging in memory removes the tags from the shipped file without changing what any model sees during evaluation.
+- **Change:** `annotate()` in `src/skill.ts` (3 unit tests: tagging, round trip, loud failure on drift); `SKILL.md` is now untagged; the run hash is computed on the rendered text.
+- **Result:** the new `SKILL.md` is byte-identical (SHA-256 prefix `6ecabd3f5378`) to the rendered text every model received in Iterations 8-12, so those results apply unchanged and no re-run was needed. The CLI path was checked with a mock run (discarded). 15 unit tests pass.
+- **Reasoning:** an identical model input cannot change a pass rate, so a byte comparison is stronger evidence than a re-run. Hashes in earlier logs (e.g. 74acfcbbdcff, 4ae7fc1326d4) were computed over the tagged text; 6ecabd3f5378 is the hash of the shipped text.
+
 ## Caveats
 
 - Trigger eval: the spec was revised twice after seeing results (Iterations 10 and 11), so the final numbers are tuned to the final cases and likely optimistic. Cells are 18-39 trials. Distractor skills are synthetic and the model's own agent harness lists other skills too, though `devin-cli` now runs from an empty directory so the real `ef-linq` skill is not visible to the model under test.

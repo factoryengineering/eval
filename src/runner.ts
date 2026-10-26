@@ -92,7 +92,7 @@ export async function runEval(
 
   const at = new Date().toISOString();
   const summary: RunSummary = {
-    runId: at.replace(/[:.]/g, '-'), at, skillHash: hashSkill(skillSource), trials: config.trials, lines: results, guards, tokens,
+    runId: at.replace(/[:.]/g, '-'), at, skillHash: hashSkill(renderSkill(skillSource)), trials: config.trials, lines: results, guards, tokens,
   };
   return { summary, trials };
 }

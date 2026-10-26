@@ -6,6 +6,7 @@ export interface ModelSpec {
 
 export interface Config {
   skill: string;
+  ids: string;
   cases: string;
   trials: number;
   minDelta: number;

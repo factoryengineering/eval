@@ -1,5 +1,7 @@
+import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { runEval } from './runner.js';
+import { annotate } from './skill.js';
 import { compare, logChange, readRuns, saveRun, table } from './store.js';
 import { clauseVerdicts, descriptionOf, rates, runTrigger } from './trigger.js';
 import type { TriggerSpec } from './trigger.js';
@@ -13,6 +15,7 @@ const flag = (name: string) => {
 
 const config = JSON.parse(await readFile('eval.config.json', 'utf8')) as Config;
 const skill = await readFile(config.skill, 'utf8');
+const tagged = () => annotate(skill, JSON.parse(readFileSync(config.ids, 'utf8')) as Record<string, string>);
 
 switch (cmd) {
   case 'run': {
@@ -21,7 +24,7 @@ switch (cmd) {
     if (flag('lines')) config.lines = flag('lines')!.split(',');
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = JSON.parse(await readFile(config.cases, 'utf8')) as EvalCase[];
-    const { summary, trials } = await runEval(config, skill, cases, undefined, (t) =>
+    const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
       console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`));
     await saveRun(summary, trials);
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);

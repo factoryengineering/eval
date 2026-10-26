@@ -33,4 +33,19 @@ export function renderSkill(source: string, omit?: string): string {
     .join('\n');
 }
 
+export function annotate(clean: string, ids: Record<string, string>): string {
+  const byText = new Map(Object.entries(ids).map(([id, text]) => [text, id]));
+  const seen = new Set<string>();
+  const out = clean.split('\n').map((raw) => {
+    const m = /^- (.+)$/.exec(raw);
+    if (!m) return raw;
+    const id = byText.get(m[1]!);
+    if (!id) throw new Error(`no id for skill line: ${m[1]}`);
+    seen.add(id);
+    return `- [${id}] ${m[1]}`;
+  });
+  for (const id of Object.keys(ids)) if (!seen.has(id)) throw new Error(`id ${id} not found in skill`);
+  return out.join('\n');
+}
+
 export const hashSkill = (source: string) => createHash('sha256').update(source).digest('hex').slice(0, 12);

@@ -30,7 +30,8 @@ There are no runtime npm dependencies. Anthropic API calls use `fetch`.
 ## Layout
 
 ```
-.devin/skills/ef-linq/SKILL.md   The skill under test, in the folder Devin loads project skills from. One rule per line: "- [id] text"
+.devin/skills/ef-linq/SKILL.md   The skill under test, in the folder Devin loads project skills from. One rule per bullet, no ids
+evals/skill-lines.json     Rule id -> exact bullet text, so cases and logs can refer to a line stably
 evals/cases.json           Eval cases: prompt, targeted line ids, must / mustNot regexes
 eval.config.json           Models, trials per case, minDelta
 src/                       skill parsing, providers, grading, runner, log store, CLI
@@ -43,7 +44,7 @@ logs/snapshots/<hash>.md   Skill text at each logged change
 runs/<runId>.json          Full per-trial record, including raw model output
 ```
 
-Rule ids (`[id]`) are stripped before the skill is sent to a model. They exist so cases and logs can refer to a line stably.
+The deployed skill contains no ids. The harness reads `evals/skill-lines.json`, tags each bullet in memory, ablates one at a time, and renders the untagged text for the "with" variant, so what is evaluated is exactly what ships. If a bullet has no id, or an id has no bullet, the run fails with an error rather than testing a stale mapping. After editing a rule, update its text in `skill-lines.json` too.
 
 ## Skill structure and why it is not classic RTCC
 
@@ -51,8 +52,8 @@ The skill targets a coding agent and must stay valid across projects and as sche
 
 | Component | In the skill? | Where it lives and why |
 | --- | --- | --- |
-| **Task** | Yes | The frontmatter `description` is what the agent reads to decide whether to load the skill. It is the only text present before the skill is chosen, so it is load bearing by discovery. `npm run eval:trigger` measures it: a model sees a skill list with neighbouring skills and must pick `ef-linq` exactly when it applies. Its two clauses (scope, exclusions) are each load bearing on 2 of 3 models, mainly by rejecting near-miss requests such as in-memory LINQ and raw SQL. It adds nothing for recall, because the skill name already drives that (`PROGRESS.md`, Iterations 10-11). |
-| **Constraints** | Yes | The `- [id]` rules. Each is ablated against a targeted case and must change pass rates (see `PROGRESS.md`). This is the whole body of the skill. |
+| **Task** | Yes | The frontmatter `description` is what the agent reads to decide whether to load the skill. It is the only text present before the skill is chosen, so it is load bearing by discovery. `npm run eval:trigger` measures it: a model sees a skill list with neighbouring skills and must pick `ef-linq` exactly when it applies. Its two clauses are load bearing on 3 of 5 models (scope) and 4 of 5 (exclusions), mainly by rejecting near-miss requests such as in-memory LINQ and raw SQL. It adds nothing for recall, because the skill name already drives that (`PROGRESS.md`, Iterations 10-11). |
+| **Constraints** | Yes | The bulleted rules. Each is ablated against a targeted case and must change pass rates (see `PROGRESS.md`). This is the whole body of the skill. |
 | **Context** | No | A schema in the skill would duplicate the repository, go stale as the model evolves, and tie the skill to one domain. The agent reads the entities and `DbContext` from the code, so context is supplied by the environment. The eval case prompts state the schema because there is no repository in the harness. That text belongs to the test, not the skill. |
 | **Output format** | No | The agent harness owns tool-call validity and file edits. The phrase "Return only a C# code block" appears in the case prompts only so graders can extract code. It is a test fixture, not a skill instruction. |
 | **Role** | No | See below. |
@@ -73,10 +74,6 @@ Headings and section labels are not added, because they carry no instruction and
 - Shi, F., Chen, X., Misra, K., et al. (2023). Large Language Models Can Be Easily Distracted by Irrelevant Context. ICML 2023. https://proceedings.mlr.press/v202/shi23a.html
 - Levy, M., Jacoby, A., and Goldberg, Y. (2024). Same Task, More Tokens: the Impact of Input Length on the Reasoning Performance of Large Language Models. ACL 2024. https://aclanthology.org/2024.acl-long.818/
 - Sclar, M., Choi, Y., Tsvetkov, Y., and Suhr, A. (2024). Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design. ICLR 2024. https://proceedings.iclr.cc/paper_files/paper/2024/hash/6c0e99d736da621403018ca7b32b1a4d-Abstract-Conference.html
-
-### Known gap: rule ids ship to the agent
-
-The `[id]` tags let the harness ablate lines, but the agent loads the file as written, so it also sees the ids. They are not load bearing text. Options are a sidecar mapping from id to line text, or a build step that strips them into the deployed file. This is not yet done.
 
 ## Usage
 

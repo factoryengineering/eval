@@ -2,3 +2,4 @@
 {"at":"2026-10-26T15:25:28.970Z","skillHash":"c079ade92107","note":"Iter 1: delete redundant project line; reword translatable to cover ToListAsync and name EF.Functions"}
 {"at":"2026-10-26T15:27:57.654Z","skillHash":"74acfcbbdcff","note":"Iter 2: translatable bans user-defined helpers and post-materialization filtering, names StartsWith"}
 {"at":"2026-10-26T16:23:54.982Z","skillHash":"4ae7fc1326d4","note":"Iter 11: description rewritten to scope + exclusions; dropped actions clause"}
+{"at":"2026-10-26T17:16:55.590Z","skillHash":"6ecabd3f5378","note":"Iter 13: ids moved to evals/skill-lines.json; deployed SKILL.md is clean and byte-identical to the rendered text evaluated before"}
