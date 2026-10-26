@@ -21,7 +21,10 @@ test('execFailures reports compile, forbidden, runtime and sql problems in prior
   assert.deepEqual(execFailures(c({ sqlMustNot: ['"Id"'] }), ok), []);
   assert.deepEqual(execFailures(c({ sqlMustNot: ['"Title"'] }), ok), ['sql forbidden /"Title"/']);
   assert.deepEqual(execFailures(c({ minCommands: 3 }), ok), ['sql commands 1 < 3']);
-  const syntax = { queryExpressions: 0, methodCalls: [], identifiers: [], queryableOperators: ['Where', 'Select'] };
+  const syntax = { queryExpressions: 0, methodCalls: [], identifiers: [], queryableOperators: ['Where', 'Select'], awaitedQueryLocals: 1, inlineAwaitedQueries: 0 };
+  assert.deepEqual(execFailures(c({ separateQuery: true }), { ...ok, syntax }), []);
+  assert.deepEqual(execFailures(c({ separateQuery: true }), { ...ok, syntax: { ...syntax, inlineAwaitedQueries: 1 } }), ['query executed inline instead of via a variable']);
+  assert.deepEqual(execFailures(c({ separateQuery: true }), { ...ok, syntax: { ...syntax, awaitedQueryLocals: 0 } }), ['no query variable was awaited']);
   assert.deepEqual(execFailures(c({ noMethodSyntax: ['Where', 'GroupBy'] }), { ...ok, syntax }), ['method syntax on a queryable: Where']);
   assert.deepEqual(execFailures(c({ noMethodSyntax: ['Where'] }), { ...ok, syntax: { ...syntax, queryableOperators: [] } }), []);
 });
@@ -36,7 +39,7 @@ test('runEval uses the injected async grader', async () => {
 });
 
 test('judgeNames fails a case when the judge rejects a declared identifier', async () => {
-  const fakeRunner = { run: async () => ({ ...ok, syntax: { queryExpressions: 1, methodCalls: [], queryableOperators: [], identifiers: ['post', 'p', 'post'] } }) } as unknown as ExecRunner;
+  const fakeRunner = { run: async () => ({ ...ok, syntax: { queryExpressions: 1, methodCalls: [], queryableOperators: [], identifiers: ['post', 'p', 'post'], awaitedQueryLocals: 0, inlineAwaitedQueries: 0 } }) } as unknown as ExecRunner;
   const judge = { bad: async (ids: string[]) => [...new Set(ids)].filter((id) => id === 'p') };
   const spec = c({ judgeNames: true });
   assert.deepEqual(await makeGrader(fakeRunner, judge)(spec, '```csharp\nx\n```'), ['names not meaningful: p']);

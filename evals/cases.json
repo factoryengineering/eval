@@ -38,13 +38,11 @@
     "targets": [
       "separate-spec"
     ],
-    "exec": { "sqlMust": ["WHERE", "ORDER BY[\\s\\S]*DESC"] },
+    "exec": { "sqlMust": ["WHERE", "ORDER BY[\\s\\S]*DESC"], "separateQuery": true },
     "must": [
-      "var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)",
-      "await\\s+\\w+\\.\\w+Async\\("
+      "var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)"
     ],
     "mustNot": [
-      "await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)",
       "IQueryable<[^>]*>\\s+\\w+\\s*="
     ]
   },

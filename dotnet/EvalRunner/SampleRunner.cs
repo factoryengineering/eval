@@ -16,7 +16,7 @@ namespace EvalRunner;
 
 public record Request(string Id, string Code, string? StringArg = null, int? IntArg = null);
 public record Invocation(string Method, string? Error);
-public record SyntaxFacts(int QueryExpressions, List<string> MethodCalls, List<string> QueryableOperators, List<string> Identifiers);
+public record SyntaxFacts(int QueryExpressions, List<string> MethodCalls, List<string> QueryableOperators, List<string> Identifiers, int AwaitedQueryLocals, int InlineAwaitedQueries);
 public record Result(string Id, bool Compiled, List<string> Diagnostics, List<string> Forbidden, List<Invocation> Invoked, List<string> Sql, List<string> QueryStrings, SyntaxFacts? Syntax);
 
 public static partial class SampleRunner
@@ -95,6 +95,14 @@ public static partial class SampleRunner
         var operators = invocations
             .Where(i => i.Expression is MemberAccessExpressionSyntax && model.GetSymbolInfo(i).Symbol is IMethodSymbol { ContainingType: { Name: "Queryable", ContainingNamespace: { Name: "Linq" } } })
             .Select(i => ((MemberAccessExpressionSyntax)i.Expression).Name.Identifier.ValueText).ToList();
+        int awaitedLocals = 0, awaitedInline = 0;
+        foreach (var await in root.DescendantNodes().OfType<AwaitExpressionSyntax>())
+        {
+            if (await.Expression is not InvocationExpressionSyntax { Expression: MemberAccessExpressionSyntax access }) continue;
+            var receiver = model.GetTypeInfo(access.Expression).Type;
+            if (receiver is null || !(receiver.Name == "IQueryable" || receiver.AllInterfaces.Any(i => i.Name == "IQueryable"))) continue;
+            if (access.Expression is IdentifierNameSyntax) awaitedLocals++; else awaitedInline++;
+        }
         var ids = new List<string>();
         foreach (var n in root.DescendantNodes())
             switch (n)
@@ -108,7 +116,7 @@ public static partial class SampleRunner
                 case LetClauseSyntax l: ids.Add(l.Identifier.ValueText); break;
                 case ForEachStatementSyntax fe: ids.Add(fe.Identifier.ValueText); break;
             }
-        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, operators, ids.Where(i => i.Length > 0 && i != "_").ToList());
+        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, operators, ids.Where(i => i.Length > 0 && i != "_").ToList(), awaitedLocals, awaitedInline);
     }
 
     static List<string> Forbidden(CSharpCompilation compilation, SyntaxTree tree)

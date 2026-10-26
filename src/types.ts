@@ -26,6 +26,7 @@ export interface ExecSpec {
   minCommands?: number;
   noMethodSyntax?: string[];
   judgeNames?: boolean;
+  separateQuery?: boolean;
 }
 
 export interface EvalCase {

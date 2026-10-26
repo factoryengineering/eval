@@ -126,6 +126,32 @@ public class SampleRunnerTests
     }
 
     [Fact]
+    public async Task DistinguishesAwaitedQueryVariablesFromInlineAwaitedQueries()
+    {
+        var separate = await Run("""
+            public async Task<List<string>> Titles(BlogContext db, CancellationToken ct)
+            {
+                var query = from p in db.Posts select p.Title;
+                var titles = await query
+                    .ToListAsync(ct);
+                return titles;
+            }
+            """);
+        Assert.Equal(1, separate.Syntax!.AwaitedQueryLocals);
+        Assert.Equal(0, separate.Syntax.InlineAwaitedQueries);
+
+        var inlineParen = await Run("public async Task<List<string>> Titles(BlogContext db) => await (from p in db.Posts select p.Title).ToListAsync();");
+        Assert.Equal(0, inlineParen.Syntax!.AwaitedQueryLocals);
+        Assert.Equal(1, inlineParen.Syntax.InlineAwaitedQueries);
+
+        var chained = await Run("public async Task<List<Post>> Posts(BlogContext db) => await db.Posts.Where(p => p.Views > 1).ToListAsync();");
+        Assert.Equal(1, chained.Syntax!.InlineAwaitedQueries);
+
+        var notAQuery = await Run("public async Task Save(BlogContext db) { var saving = db.SaveChangesAsync(); await saving; await db.SaveChangesAsync(); }");
+        Assert.Equal(0, notAQuery.Syntax!.AwaitedQueryLocals + notAQuery.Syntax.InlineAwaitedQueries);
+    }
+
+    [Fact]
     public async Task ExtractsDeclaredIdentifiers()
     {
         var r = await Run("""

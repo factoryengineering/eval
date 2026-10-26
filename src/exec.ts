@@ -12,7 +12,14 @@ export interface ExecResult {
   invoked: { method: string; error: string | null }[];
   sql: string[];
   queryStrings: string[];
-  syntax: { queryExpressions: number; methodCalls: string[]; queryableOperators: string[]; identifiers: string[] } | null;
+  syntax: {
+    queryExpressions: number;
+    methodCalls: string[];
+    queryableOperators: string[];
+    identifiers: string[];
+    awaitedQueryLocals: number;
+    inlineAwaitedQueries: number;
+  } | null;
 }
 
 const failure = (id: string, message: string): ExecResult =>
@@ -70,6 +77,10 @@ export function execFailures(c: EvalCase, r: ExecResult): string[] {
   if (x.minCommands !== undefined && r.sql.length < x.minCommands) failures.push(`sql commands ${r.sql.length} < ${x.minCommands}`);
   const banned = (x.noMethodSyntax ?? []).filter((op) => r.syntax?.queryableOperators.includes(op));
   if (banned.length) failures.push(`method syntax on a queryable: ${banned.join(', ')}`);
+  if (x.separateQuery && r.syntax) {
+    if (r.syntax.inlineAwaitedQueries > 0) failures.push('query executed inline instead of via a variable');
+    else if (r.syntax.awaitedQueryLocals < 1) failures.push('no query variable was awaited');
+  }
   return failures;
 }
 
