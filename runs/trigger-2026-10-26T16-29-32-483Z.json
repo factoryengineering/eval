@@ -1,0 +1,4145 @@
+{
+  "runId": "2026-10-26T16-29-32-483Z",
+  "at": "2026-10-26T16:29:32.483Z",
+  "variants": [
+    {
+      "id": "none",
+      "description": ""
+    },
+    {
+      "id": "baseline",
+      "description": "Write Entity Framework Core LINQ queries."
+    },
+    {
+      "id": "full",
+      "description": "Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL."
+    },
+    {
+      "id": "no-scope",
+      "description": "Not for migrations, model configuration, or raw SQL."
+    },
+    {
+      "id": "no-exclusions",
+      "description": "Opinions for LINQ queries against an Entity Framework Core DbContext."
+    }
+  ],
+  "cells": [
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "scope": "all",
+      "rate": 0.7727272727272727,
+      "n": 66
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "scope": "negatives",
+      "rate": 0.6153846153846154,
+      "n": 39
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "scope": "scope",
+      "rate": 0.16666666666666666,
+      "n": 12
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "scope": "exclusions",
+      "rate": 0.4444444444444444,
+      "n": 9
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "scope": "all",
+      "rate": 0.8636363636363636,
+      "n": 66
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "scope": "positives",
+      "rate": 0.9629629629629629,
+      "n": 27
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "scope": "negatives",
+      "rate": 0.7948717948717948,
+      "n": 39
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "scope": "scope",
+      "rate": 0.5833333333333334,
+      "n": 12
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "scope": "exclusions",
+      "rate": 0.6666666666666666,
+      "n": 9
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "scope": "all",
+      "rate": 0.9090909090909091,
+      "n": 66
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "scope": "negatives",
+      "rate": 0.8461538461538461,
+      "n": 39
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "scope": "scope",
+      "rate": 0.6666666666666666,
+      "n": 12
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "scope": "exclusions",
+      "rate": 0.7777777777777778,
+      "n": 9
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "scope": "all",
+      "rate": 0.8787878787878788,
+      "n": 66
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "scope": "positives",
+      "rate": 0.9629629629629629,
+      "n": 27
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "scope": "negatives",
+      "rate": 0.8205128205128205,
+      "n": 39
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "scope": "scope",
+      "rate": 0.5,
+      "n": 12
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "scope": "exclusions",
+      "rate": 0.8888888888888888,
+      "n": 9
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.9393939393939394,
+      "n": 66
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 0.9629629629629629,
+      "n": 27
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 0.9230769230769231,
+      "n": 39
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 0.9166666666666666,
+      "n": 12
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 0.7777777777777778,
+      "n": 9
+    }
+  ],
+  "verdicts": [
+    {
+      "model": "gpt-6-luna",
+      "clause": "scope",
+      "withRate": 0.6666666666666666,
+      "withoutRate": 0.5,
+      "delta": 0.16666666666666663,
+      "verdict": "not-load-bearing"
+    },
+    {
+      "model": "gpt-6-luna",
+      "clause": "exclusions",
+      "withRate": 0.7777777777777778,
+      "withoutRate": 0.7777777777777778,
+      "delta": 0,
+      "verdict": "not-load-bearing"
+    }
+  ],
+  "trials": [
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "ef-modeling"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "ef-modeling"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\",\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    }
+  ]
+}

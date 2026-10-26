@@ -32,7 +32,7 @@ switch (cmd) {
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
     if (flag('trials')) config.trials = Number(flag('trials'));
     const spec = JSON.parse(await readFile('evals/trigger.json', 'utf8')) as TriggerSpec;
-    const { trials, variants } = await runTrigger(spec, config.models, config.trials, descriptionOf(skill), undefined, 4, (t) =>
+    const { trials, variants } = await runTrigger(spec, config.models, config.trials, descriptionOf(skill), undefined, 6, (t) =>
       console.error(`${t.model} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`));
     const cells = rates(trials, spec);
     const verdicts = clauseVerdicts(cells, spec, config.minDelta);

@@ -1,0 +1,4117 @@
+{
+  "runId": "2026-10-26T16-27-21-421Z",
+  "at": "2026-10-26T16:27:21.421Z",
+  "variants": [
+    {
+      "id": "none",
+      "description": ""
+    },
+    {
+      "id": "baseline",
+      "description": "Write Entity Framework Core LINQ queries."
+    },
+    {
+      "id": "full",
+      "description": "Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL."
+    },
+    {
+      "id": "no-scope",
+      "description": "Not for migrations, model configuration, or raw SQL."
+    },
+    {
+      "id": "no-exclusions",
+      "description": "Opinions for LINQ queries against an Entity Framework Core DbContext."
+    }
+  ],
+  "cells": [
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "scope": "all",
+      "rate": 0.9242424242424242,
+      "n": 66
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "scope": "negatives",
+      "rate": 0.8717948717948718,
+      "n": 39
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "scope": "scope",
+      "rate": 0.75,
+      "n": 12
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "scope": "exclusions",
+      "rate": 0.7777777777777778,
+      "n": 9
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "scope": "all",
+      "rate": 0.9090909090909091,
+      "n": 66
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "scope": "negatives",
+      "rate": 0.8461538461538461,
+      "n": 39
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "scope": "scope",
+      "rate": 1,
+      "n": 12
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "scope": "exclusions",
+      "rate": 0.3333333333333333,
+      "n": 9
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "scope": "all",
+      "rate": 0.9848484848484849,
+      "n": 66
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "scope": "negatives",
+      "rate": 0.9743589743589743,
+      "n": 39
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "scope": "scope",
+      "rate": 1,
+      "n": 12
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "scope": "exclusions",
+      "rate": 0.8888888888888888,
+      "n": 9
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "scope": "all",
+      "rate": 0.8787878787878788,
+      "n": 66
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "scope": "positives",
+      "rate": 0.9629629629629629,
+      "n": 27
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "scope": "negatives",
+      "rate": 0.8205128205128205,
+      "n": 39
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "scope": "scope",
+      "rate": 0.5833333333333334,
+      "n": 12
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "scope": "exclusions",
+      "rate": 0.7777777777777778,
+      "n": 9
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.9242424242424242,
+      "n": 66
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 1,
+      "n": 27
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 0.8717948717948718,
+      "n": 39
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 1,
+      "n": 12
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 0.4444444444444444,
+      "n": 9
+    }
+  ],
+  "verdicts": [
+    {
+      "model": "sonnet-5.5",
+      "clause": "scope",
+      "withRate": 1,
+      "withoutRate": 0.5833333333333334,
+      "delta": 0.41666666666666663,
+      "verdict": "load-bearing"
+    },
+    {
+      "model": "sonnet-5.5",
+      "clause": "exclusions",
+      "withRate": 0.8888888888888888,
+      "withoutRate": 0.4444444444444444,
+      "delta": 0.4444444444444444,
+      "verdict": "load-bearing"
+    }
+  ],
+  "trials": [
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "This is an EF Core N+1 query refactor. The `ef-linq` skill has no description, but its name fits LINQ query rewrites like this one, so I'm including it. `ef-modeling` could also apply to relationship configuration, but the fix here is just `Include` in the query.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "Two skills could plausibly match. `ef-linq` has no description, so I can't tell what it covers, and its name suggests Entity Framework LINQ rather than LINQ to XML. `microsoft-code-reference` covers .NET library code and API signatures, which fits writing LINQ to XML code against an XDocument.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about LINQ to XML on an XDocument. The `ef-linq` skill has no description, and it would most likely cover LINQ for Entity Framework, not XML. The Microsoft code reference skill could match for .NET API signatures, but this is a basic coding task I can do without it.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The request is to filter a DataTable's rows with LINQ. The `ef-linq` skill is listed with no description, so it may not be the right fit. DataTable LINQ is LINQ to DataSet, not Entity Framework. The microsoft-code-reference skill covers .NET API usage and signatures, such as `AsEnumerable()` and `Field<T>()`, so it's the closest match.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The task is a LINQ sum over a parsed JsonArray. That is plain .NET code with no Entity Framework involved. The `ef-linq` skill has an empty description, so I can't rely on it. The Microsoft code reference skill could help verify the System.Text.Json API signatures, since JsonArray and JsonNode are Microsoft SDK types.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "The request is about summing an `amount` field across a parsed `JsonArray` with LINQ. That is plain .NET code, so I'd pick one skill. `ef-linq` has no description, but its name is the closest fit for a LINQ question. I'm treating the `JsonArray` as a System.Text.Json type, which `microsoft-code-reference` could also cover, but a short LINQ sum doesn't need it.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The task is a LINQ sum over a parsed JsonArray (System.Text.Json.Nodes). The `ef-linq` skill has no description, but its name matches LINQ. It is about EF Core, though, and this task is plain LINQ over JSON with no Entity Framework involved. The `microsoft-code-reference` skill fits better, because the task is .NET code that touches a Microsoft API (JsonArray) and the skill checks API signatures.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The task is writing Dapper code that touches a Microsoft library (.NET and SQL Server), so the microsoft-code-reference skill is the one that fits. Of the first skill list, none are about Dapper: sql-tuning covers execution plans and indexes, and ef-linq has no description.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "none",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "DataTable filtering with LINQ is LINQ to DataSet (`AsEnumerable()`), not Entity Framework Core. The ef-linq skill covers EF Core queries, so it doesn't match. No other skill matches.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about filtering a `DataTable` with LINQ (LINQ to DataSet), not Entity Framework Core. The `ef-linq` skill covers EF Core queries, so it doesn't match. The Microsoft code-reference skill could apply because this is .NET code, but the task is simple and I know the API already, so I'm not invoking it.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about LINQ over a parsed JsonArray (System.Text.Json.Nodes). That is plain C# LINQ, not Entity Framework Core. The ef-linq skill covers EF Core queries, so it doesn't match. The Microsoft code-reference skill could help verify the JsonArray API, but the task is simple and doesn't clearly need it.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "baseline",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "The query fails because EF Core can't translate a custom method (`Slug.IsValid`) into SQL. That is a LINQ query problem against a DbContext. The ef-linq skill covers it, and the other EF skills are explicitly excluded or irrelevant.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about LINQ over an in-memory parsed JsonArray (System.Text.Json.Nodes). It doesn't involve an EF Core DbContext, so ef-linq doesn't apply. Microsoft SDK guidance could arguably help with JsonArray API signatures, but it isn't clearly required for a simple sum.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about summing a field over a parsed JsonArray with LINQ. That is plain in-memory LINQ over JSON, with no Entity Framework DbContext involved. The ef-linq skill is explicitly for queries against an EF Core DbContext, so it doesn't apply. The microsoft-code-reference skill could help check System.Text.Json or Newtonsoft API signatures, but the task is simple enough that I wouldn't invoke it.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The request is about raw SQL through ExecuteSqlRawAsync in EF Core. The ef-linq skill explicitly excludes raw SQL, and none of the other EF skills (migrations, modeling) match. The sql-tuning skill covers slow SQL diagnosis, which isn't what's being asked. microsoft-code-reference could apply because the request involves a .NET and EF Core API signature, and that skill is meant for any code that touches a Microsoft SDK or .NET library.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "full",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The task is writing an EF Core LINQ query. The `ef-linq` skill's description is \"Not for migrations, model configuration, or raw SQL.\" That is a negative-only description, but a LINQ query is what it covers. The `microsoft-code-reference` skill also applies, since it covers .NET libraries and Microsoft SDK code.\n\n[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "Two skills in the list could apply to a task like this. The first is **ef-linq**, which covers querying with LINQ. Its description is \"Not for migrations, model configuration, or raw SQL,\" and this request is a plain query, so it fits. The second is **microsoft-code-reference**, which is for Microsoft SDK and .NET library code. Fetching orders with their lines through EF Core would normally match it, but the request is a simple query that doesn't need API verification, so I'm leaving it out.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "The request is a LINQ query through EF Core (orders with their lines, filtered and ordered). That matches **ef-linq**. Its description says \"Not for migrations, model configuration, or raw SQL\", and this task is none of those.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "The error comes from an EF Core LINQ query, so `ef-linq` is the closest match. Its description says \"Not for migrations, model configuration, or raw SQL\", and this issue is none of those. `microsoft-code-reference` could also apply, since this is .NET code. The fix itself is about LINQ translation, though, so I'm leaving it out.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "The request is to add paging to a method that queries `db.Posts` ordered by `Views`. That is a LINQ query change (Skip/Take). The `ef-linq` skill is described only as \"Not for migrations, model configuration, or raw SQL\", which is a negative description with no positive scope. By its name it still fits LINQ query work, and this request isn't a migration, model configuration, or raw SQL.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "The task is plain in-memory LINQ over a `List<Post>`. It doesn't involve EF migrations, EF model configuration, SQL tuning, xUnit tests, React components or commits. The `ef-linq` skill is marked \"Not for migrations, model configuration, or raw SQL\", but it's the closest match for LINQ grouping. I'm treating it as covering LINQ queries in general, and I'm assuming that includes in-memory ones. The description doesn't say, so this is a judgment call.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The task is in-memory LINQ over a `List<Post>`. The `ef-linq` skill is described as \"Not for migrations, model configuration, or raw SQL\", which doesn't clearly cover in-memory grouping. No other skill fits either.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is to write LINQ to XML code against an XDocument. The `ef-linq` skill is described only as \"Not for migrations, model configuration, or raw SQL\", and it doesn't say it covers LINQ to XML. The Microsoft code-reference skill could help verify API signatures, but the request doesn't ask for that, and I know the XDocument API well enough without it. No skill clearly matches.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The task is LINQ to XML on an XDocument, which is plain .NET code. The `ef-linq` skill is marked \"Not for migrations, model configuration, or raw SQL\", and it's about EF Core LINQ, not LINQ to XML. The `microsoft-code-reference` skill fits better. It covers .NET libraries and checking API signatures.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "Filtering a DataTable with LINQ is a plain LINQ to DataSet task. The `ef-linq` skill is marked \"Not for migrations, model configuration, or raw SQL\" and is meant for EF Core queries, so it doesn't fit a DataTable. I'm not invoking `microsoft-code-reference` either, because the task needs no API lookup.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The request is to use LINQ to XML on an XDocument. The `ef-linq` skill's description says \"Not for migrations, model configuration, or raw SQL\". That is a negative-only description, so it isn't clearly about LINQ to XML. The `microsoft-code-reference` skill covers writing .NET code that touches Microsoft libraries, and LINQ to XML (System.Xml.Linq) is part of that. Still, the task is simple and doesn't clearly require a skill lookup.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "The request is to filter a DataTable's rows with LINQ. The only skill that fits is **ef-linq**, but its description says \"Not for migrations, model configuration, or raw SQL\". A DataTable isn't an EF Core query, and none of those exclusions apply to this task. The Microsoft docs skills are for understanding concepts, and this is a simple code task. I'm choosing ef-linq as the closest match, though the fit is loose.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The request is to filter a DataTable's rows with LINQ. The `ef-linq` skill is described as \"Not for migrations, model configuration, or raw SQL\", which doesn't say what it covers. A DataTable is not Entity Framework, so I'm not confident it applies. The other skills don't match, and the Microsoft code reference skill could help with the API signatures, though the task is simple.\n\n`microsoft-code-reference` is the closest match, because it covers .NET library code (DataTable, `AsEnumerable`, `DataRowExtensions`).\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "The request is a LINQ sum over a parsed JsonArray. The only LINQ skill listed is **ef-linq**, and its description reads \"Not for migrations, model configuration, or raw SQL.\" That is an exclusion list, not a description of what it does, but it is the only skill about LINQ. Nothing in the request involves EF Core, though, and a JsonArray is in-memory data. The Microsoft code-reference skill could apply to .NET API signatures, but the task is simple enough that it isn't needed.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "The request is about using LINQ to sum a field over a parsed JsonArray. The `ef-linq` skill is the nearest match, but its description says \"Not for migrations, model configuration, or raw SQL,\" and this task involves none of those. It's plain LINQ over a JsonArray. No Entity Framework is involved. The Microsoft code-reference skill also fits, because it covers .NET API signatures for System.Text.Json.Nodes, but the task is simple enough that it isn't clearly needed.\n\nThe `ef-linq` skill is the one that matches the LINQ part of the request.\n\n[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "Two skills could apply here. The ef-linq skill says \"Not for ... raw SQL\", so it is out. No ef-* skill is described as covering raw SQL, and sql-tuning is about slow queries, which this isn't.\n\nThe microsoft-code-reference skill covers writing code against .NET libraries and checking API signatures. EF Core's `FromSqlRaw` or `FromSql` is that kind of API, so it is the closest match.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-scope",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-explicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-report",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-query",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "review-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "refactor-n-plus-one",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-untranslatable",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "add-paging",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "in-memory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-xml",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "Two skills could apply. **ef-linq** doesn't, because this is LINQ to XML and has nothing to do with Entity Framework Core. **microsoft-code-reference** does: it covers .NET library code and checking API signatures, and `System.Xml.Linq` is a .NET library.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "This request is about filtering a DataTable with LINQ, which is LINQ to DataSet. It isn't a query against an Entity Framework Core DbContext, so ef-linq doesn't apply. Another candidate is microsoft-code-reference, because the task involves .NET code. It's meant for finding verified samples and API signatures for Microsoft SDKs. This is a simple `AsEnumerable().Where(...)` filter, so it doesn't clearly match.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-datatable",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "DataTable filtering with LINQ (LINQ to DataSet) is not Entity Framework Core. The `ef-linq` skill covers DbContext queries, so it doesn't match. The `microsoft-code-reference` skill covers .NET library code and API signatures, and it may apply.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is about LINQ over a parsed JsonArray (System.Text.Json.Nodes), not an EF Core DbContext query. The ef-linq skill covers LINQ against an EF Core DbContext, so it doesn't clearly apply. The microsoft-code-reference skill could help with verifying .NET API signatures, but the task is simple enough that it isn't clearly needed.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "The request is about LINQ over a parsed JsonArray (System.Text.Json.Nodes), not an Entity Framework Core DbContext. That rules out ef-linq. The microsoft-code-reference skill could apply because this is .NET code that uses a Microsoft API (JsonArray), and it would help check the API signatures.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "from-sql-raw",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "ef-linq"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\",\"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "linq-json",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"microsoft-code-reference\"]\n\nHmm, let me reconsider: the task is raw SQL via EF Core's ExecuteSqlRawAsync, a bulk update. Of the listed skills, ef-linq covers LINQ queries only, and ef-modeling covers entity configuration. Neither fits a raw SQL bulk update. The microsoft-code-reference skill fits better, since it verifies API signatures for .NET libraries.\n\n[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling",
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\", \"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "exec-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-linq",
+        "microsoft-code-reference"
+      ],
+      "pass": false,
+      "output": "[\"ef-linq\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "dapper",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fluent-config",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "slow-sql",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "sql-tuning"
+      ],
+      "pass": true,
+      "output": "[\"sql-tuning\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "django",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "unit-tests",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    }
+  ]
+}
