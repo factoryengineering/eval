@@ -1,0 +1,300 @@
+{
+  "summary": {
+    "runId": "2026-10-26T15-49-12-875Z",
+    "at": "2026-10-26T15:49:12.875Z",
+    "skillHash": "74acfcbbdcff",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "sonnet-5.5",
+        "line": "values-only",
+        "withRate": 0.9,
+        "withoutRate": 0.5,
+        "delta": 0.4,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "sonnet-5.5": {
+        "input": 5005,
+        "output": 2481,
+        "estimated": true,
+        "calls": 20
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 234,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; }\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 98,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var postSummaries =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var result = await postSummaries.ToListAsync(cancellationToken);\n    return result;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 234,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<PostSummary>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 234,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postSummaries =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var results = await postSummaries.ToListAsync(cancellationToken);\n    return results;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 234,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 98,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var postSummaries =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var result = await postSummaries.ToListAsync(cancellationToken);\n    return result;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 234,
+      "outputTokens": 140,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 99,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<PostSummary>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n    return summaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 240,
+      "outputTokens": 112,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext blogContext,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in blogContext.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleAsync(cancellationToken);\n\n    matchingPost.Title = newTitle;\n\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 190,
+      "estimated": true,
+      "output": "Loading a post to modify it needs a tracked entity, so the read-only \"project values\" rule doesn't apply. The query is in query syntax, and the async terminal is executed in a separate statement.\n\n```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (matchingPost is null)\n    {\n        throw new InvalidOperationException($\"Post {postId} was not found.\");\n    }\n\n    matchingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 240,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleAsync(cancellationToken);\n\n    matchingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 171,
+      "estimated": true,
+      "output": "Here is the method. The ef-linq rules apply as follows. The post is loaded for modification, so it must be a tracked entity, and the query is not read-only. I wrote the query in query syntax, assigned it to a `var`, and executed it in a separate statement with `await`.\n\n```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var existingPost = await postQuery.SingleAsync(cancellationToken);\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 240,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in blogContext.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleAsync(cancellationToken);\n\n    matchingPost.Title = newTitle;\n\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 146,
+      "estimated": true,
+      "output": "Because this method changes data, it has to load a tracked entity. The query therefore selects the entity itself and not a projection, and it leaves out `AsNoTracking()`.\n\n```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleAsync(cancellationToken);\n\n    matchingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 240,
+      "outputTokens": 104,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var existingPost = await postQuery.SingleAsync(cancellationToken);\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "Because the method changes the entity, it has to load a tracked entity. That means no projection. I used query syntax and kept the `var` and `await` as separate statements.\n\n```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var existingPost = await postQuery.SingleAsync(cancellationToken);\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 240,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleAsync(cancellationToken);\n\n    matchingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 266,
+      "outputTokens": 195,
+      "estimated": true,
+      "output": "The skill's rules govern queries. This method loads a post in order to modify it, so the entity must be tracked. I used query syntax, a `var` query, a separate awaited execution, and the cancellation token.\n\n```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (matchingPost is null)\n    {\n        throw new InvalidOperationException($\"Post {postId} was not found.\");\n    }\n\n    matchingPost.Title = newTitle;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    }
+  ]
+}

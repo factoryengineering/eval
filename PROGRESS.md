@@ -85,6 +85,14 @@ Full 7-line skill, 5 trials per line, three models. Runs 2026-10-26T15-31-58 (so
 - **Result:** every line passes 100% with the skill on every model (7 of 7 lines x 3 models). All 7 lines are load bearing on at least 2 of 3 models, so 100% of lines (above the 90% bar) earn their place. 19 of 21 line-model cells are load bearing.
 - **Reasoning:** the two exceptions are model-specific (sonnet already filters in the database, luna already names variables well). Neither line is dead weight, because it is decisive on the other models.
 
+### Iteration 9 - precedence probe and grader refactor (hash 74acfcbbdcff, skill unchanged)
+- **Baseline:** Iteration 8 skill, all lines 5/5 with the skill.
+- **Hypothesis:** `values-only` ("never entities") conflicts with workflows that must load a tracked entity, so the skill will break a legitimate write path. If true, a scoping line would be load bearing.
+- **Change:** new case `load-entity-for-edit` (load a post, change `Title`, save; must use `SaveChangesAsync`, a tracked-load method and no `AsNoTracking`/`ExecuteUpdate`), targeting `values-only`. No skill change (RED probe).
+- **Result (5 trials, without -> with, pooled with the read-only case):** haiku-5.5 0.50 -> 1.00, sonnet-5.5 0.50 -> 0.90, gpt-6-luna 1.00 -> 1.00. On the new case alone the skill passed 14/15 trials; every model without the skill passed 5/5.
+- **Reasoning:** hypothesis rejected. The models read "read-only queries" as scoping `values-only` and load a tracked entity for writes. The one failure (sonnet) was a grader false positive: the model's prose said it "leaves out `AsNoTracking()`" and the regex matched prose. No precedence line is justified, so none was added (adding one would be dead weight).
+- **Refactor:** `grade()` now checks only fenced code blocks when any are present (`src/grade.ts`, unit test added). Re-grading all stored trials from the Iteration 8 and later runs gave identical results except that one false positive, so earlier conclusions stand.
+
 ## Caveats
 
 - Token counts are estimated (chars / 4) for `devin-cli` models; consistent between runs, so deltas are valid.
