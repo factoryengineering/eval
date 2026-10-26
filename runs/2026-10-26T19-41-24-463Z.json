@@ -1,0 +1,1412 @@
+{
+  "summary": {
+    "runId": "2026-10-26T19-41-24-463Z",
+    "at": "2026-10-26T19:41:24.463Z",
+    "skillHash": "4d208742187e",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "gpt-6-luna",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0.4,
+        "delta": 0.6,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "separate-spec",
+        "withRate": 0.8,
+        "withoutRate": 0.6,
+        "delta": 0.20000000000000007,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "distinct-result-name",
+        "withRate": 0.7,
+        "withoutRate": 0.7,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "keyword-syntax",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "gpt-6-luna",
+        "line": "values-only",
+        "withRate": 1,
+        "withoutRate": 0.6,
+        "delta": 0.4,
+        "verdict": "load-bearing"
+      }
+    ],
+    "guards": [
+      {
+        "model": "gpt-6-luna",
+        "caseId": "load-entity-for-edit",
+        "rate": 1,
+        "n": 5
+      }
+    ],
+    "tokens": {
+      "gpt-6-luna": {
+        "input": 32000,
+        "output": 13712,
+        "estimated": true,
+        "calls": 95
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "runtime BlogQueries.GetPostsWithTitlePrefixAsync: InvalidOperationException: The LINQ expression 'DbSet<Post>()\n    .Where(p => TitleRules.HasPrefix(\n        title: p.Title, \n        prefix: @prefix))' could not be translated. Additional information: Translation of method 'EfF",
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\nnamespace EfFixtures;\n\npublic sealed record PostResult(int Id, string Title);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostResult>> GetPostsWithTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where TitleRules.HasPrefix(post.Title, prefix)\n            select new PostResult(post.Id, post.Title);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 362,
+      "outputTokens": 175,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<List<Post>> GetPostsByTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var postsQuery =\n            from post in context.Posts\n            where post.Title.StartsWith(prefix)\n            select new Post\n            {\n                Id = post.Id,\n                Title = post.Title\n            };\n\n        var posts = await postsQuery.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "runtime BlogQueries.GetPostsWithTitlePrefixAsync: InvalidOperationException: The LINQ expression 'DbSet<Post>()\n    .Where(p => TitleRules.HasPrefix(\n        title: p.Title, \n        prefix: @prefix))' could not be translated. Additional information: Translation of method 'EfF",
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostResult(int Id, string Title);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostResult>> GetPostsWithTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where TitleRules.HasPrefix(post.Title, prefix)\n            select new PostResult(post.Id, post.Title);\n\n        var results = await query.ToListAsync(cancellationToken);\n        return results;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 362,
+      "outputTokens": 172,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record PostSummary(int Id, string Title);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> GetPostsStartingWithAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.StartsWith(prefix)\n            select new PostSummary(post.Id, post.Title);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "runtime PostQueries.GetPostsWithTitlePrefixAsync: InvalidOperationException: The LINQ expression 'DbSet<Post>()\n    .Where(p => TitleRules.HasPrefix(\n        title: p.Title, \n        prefix: @prefix))' could not be translated. Additional information: Translation of method 'EfF",
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 175,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostResult(int Id, string Title);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostResult>> GetPostsWithTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where TitleRules.HasPrefix(post.Title, prefix)\n            select new PostResult(post.Id, post.Title);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 362,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Post>> GetPostsWithTitlePrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    var posts = await postsQuery.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "runtime PostQueries.GetPostsWithTitlePrefixAsync: InvalidOperationException: The LINQ expression 'DbSet<Post>()\n    .Where(p => TitleRules.HasPrefix(\n        title: p.Title, \n        prefix: @prefix))' could not be translated. Additional information: Translation of method 'EfF",
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int Id, string Title);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> GetPostsWithTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where TitleRules.HasPrefix(post.Title, prefix)\n            select new PostSummary(post.Id, post.Title);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 362,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Post>> GetPostsByTitlePrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "runtime PostQueries.GetPostsWithTitlePrefixAsync: InvalidOperationException: The LINQ expression 'DbSet<Post>()\n    .Where(p => TitleRules.HasPrefix(\n        title: p.Title, \n        prefix: @prefix))' could not be translated. Additional information: Translation of method 'EfF",
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 153,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record PostSummary(int Id, string Title);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> GetPostsWithTitlePrefixAsync(\n        BlogContext context,\n        string prefix,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where TitleRules.HasPrefix(post.Title, prefix)\n            select new PostSummary(post.Id, post.Title);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 362,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Post>> GetPostsStartingWithAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 322,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing System.Collections.Generic;\nusing System.Threading.Tasks;\n\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 155,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class BlogQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var titlesQuery =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await titlesQuery.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 322,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 157,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 322,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var titlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await titlesQuery.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 322,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 147,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 322,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 155,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var titlesQuery =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await titlesQuery.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 335,
+      "outputTokens": 147,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogLoader\n{\n    public static async Task<List<Blog>> LoadBlogsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var blogsQuery = context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery();\n\n        var blogs = await blogsQuery.ToListAsync(cancellationToken);\n        return blogs;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 352,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\n\npublic static async Task<List<Blog>> LoadBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "sql commands 1 < 3"
+      ],
+      "inputTokens": 335,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery = context.Blogs\n        .Include(blog => blog.Posts)\n        .Include(blog => blog.Contributors);\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 352,
+      "outputTokens": 164,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<List<Blog>> LoadBlogsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from blog in context.Blogs\n                .Include(blog => blog.Posts)\n                .Include(blog => blog.Contributors)\n                .AsSplitQuery()\n            select blog;\n\n        var blogs = await query.ToListAsync(cancellationToken);\n        return blogs;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "sql commands 1 < 3"
+      ],
+      "inputTokens": 335,
+      "outputTokens": 92,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n        select blog;\n\n    return await blogsQuery\n        .Include(blog => blog.Posts)\n        .Include(blog => blog.Contributors)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 352,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class BlogLoader\n{\n    public static async Task<List<Blog>> LoadBlogsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var blogsQuery = context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery();\n\n        var blogs = await blogsQuery.ToListAsync(cancellationToken);\n        return blogs;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 335,
+      "outputTokens": 104,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 352,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogLoader\n{\n    public static async Task<List<Blog>> LoadBlogsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var blogsQuery =\n            from blog in context.Blogs\n                .Include(blog => blog.Posts)\n                .Include(blog => blog.Contributors)\n                .AsSplitQuery()\n            select blog;\n\n        var blogs = await blogsQuery.ToListAsync(cancellationToken);\n        return blogs;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "no public method was invoked"
+      ],
+      "inputTokens": 335,
+      "outputTokens": 92,
+      "estimated": true,
+      "output": "```csharp\nasync Task<List<Blog>> LoadBlogsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n        select blog;\n\n    var blogs = await blogsQuery\n        .Include(blog => blog.Posts)\n        .Include(blog => blog.Contributors)\n        .ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 352,
+      "outputTokens": 167,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogLoader\n{\n    public static async Task<List<Blog>> LoadBlogsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var blogsQuery =\n            from blog in context.Blogs\n                .Include(blog => blog.Posts)\n                .Include(blog => blog.Contributors)\n                .AsSplitQuery()\n            select blog;\n\n        var blogs = await blogsQuery.ToListAsync(cancellationToken);\n        return blogs;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var titles = await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 325,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await postTitlesQuery.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /await\\s+\\w+\\.\\w+Async\\(/"
+      ],
+      "inputTokens": 347,
+      "outputTokens": 111,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitlesQuery\n        .ToListAsync(cancellationToken);\n\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 325,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var titles = await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 325,
+      "outputTokens": 157,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var titles = await query.ToListAsync(cancellationToken);\n        return titles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "get-blog-by-id",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 324,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class BlogQueries\n{\n    public static async Task<Blog?> GetBlogAsync(\n        BlogContext context,\n        int blogId,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from blog in context.Blogs\n            where blog.Id == blogId\n            select blog;\n\n        return await query.SingleOrDefaultAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "get-blog-by-id",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 88,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    var result = await blogQuery.SingleOrDefaultAsync(cancellationToken);\n    return result;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "get-blog-by-id",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 324,
+      "outputTokens": 80,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    return await query.SingleOrDefaultAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "get-blog-by-id",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<Blog?> GetBlogAsync(\n        BlogContext context,\n        int blogId,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from blog in context.Blogs\n            where blog.Id == blogId\n            select blog;\n\n        var returnedBlog = await query.FirstOrDefaultAsync(cancellationToken);\n        return returnedBlog;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "get-blog-by-id",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 324,
+      "outputTokens": 80,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    return await query.FirstOrDefaultAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "get-blog-by-id",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 88,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    var result = await blogQuery.SingleOrDefaultAsync(cancellationToken);\n    return result;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "get-blog-by-id",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 324,
+      "outputTokens": 80,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    return await query.SingleOrDefaultAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "get-blog-by-id",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 161,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogQueries\n{\n    public static async Task<Blog?> GetBlogByIdAsync(\n        BlogContext context,\n        int blogId,\n        CancellationToken cancellationToken)\n    {\n        var blogQuery =\n            from blog in context.Blogs\n            where blog.Id == blogId\n            select new Blog\n            {\n                Id = blog.Id,\n                Name = blog.Name\n            };\n\n        var result = await blogQuery.SingleOrDefaultAsync(cancellationToken);\n        return result;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "get-blog-by-id",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 324,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class BlogQueries\n{\n    public static async Task<Blog?> GetBlogByIdAsync(\n        BlogContext context,\n        int blogId,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from blog in context.Blogs\n            where blog.Id == blogId\n            select blog;\n\n        return await query.FirstOrDefaultAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "get-blog-by-id",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 86,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Blog?> GetBlogByIdAsync(\n    BlogContext context,\n    int blogId,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n        where blog.Id == blogId\n        select blog;\n\n    var result = await query.SingleOrDefaultAsync(cancellationToken);\n    return result;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "rename-contributor",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 331,
+      "outputTokens": 132,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var contributor = await context.Contributors\n        .FindAsync(new object[] { contributorId }, cancellationToken);\n\n    if (contributor is null)\n    {\n        throw new InvalidOperationException($\"Contributor with ID {contributorId} was not found.\");\n    }\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "rename-contributor",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 350,
+      "outputTokens": 159,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var contributorQuery =\n        from contributor in context.Contributors\n        where contributor.Id == contributorId\n        select contributor;\n\n    var contributor = await contributorQuery.FirstOrDefaultAsync(cancellationToken);\n\n    if (contributor is null)\n    {\n        throw new InvalidOperationException($\"Contributor {contributorId} was not found.\");\n    }\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "rename-contributor",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 233,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class ContributorService\n{\n    public static async Task RenameContributorAsync(\n        BlogContext blogContext,\n        int contributorId,\n        string newName,\n        CancellationToken cancellationToken)\n    {\n        var contributorQuery =\n            from contributor in blogContext.Contributors\n            where contributor.Id == contributorId\n            select contributor;\n\n        var contributor = await contributorQuery.SingleOrDefaultAsync(cancellationToken);\n\n        if (contributor is null)\n        {\n            throw new InvalidOperationException(\n                $\"Contributor with ID {contributorId} was not found.\");\n        }\n\n        contributor.Name = newName;\n        await blogContext.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "rename-contributor",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 350,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken = default)\n{\n    var contributor = await context.Contributors\n        .SingleOrDefaultAsync(\n            contributor => contributor.Id == contributorId,\n            cancellationToken);\n\n    if (contributor is null)\n    {\n        throw new InvalidOperationException(\n            $\"Contributor with id {contributorId} was not found.\");\n    }\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "rename-contributor",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 159,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var contributorQuery =\n        from contributor in context.Contributors\n        where contributor.Id == contributorId\n        select contributor;\n\n    var contributor = await contributorQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (contributor is null)\n    {\n        throw new InvalidOperationException($\"Contributor {contributorId} was not found.\");\n    }\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "rename-contributor",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 350,
+      "outputTokens": 219,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class ContributorService\n{\n    public static async Task RenameContributorAsync(\n        BlogContext context,\n        int contributorId,\n        string newName,\n        CancellationToken cancellationToken)\n    {\n        var contributorQuery =\n            from contributor in context.Contributors\n            where contributor.Id == contributorId\n            select contributor;\n\n        var contributorToRename =\n            await contributorQuery.SingleOrDefaultAsync(cancellationToken)\n            ?? throw new InvalidOperationException(\n                $\"Contributor with id {contributorId} was not found.\");\n\n        contributorToRename.Name = newName;\n\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "rename-contributor",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 148,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from contributor in context.Contributors\n        where contributor.Id == contributorId\n        select contributor;\n\n    var contributor = await query.SingleOrDefaultAsync(cancellationToken)\n        ?? throw new KeyNotFoundException(\n            $\"Contributor with ID {contributorId} was not found.\");\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "rename-contributor",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 350,
+      "outputTokens": 215,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class ContributorService\n{\n    public static async Task RenameContributorAsync(\n        BlogContext context,\n        int contributorId,\n        string newName,\n        CancellationToken cancellationToken = default)\n    {\n        var contributorQuery =\n            from contributor in context.Contributors\n            where contributor.Id == contributorId\n            select contributor;\n\n        var contributor = await contributorQuery.SingleOrDefaultAsync(cancellationToken)\n            ?? throw new InvalidOperationException(\n                $\"Contributor with ID {contributorId} was not found.\");\n\n        contributor.Name = newName;\n\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "without",
+      "caseId": "rename-contributor",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 331,
+      "outputTokens": 115,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var contributor = await context.Contributors\n        .SingleAsync(contributor => contributor.Id == contributorId, cancellationToken);\n\n    contributor.Name = newName;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "distinct-result-name",
+      "variant": "with",
+      "caseId": "rename-contributor",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "compile: CS1931: The range variable 'contributor' conflicts with a previous declaration of 'contributor'"
+      ],
+      "inputTokens": 350,
+      "outputTokens": 170,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task RenameContributorAsync(\n    BlogContext context,\n    int contributorId,\n    string newName,\n    CancellationToken cancellationToken)\n{\n    var contributorQuery =\n        from contributor in context.Contributors\n        where contributor.Id == contributorId\n        select contributor;\n\n    var contributor = await contributorQuery.FirstOrDefaultAsync(cancellationToken);\n\n    if (contributor is null)\n    {\n        throw new InvalidOperationException($\"Contributor with ID {contributorId} was not found.\");\n    }\n\n    contributor.Name = newName;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 189,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed class PostSummary\n{\n    public string Title { get; init; } = string.Empty;\n    public int Views { get; init; }\n}\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> GetPopularPostsAsync(\n        BlogContext blogContext,\n        CancellationToken cancellationToken)\n    {\n        var query = blogContext.Posts\n            .Where(post => post.Views > 100)\n            .OrderByDescending(post => post.Views)\n            .Select(post => new PostSummary\n            {\n                Title = post.Title,\n                Views = post.Views\n            });\n\n        var popularPosts = await query.ToListAsync(cancellationToken);\n        return popularPosts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 349,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postsQuery = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var postSummaries = await postsQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 349,
+      "outputTokens": 120,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var popularPosts = await query.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> GetPopularPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query = context.Posts\n            .Where(post => post.Views > 100)\n            .OrderByDescending(post => post.Views)\n            .Select(post => new PostSummary(post.Title, post.Views));\n\n        var postSummaries = await query.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n\npublic sealed record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 349,
+      "outputTokens": 126,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 184,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> GetPopularPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var popularPostsQuery = context.Posts\n            .Where(post => post.Views > 100)\n            .OrderByDescending(post => post.Views)\n            .Select(post => new PostSummary(post.Title, post.Views));\n\n        var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n        return popularPosts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 349,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostView(string Title, int Views);\n\npublic static async Task<List<PostView>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostView(post.Title, post.Views);\n\n    var posts = await postsQuery.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 331,
+      "outputTokens": 183,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> GetPopularPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query = context.Posts\n            .Where(post => post.Views > 100)\n            .OrderByDescending(post => post.Views)\n            .Select(post => new PostSummary(post.Title, post.Views));\n\n        var popularPosts = await query.ToListAsync(cancellationToken);\n        return popularPosts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 349,
+      "outputTokens": 120,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var popularPosts = await query.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 230,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed class BlogViews\n{\n    public int BlogId { get; init; }\n    public int TotalViews { get; init; }\n}\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViews>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into posts\n            select new BlogViews\n            {\n                BlogId = posts.Key,\n                TotalViews = posts.Sum(post => post.Views)\n            };\n\n        var results = await query.ToListAsync(cancellationToken);\n        return results;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 237,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed class BlogPostViews\n{\n    public int BlogId { get; set; }\n    public int TotalViews { get; set; }\n}\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogPostViews>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsByBlog\n            select new BlogPostViews\n            {\n                BlogId = postsByBlog.Key,\n                TotalViews = postsByBlog.Sum(post => post.Views)\n            };\n\n        var results = await query.ToListAsync(cancellationToken);\n        return results;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\npublic sealed class BlogViews\n{\n    public int BlogId { get; init; }\n    public int TotalViews { get; init; }\n}\n\npublic static async Task<List<BlogViews>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId\n        into posts\n        select new BlogViews\n        {\n            BlogId = posts.Key,\n            TotalViews = posts.Sum(post => post.Views)\n        };\n\n    var results = await query.ToListAsync(cancellationToken);\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 200,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViews>> GetViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsByBlog\n            select new BlogViews(\n                postsByBlog.Key,\n                postsByBlog.Sum(post => post.Views));\n\n        var blogViews = await query.ToListAsync(cancellationToken);\n        return blogViews;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 207,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViews>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId\n            into posts\n            select new BlogViews(\n                posts.Key,\n                posts.Sum(post => post.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 235,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed class BlogViews\n{\n    public int BlogId { get; set; }\n    public int TotalViews { get; set; }\n}\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViews>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsByBlog\n            select new BlogViews\n            {\n                BlogId = postsByBlog.Key,\n                TotalViews = postsByBlog.Sum(post => post.Views)\n            };\n\n        var blogViews = await query.ToListAsync(cancellationToken);\n        return blogViews;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 167,
+      "estimated": true,
+      "output": "```csharp\npublic sealed class BlogViews\n{\n    public int BlogId { get; init; }\n    public int TotalViews { get; init; }\n}\n\npublic static async Task<List<BlogViews>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId\n        into blogPosts\n        select new BlogViews\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(post => post.Views)\n        };\n\n    var results = await query.ToListAsync(cancellationToken);\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record BlogViews(int BlogId, int TotalViews);\n\npublic static async Task<List<BlogViews>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into posts\n        select new BlogViews(\n            posts.Key,\n            posts.Sum(post => post.Views));\n\n    var results = await query.ToListAsync(cancellationToken);\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 212,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsByBlog\n            select new BlogViewTotal(\n                postsByBlog.Key,\n                postsByBlog.Sum(post => post.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 207,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class BlogQueries\n{\n    public static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsByBlog\n            select new BlogViewTotal(\n                postsByBlog.Key,\n                postsByBlog.Sum(post => post.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 311,
+      "outputTokens": 112,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<PostSummary>> ListPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n\npublic sealed record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 337,
+      "outputTokens": 161,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        List<PostSummary> posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts.AsNoTracking()\n            select new PostSummary(post.Title, post.Views);\n\n        var postSummaries = await query.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 337,
+      "outputTokens": 156,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        List<PostSummary> posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 311,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> ListPostSummariesAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        var summaries = await query.ToListAsync(cancellationToken);\n        return summaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 337,
+      "outputTokens": 158,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        var posts = await query.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 311,
+      "outputTokens": 201,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed class PostSummary\n{\n    public string Title { get; init; } = string.Empty;\n    public int Views { get; init; }\n}\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts.AsNoTracking()\n            select new PostSummary\n            {\n                Title = post.Title,\n                Views = post.Views\n            };\n\n        var postSummaries = await query.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 337,
+      "outputTokens": 155,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class BlogQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var postsQuery =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        var posts = await postsQuery.ToListAsync(cancellationToken);\n        return posts;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 311,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class PostQueries\n{\n    public static async Task<List<PostSummary>> ListPostsAsync(\n        BlogContext context,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        var postSummaries = await query.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 337,
+      "outputTokens": 124,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> ListPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postSummariesQuery =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogPostUpdater\n{\n    public static async Task UpdatePostTitleAsync(\n        BlogContext context,\n        int id,\n        string title,\n        CancellationToken cancellationToken)\n    {\n        var post = await context.Posts\n            .SingleOrDefaultAsync(post => post.Id == id, cancellationToken);\n\n        if (post is null)\n        {\n            return;\n        }\n\n        post.Title = title;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 176,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogPostUpdater\n{\n    public static async Task UpdatePostTitleAsync(\n        BlogContext context,\n        int postId,\n        string newTitle,\n        CancellationToken cancellationToken = default)\n    {\n        var post = await context.Posts\n            .SingleOrDefaultAsync(post => post.Id == postId, cancellationToken);\n\n        if (post is null)\n        {\n            throw new InvalidOperationException($\"Post with ID {postId} was not found.\");\n        }\n\n        post.Title = newTitle;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 199,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogPostUpdater\n{\n    public static async Task UpdatePostTitleAsync(\n        BlogContext context,\n        int id,\n        string title,\n        CancellationToken cancellationToken)\n    {\n        var postQuery =\n            from post in context.Posts\n            where post.Id == id\n            select post;\n\n        var postToUpdate = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n        if (postToUpdate is null)\n        {\n            throw new InvalidOperationException($\"Post with id {id} was not found.\");\n        }\n\n        postToUpdate.Title = title;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 181,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostUpdater\n{\n    public static async Task UpdatePostTitleAsync(\n        BlogContext context,\n        int id,\n        string title,\n        CancellationToken cancellationToken)\n    {\n        var postQuery =\n            from post in context.Posts\n            where post.Id == id\n            select post;\n\n        var postToUpdate = await postQuery.FirstOrDefaultAsync(cancellationToken);\n\n        if (postToUpdate is null)\n        {\n            throw new InvalidOperationException($\"Post with ID {id} was not found.\");\n        }\n\n        postToUpdate.Title = title;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 343,
+      "outputTokens": 169,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string title,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Id == id\n        select post;\n\n    var postToUpdate = await query.SingleOrDefaultAsync(cancellationToken);\n\n    if (postToUpdate is null)\n    {\n        throw new InvalidOperationException($\"Post with id {id} was not found.\");\n    }\n\n    postToUpdate.Title = title;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    }
+  ]
+}

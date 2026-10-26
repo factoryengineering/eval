@@ -3,3 +3,6 @@
 {"at":"2026-10-26T15:27:57.654Z","skillHash":"74acfcbbdcff","note":"Iter 2: translatable bans user-defined helpers and post-materialization filtering, names StartsWith"}
 {"at":"2026-10-26T16:23:54.982Z","skillHash":"4ae7fc1326d4","note":"Iter 11: description rewritten to scope + exclusions; dropped actions clause"}
 {"at":"2026-10-26T17:16:55.590Z","skillHash":"6ecabd3f5378","note":"Iter 13: ids moved to evals/skill-lines.json; deployed SKILL.md is clean and byte-identical to the rendered text evaluated before"}
+{"at":"2026-10-26T18:57:17.343Z","skillHash":"4d208742187e","note":"Iter 14: add distinct-result-name line after compile oracle showed range-variable clash in guard"}
+{"at":"2026-10-26T19:14:23.689Z","skillHash":"aaa9a71ae440","note":"Iter 15: distinct-result-name reworded with a concrete example"}
+{"at":"2026-10-26T19:31:21.139Z","skillHash":"4d208742187e","note":"Iter 16: revert distinct-result-name to the shorter wording (example did not help)"}

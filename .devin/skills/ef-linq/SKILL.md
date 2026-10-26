@@ -7,6 +7,7 @@ Rules for EF Core LINQ queries:
 - Use async terminals such as `ToListAsync(cancellationToken)` and pass the `CancellationToken`.
 - Use `AsSplitQuery()` when `Include`-ing more than one collection.
 - Assign the query to a `var`, then execute it in a separate statement with `await`.
+- Give the awaited result a different name from the query's range variable.
 - Prefer query syntax (`from ... select`) over extension-method syntax.
 - Use meaningful words for variable and lambda parameter names.
 - Read-only queries project values, never entities, so nothing is tracked: never write `AsNoTracking()`.

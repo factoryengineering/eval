@@ -3,6 +3,7 @@
   "async": "Use async terminals such as `ToListAsync(cancellationToken)` and pass the `CancellationToken`.",
   "split-query": "Use `AsSplitQuery()` when `Include`-ing more than one collection.",
   "separate-spec": "Assign the query to a `var`, then execute it in a separate statement with `await`.",
+  "distinct-result-name": "Give the awaited result a different name from the query's range variable.",
   "keyword-syntax": "Prefer query syntax (`from ... select`) over extension-method syntax.",
   "meaningful-names": "Use meaningful words for variable and lambda parameter names.",
   "values-only": "Read-only queries project values, never entities, so nothing is tracked: never write `AsNoTracking()`."

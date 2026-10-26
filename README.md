@@ -32,12 +32,17 @@ There are no runtime npm dependencies. Anthropic API calls use `fetch`.
 ```
 .devin/skills/ef-linq/SKILL.md   The skill under test, in the folder Devin loads project skills from. One rule per bullet, no ids
 evals/skill-lines.json     Rule id -> exact bullet text, so cases and logs can refer to a line stably
-evals/cases.json           Eval cases: prompt, targeted line ids, must / mustNot regexes
+evals/cases.json           Eval cases: prompt, targeted line ids, regexes, and an exec block of executable assertions
+evals/references.json      A good and bad C# solution per case; a test requires the graders to accept and reject them
+evals/name-labels.json     Hand-labelled identifiers used to calibrate the name judge
+evals/name-verdicts.json   Cached judge verdicts, keyed by rubric hash and judge model
+evals/trigger.json         Skill-discovery cases and description clauses
 eval.config.json           Models, trials per case, minDelta
-src/                       skill parsing, providers, grading, runner, log store, CLI
+src/                       skill parsing, providers, grading, exec grader, judge, runner, log store, CLI
 test/                      node:test unit tests (compiled to dist/test)
-dotnet/EfFixtures          Sample BlogContext + EF Core (SQLite)
-dotnet/EfFixtures.Tests    xunit tests proving LINQ translates and runs on EF Core
+dotnet/EfFixtures          Sample BlogContext (Blog, Post, Contributor), a non-translatable helper, EF Core on SQLite
+dotnet/EvalRunner          Roslyn runner: compiles model output, runs it on seeded SQLite, captures SQL and syntax facts
+dotnet/EfFixtures.Tests    xunit tests for the fixtures and for the runner
 logs/evals.jsonl           One summary per run (verdicts and token totals)
 logs/changes.jsonl         One entry per logged skill edit
 logs/snapshots/<hash>.md   Skill text at each logged change
@@ -80,6 +85,7 @@ Headings and section labels are not added, because they carry no instruction and
 ```sh
 npm install
 dotnet tool restore
+npm run build:runner     # builds dotnet/EvalRunner, required for every eval run
 
 npm test                 # compile + unit tests
 npm run test:dotnet      # EF Core fixture tests
@@ -114,14 +120,42 @@ Suggested loop: edit the skill, `eval:change` with a note, `eval`, then `eval:co
 }
 ```
 
-Every id in `targets` is ablated against this case. A case should fail without its target line and pass with it, so choose prompts where a model would not do the right thing unprompted. Grading is deterministic regex. Models that already follow a rule unprompted produce `delta 0`, which is the signal that the line is not earning its place for that model.
+Every id in `targets` is ablated against this case. A case should fail without its target line and pass with it, so choose prompts where a model would not do the right thing unprompted. Models that already follow a rule unprompted produce `delta 0`, which is the signal that the line is not earning its place for that model. A `guard: true` case runs with the full skill only and reports a separate pass rate, so a regression check never dilutes a line's delta.
+
+## How outputs are graded
+
+A trial passes only if every check passes. Checks run from cheapest and most objective to most subjective:
+
+| Tier | Check | Used for |
+| --- | --- | --- |
+| 1 | **Compiles.** Roslyn compiles the code block against the fixtures. | Every case. Catches uncompilable output that form checks accept, such as a tuple literal in an expression tree or a result variable named like the query's range variable. |
+| 2 | **Runs.** Each public method is invoked on seeded in-memory SQLite. An exception fails the trial. | Every case. The non-translatable helper `TitleRules.HasPrefix` throws at runtime when used in a predicate. |
+| 3 | **Executed SQL.** An EF command interceptor records every command. Cases assert with `sqlMust`, `sqlMustNot` and `minCommands`. | `translatable` (a `WHERE` and `LIKE` must reach the database), `values-only` (only the projected columns are selected), `split-query` (3 commands, not 1 join), grouping and ordering. |
+| 4 | **Syntax facts from the semantic model.** Roslyn reports operators bound to `System.Linq.Queryable`, whether an awaited `IQueryable` is a local or an inline expression, and declared identifiers. | `keyword-syntax`, `separate-spec`. Replaced regexes that rejected correct code (a post-`ToList` `.Select` on a `List`, a newline before `.ToListAsync`). |
+| 5 | **Regex** on the code block only (prose is ignored). | Remaining form checks, for example `ToListAsync(cancellationToken)`. |
+| 6 | **LLM judge** for identifier names. | `meaningful-names` only. See below. |
+
+**Why executed SQL rather than `ToQueryString()`.** `ToQueryString()` needs the `IQueryable` in hand, but the skill's own `separate-spec` rule and normal code end by executing the query and returning results, so there is nothing to call it on. The command interceptor sees the SQL for any shape of method. The runner also records `ToQueryString()` for any method that returns an `IQueryable` (`queryStrings` in the result), so both views exist. Assertions are on SQL properties (a `WHERE`, `GROUP BY`, which columns are selected, how many commands), not on exact text, so equivalent code written in method or keyword syntax passes.
+
+**Why an LLM judge for names only.** Everything above has an executable oracle, which is deterministic, free to repeat and not subject to judge bias. Identifier quality does not: "meaningful words" is a language judgement, and a regex list of banned abbreviations misses new ones. The judge is kept narrow so its known weaknesses cannot dominate the result (Zheng et al., 2023, found position and verbosity bias and imperfect agreement; Panickssery et al., 2024, found models favour their own outputs):
+
+- Roslyn extracts the declared identifiers. The judge sees only those short strings, never the model's code or answer, so there is no answer to favour and no second candidate to position-bias.
+- Each unique identifier is labelled once with a fixed rubric, and the verdict is cached in `evals/name-verdicts.json` keyed by rubric hash and judge model. Re-grading is deterministic. Identifiers with no verdict, and single letters, fail closed.
+- The rubric mirrors the skill rule ("whole ordinary English words"). A first draft added a "generic placeholder" clause the skill never states, and four judge models disagreed on 7 of 24 ordinary words; after the fix they agree on 30 of 31.
+- It is calibrated: `npm run eval -- ...` is not trusted until `node dist/src/cli.js calibrate-names --judge <id>` agrees with `evals/name-labels.json` (59 labelled identifiers; all four judges agree on 59/59). The labels were written by the author of this repository and should be reviewed by a person; they cover clear cases, so they show the judge follows the rubric, not that it handles every borderline name.
+
+**The graders are tested.** `evals/references.json` holds a correct solution and one or more deliberately wrong solutions for every case. `test/references.test.ts` fails if a grader rejects a correct reference or accepts a wrong one. This is what caught the grader errors listed above.
+
+**Safety.** The runner executes model-generated C#. It compiles in a separate process, rejects code that references `System.IO`, `System.Net`, `System.Diagnostics`, `System.Reflection`, `Environment` or similar APIs before loading it, uses only in-memory SQLite and a 20 second timeout per method. This is defence in depth, not a sandbox; do not point it at untrusted prompts.
 
 ## Known limits
 
-- Small trial counts are noisy. Use `--trials 5` or more before deleting a line, and treat a single-trial run as a smoke test.
-- Regex graders check form, not correctness. A planned next step is to compile and run generated queries against `dotnet/EfFixtures` (SQLite) and assert on `ToQueryString()`.
+- Small trial counts are noisy. Use `--trials 5` or more before deleting a line, and treat a single-trial run as a smoke test. Cells with 10 to 30 trials are noted in `PROGRESS.md`.
+- The fixtures are one small blog schema. Cases state the schema in the prompt because the harness has no repository; the skill itself contains no schema.
+- The judge's calibration set is small and was labelled by the repository author.
 - `with` runs are shared across lines of the same case, so token totals count each unique call once.
 
-## First test run (2026-10-26)
+## References for grading design
 
-`haiku-5.5` via `devin-cli`, 1 trial, 5-line skill: `no-tracking` and `split-query` were load bearing (0 -> 1.00). `project`, `translatable` and `async` showed no effect on this small sample, so they need harder cases or more trials before any decision. See `logs/` and `runs/`.
+- Zheng, L., Chiang, W.-L., Sheng, Y., et al. (2023). Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. NeurIPS 2023 Datasets and Benchmarks. https://proceedings.neurips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract-Datasets_and_Benchmarks.html
+- Panickssery, A., Bowman, S. R., and Feng, S. (2024). LLM Evaluators Recognize and Favor Their Own Generations. NeurIPS 2024. https://proceedings.neurips.cc/paper_files/paper/2024/file/7f1f0218e45f5414c79c0679633e47bc-Paper-Conference.pdf

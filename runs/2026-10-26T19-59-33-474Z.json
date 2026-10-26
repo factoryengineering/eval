@@ -1,0 +1,312 @@
+{
+  "summary": {
+    "runId": "2026-10-26T19-59-33-474Z",
+    "at": "2026-10-26T19:59:33.474Z",
+    "skillHash": "4d208742187e",
+    "trials": 10,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "separate-spec",
+        "withRate": 1,
+        "withoutRate": 0.2,
+        "delta": 0.8,
+        "verdict": "load-bearing"
+      }
+    ],
+    "guards": [],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 6720,
+        "output": 3168,
+        "estimated": true,
+        "calls": 20
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "forbidden /IQueryable<[^>]*>\\s+\\w+\\s*=/"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 171,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing System.Collections.Generic;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PopularPostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        IQueryable<string> popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        List<string> popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 160,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PopularPostTitleQuery\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery = from post in blogContext.Posts\n                                     where post.Views > 100\n                                     orderby post.Views descending\n                                     select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 325,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PopularPostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 182,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\nnamespace EfFixtures;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery = from post in blogContext.Posts\n                                     where post.Views > 100\n                                     orderby post.Views descending\n                                     select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 161,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitles = await (from post in blogContext.Posts\n                                       where post.Views > 100\n                                       orderby post.Views descending\n                                       select post.Title).ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 172,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        List<string> popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 149,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PopularPostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        return await (from popularPost in blogContext.Posts\n                      where popularPost.Views > 100\n                      orderby popularPost.Views descending\n                      select popularPost.Title).ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 161,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic class PostTitleQuery\n{\n    public async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 325,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        return await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PopularPostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 5,
+      "pass": false,
+      "failures": [
+        "no query variable was awaited"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 119,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\n\npublic static class PostTitleQueries\n{\n    public static List<string> GetTitlesOfPopularPosts(BlogContext blogContext)\n    {\n        var popularPostTitles = from post in blogContext.Posts\n                                where post.Views > 100\n                                orderby post.Views descending\n                                select post.Title;\n        return popularPostTitles.ToList();\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 5,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PopularPostQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 6,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PopularPostTitleQuery\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitles = await (\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title\n        ).ToListAsync(cancellationToken);\n\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 6,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 159,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery = from post in blogContext.Posts\n                                     where post.Views > 100\n                                     orderby post.Views descending\n                                     select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 7,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 146,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitles = await (\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title).ToListAsync(cancellationToken);\n\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 7,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery = from post in blogContext.Posts\n                                 where post.Views > 100\n                                 orderby post.Views descending\n                                 select post.Title;\n    List<string> popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 8,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 149,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic class PostTitleQuery\n{\n    public async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitles = await (\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title\n        ).ToListAsync(cancellationToken);\n\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 8,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 181,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery = from post in blogContext.Posts\n                                     where post.Views > 100\n                                     orderby post.Views descending\n                                     select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 9,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "query executed inline instead of via a variable"
+      ],
+      "inputTokens": 325,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleQueries\n{\n    public static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitles = await (\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title\n        ).ToListAsync(cancellationToken);\n\n        return popularPostTitles;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 9,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 347,
+      "outputTokens": 184,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic class PopularPostTitleQueries\n{\n    public async Task<List<string>> GetTitlesOfPopularPostsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery = from post in blogContext.Posts\n                                     where post.Views > 100\n                                     orderby post.Views descending\n                                     select post.Title;\n\n        var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n        return popularPostTitles;\n    }\n}\n```\n"
+    }
+  ]
+}

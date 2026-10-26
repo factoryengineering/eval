@@ -155,11 +155,79 @@ Across all 5 models `scope` is load bearing on 3 (haiku, sonnet, swe-2) and `exc
 - **Result:** the new `SKILL.md` is byte-identical (SHA-256 prefix `6ecabd3f5378`) to the rendered text every model received in Iteration 12 (the rule bullets were also identical in Iterations 8-11; only the frontmatter description differed before Iteration 11), so the Iteration 12 results apply unchanged and no re-run was needed. The CLI path was checked with a mock run (discarded). 15 unit tests pass.
 - **Reasoning:** an identical model input cannot change a pass rate, so a byte comparison is stronger evidence than a re-run. Hashes in earlier logs (e.g. 74acfcbbdcff, 4ae7fc1326d4) were computed over the tagged text; 6ecabd3f5378 is the hash of the shipped text.
 
+## Phase F: executable graders (compile, run, SQL, syntax, judge)
+
+Every rule so far was graded by regex, which checks form. Phase F replaces that with oracles: compile the code, run it on seeded SQLite, assert on the SQL that reached the database, inspect the syntax tree, and use a calibrated judge for identifier names (design and rationale: README, "How outputs are graded"). The graders themselves are tested against good and bad reference solutions (`evals/references.json`).
+
+### Iteration 17 - RED: the same skill under real graders (skill hash 6ecabd3f5378, runs 2026-10-26T18-05 to T18-13)
+- **Baseline:** Iteration 12, all lines 1.00 with the skill on 5 models, guard 5/5, graded by regex.
+- **Hypothesis:** if the regex results were sound, executable graders will agree.
+- **Result:** they did not. With the skill: haiku `keyword-syntax` 0.40, swe-2 `translatable` 0.80, `meaningful-names` 0.40, `values-only` 0.60; the edit guard passed 0.80 (haiku), 0.60 (sonnet), 1.00 (luna) and 0.00 (swe-2) in that first run (swe-1.7 did not finish); after the prompt fixes in Iteration 18 it passed 0.80 / 0.80 / 0.60 / 0.00 / 0.80 (haiku / sonnet / luna / swe-1.7 / swe-2).
+- **Reasoning (from compiler errors in the raw outputs):** three causes.
+  1. Models invented types they never defined (`PostSummary`, `BlogViewTotal`): test noise, fixed in the prompts.
+  2. `CS8143`, a tuple literal inside an expression tree (`select (post.Title, post.Views)`). **This corrects Iteration 3**, which called tuple projections a grader false negative and widened the regex to accept them. They are valid only after materialisation; inside the query they do not compile. The regex fix hid a real failure.
+  3. `CS1931`, the range variable `post` reused as `var post = await ...`. A genuine rule interaction (query syntax + meaningful names + a separate statement), invisible to every earlier grader.
+
+### Iteration 18 - harness corrections found along the way (discarded run, then clean re-run)
+- Telling the model to "define any types you use" made every model redefine `BlogContext` and `Post`, which shadowed the fixtures, so every cell scored 0.00 (`NullReferenceException`: the runner could not construct its own context). That run is **discarded** (files and log lines removed). The prompt now says the fixture types exist and must not be redefined.
+- `search-by-title` gave no schema, so sonnet invented `PostId`; the prompt now states `Posts with Id and Title`.
+- The edit guard's regex for a tracked-load method duplicated what the `UPDATE` assertion proves and was removed.
+- Result after the fixes (run 2026-10-26T18-5x, 5 trials): remaining with-skill failures were the `CS1931` clash (4 of 5 models) and one stray model slip. All five edit-guard failures that mattered were the clash.
+
+### Iteration 19 - GREEN (partial): `distinct-result-name` (hash 4d208742187e)
+- **Baseline:** the edit guard failed on all five models (0.00 to 0.80), and every remaining failure was `CS1931`.
+- **Hypothesis:** one rule telling the model to name the awaited result differently from the range variable removes the failure.
+- **Change:** `- Give the awaited result a different name from the query's range variable.` Two targeted cases (`get-blog-by-id`, `rename-contributor`; 10 trials each, 5 models).
+- **Result:** with the line, the edit guard is 5/5 on all five models, and the clash disappears on haiku, sonnet, swe-1.7 and swe-2; luna still clashes in 23% of trials.
+- **Iteration 19b (rejected):** adding a concrete example (`from post in posts` then `var post = await ...` does not compile) did not help (luna 0.65 -> 0.85, swe-1.7 0.75 -> 0.95, no better than the plain wording). Reverted to the shorter text.
+- **Evidence for the line, pooled over runs with the final text, 30 trials per model:**
+
+| Model | without | with | delta | one-sided Fisher p |
+| --- | --- | --- | --- | --- |
+| haiku-5.5 | 22/30 | 30/30 | 0.27 | 0.002 |
+| sonnet-5.5 | 30/30 | 30/30 | 0.00 | 1.0 |
+| gpt-6-luna | 19/30 | 23/30 | 0.13 | 0.20 |
+| swe-1.7 | 19/30 | 30/30 | 0.37 | 0.0002 |
+| swe-2 | 25/30 | 30/30 | 0.17 | 0.03 |
+| all five | 115/150 (0.77) | 143/150 (0.95) | 0.18 | 1.7e-6 |
+
+- **Verdict, stated plainly:** this line does not meet the project's per-model bar (delta of at least 0.3) except on swe-1.7. It is significant on 3 of 5 models and overwhelmingly so pooled. It is the weakest line and a judgement call; it is kept because it prevents a compile error that otherwise appears in about a quarter of single-entity lookups. The 0.3 threshold was chosen for 5-trial cells, and this line was measured with 30.
+
+### Iteration 20 - REFACTOR: `separate-spec` graded semantically
+- **Baseline:** swe-1.7 `separate-spec` scored 1.00 without the line and 0.60 with the full skill, a negative delta.
+- **Cause:** the regex `await\s+\w+\.\w+Async\(` cannot match a newline before `.ToListAsync(`. Correct output such as `await query\n    .ToListAsync(ct)` failed.
+- **Change:** Roslyn counts awaited `IQueryable` receivers that are locals versus inline expressions (xunit test written first and failing). `separateQuery` on the case replaces two regexes.
+- **Result (10 trials):** with the skill every model is 1.00; without: haiku 0.20, sonnet 1.00, luna 0.70, swe-1.7 0.80, swe-2 0.60.
+
+### Iteration 21 - judge for `meaningful-names`
+- **Hypothesis:** an LLM judge over Roslyn-extracted identifiers can replace the abbreviation regexes without becoming a source of noise.
+- **RED:** the first rubric added a "generic placeholder" clause that the skill does not state. Four judge models agreed on only 17 of 24 ordinary words (`query`, `entity`, `row`, `count`, `index`, `response`, `items` split).
+- **GREEN:** the rubric now mirrors the skill ("whole ordinary English words"; letters, cryptic abbreviations and letters-plus-digit fail). Agreement on 31 words: 30 unanimous (`temp` splits 3 to 1). Against the 59 hand-labelled identifiers all four judges agree 59/59. Sonnet is the default judge.
+- **Result (10 trials, judge sonnet-5.5):** without -> with: haiku 0.00 -> 1.00, sonnet 0.00 -> 1.00, luna 1.00 -> 1.00, swe-1.7 0.40 -> 1.00, swe-2 0.10 -> 1.00.
+
+### Iteration 22 - five-model confirmation, final skill (hash 4d208742187e)
+5 trials unless noted; without -> with. LB = load bearing at the 0.3 threshold.
+
+| Line | haiku-5.5 | sonnet-5.5 | gpt-6-luna | swe-1.7 | swe-2 | LB models |
+| --- | --- | --- | --- | --- | --- | --- |
+| `translatable` | 0.00 -> 0.80 | 0.80 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 4 of 5 |
+| `async` | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 5 of 5 |
+| `split-query` | 0.20 -> 1.00 | 0.00 -> 1.00 | 0.40 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 5 of 5 |
+| `separate-spec` (10) | 0.20 -> 1.00 | 1.00 -> 1.00 | 0.70 -> 1.00 | 0.80 -> 1.00 | 0.60 -> 1.00 | 3 of 5 |
+| `distinct-result-name` (30) | 0.73 -> 1.00 | 1.00 -> 1.00 | 0.63 -> 0.77 | 0.63 -> 1.00 | 0.83 -> 1.00 | 1 of 5 (3 of 5 significant) |
+| `keyword-syntax` | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.20 -> 1.00 | 0.00 -> 1.00 | 5 of 5 |
+| `meaningful-names` (10, judge) | 0.00 -> 1.00 | 0.00 -> 1.00 | 1.00 -> 1.00 | 0.40 -> 1.00 | 0.10 -> 1.00 | 4 of 5 |
+| `values-only` | 0.40 -> 1.00 | 0.00 -> 1.00 | 0.60 -> 1.00 | 1.00 -> 1.00 | 1.00 -> 1.00 | 3 of 5 |
+| guard `load-entity-for-edit` | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 | |
+
+- **Result:** with the skill, 38 of 40 line-model cells are at 1.00. The two that are not: haiku `translatable` 0.80 and luna `distinct-result-name` 0.77. 30 of 40 cells are load bearing at the 0.3 threshold. Every line is load bearing on at least 3 of 5 models by that threshold except `distinct-result-name` (1 of 5), discussed in Iteration 19.
+- **Not yet re-measured under the final graders:** the trigger eval (Iterations 10-11b) is unchanged and still valid; it does not use these graders.
+
 ## Caveats
 
 - Trigger eval: the spec was revised twice after seeing results (Iterations 10 and 11), so the final numbers are tuned to the final cases and likely optimistic. Cells are 18-39 trials. Distractor skills are synthetic and the model's own agent harness lists other skills too, though `devin-cli` now runs from an empty directory so the real `ef-linq` skill is not visible to the model under test.
 - Iteration 9 ran after the skill moved into `.devin/skills/`, from the project directory, so the model could see the one-line description of `ef-linq` in its own skill list (not the rules). The rule-ablation evidence in Iterations 1-8 predates the move and is unaffected. Iteration 12 re-ran it from a neutral directory with the same conclusion.
 - Token counts are estimated (chars / 4) for `devin-cli` models; consistent between runs, so deltas are valid.
-- Graders are regex, so they measure form, not correctness. Case defects (Iterations 5-7) were found by reading raw outputs. A compile-and-`ToQueryString()` grader is the planned next step.
-- `translatable` cannot detect a client-side filter written in a separate statement without a banned token; it relies on the `HasPrefix(` ban.
-- 5 trials per cell; counts are 0/5 to 5/5, so deltas of 0.2 are noise.
+- Iterations 1-16 were graded by regex, which Phase F showed can both accept uncompilable code and reject correct code. Their conclusions about which lines matter held, but their exact rates should not be compared with Phase F. Iteration 3's tuple-projection claim is wrong and is corrected in Iteration 17.
+- The name judge's calibration labels were written by the repository author and cover clear cases only. Sonnet is both a model under test and the default judge; this is mitigated because the judge only labels bare identifier strings, never its own or any model's answer.
+- 5 trials per cell unless noted; counts are 0/5 to 5/5, so deltas of 0.2 are noise at that size. 10 and 30 trial cells are marked.

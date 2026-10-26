@@ -1,0 +1,307 @@
+{
+  "summary": {
+    "runId": "2026-10-26T19-46-24-912Z",
+    "at": "2026-10-26T19:46:24.912Z",
+    "skillHash": "4d208742187e",
+    "trials": 10,
+    "lines": [
+      {
+        "model": "swe-2",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 0.1,
+        "delta": 0.9,
+        "verdict": "load-bearing"
+      }
+    ],
+    "guards": [],
+    "tokens": {
+      "swe-2": {
+        "input": 6800,
+        "output": 2946,
+        "estimated": true,
+        "calls": 20
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 173,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n\npublic static class PostQueries\n{\n    public static async Task<IReadOnlyList<BlogViews>> GetTotalViewsPerBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken = default)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into posts\n            select new BlogViews(posts.Key, posts.Sum(p => p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 145,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViewTotal>> GetViewTotalsByTitleAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var viewTotalsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(post => post.Views));\n\n    var viewTotals = await viewTotalsQuery.ToListAsync(cancellationToken);\n    return viewTotals;\n}\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 142,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record BlogViewsTotal(int BlogId, int TotalViews);\n\npublic static async Task<IReadOnlyList<BlogViewsTotal>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into postsByBlog\n        select new BlogViewsTotal(postsByBlog.Key, postsByBlog.Sum(p => p.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 141,
+      "estimated": true,
+      "output": "```csharp\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var totalsByBlog =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewTotal(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var totals = await totalsByBlog.ToListAsync(cancellationToken);\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "names not meaningful: g, p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 130,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into g\n        select new { BlogId = g.Key, TotalViews = g.Sum(p => p.Views) };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 145,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record BlogViews(int BlogId, int TotalViews);\n\npublic static async Task<IReadOnlyList<BlogViews>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var blogViewsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new BlogViews(blogGroup.Key, blogGroup.Sum(post => post.Views));\n\n    var blogViews = await blogViewsQuery.ToListAsync(cancellationToken);\n    return blogViews;\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 133,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<BlogViews>> GetViewsByBlogAsync(BlogContext context, string searchTerm, CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new BlogViews(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 179,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic record BlogViews(int BlogId, int TotalViews);\n\npublic static class PostQueries\n{\n    public static async Task<List<BlogViews>> GetViewsPerBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var matchingPosts =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogPosts\n            select new BlogViews(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n        List<BlogViews> viewsPerBlog = await matchingPosts.ToListAsync(cancellationToken);\n        return viewsPerBlog;\n    }\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 134,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context, string searchTerm, CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(p => p.Views) };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<BlogViewsSummary>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var blogViewsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewsSummary(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var blogViewsSummaries = await blogViewsQuery.ToListAsync(cancellationToken);\n    return blogViewsSummaries;\n}\n\npublic sealed record BlogViewsSummary(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 5,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 133,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViews>> TotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViews(blogPosts.Key, blogPosts.Sum(p => p.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 5,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 178,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViewTotal>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var matchingPostsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewTotal\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(post => post.Views)\n        };\n\n    var viewTotals = await matchingPostsQuery.ToListAsync(cancellationToken);\n    return viewTotals;\n}\n\npublic sealed class BlogViewTotal\n{\n    public int BlogId { get; init; }\n    public int TotalViews { get; init; }\n}\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 6,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<BlogViewTotal>> GetViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 6,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 149,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<IReadOnlyList<BlogViewsSummary>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var matchingPostTotals =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewsSummary(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var totals = await matchingPostTotals.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic sealed record BlogViewsSummary(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 7,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 192,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostQueries\n{\n    public static async Task<List<BlogViews>> GetViewsPerBlogAsync(\n        BlogContext context, string searchTerm, CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViews(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 7,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 146,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<BlogViewsTotal>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string titleSearchTerm,\n    CancellationToken cancellationToken)\n{\n    var totalsQuery =\n        from post in context.Posts\n        where post.Title.Contains(titleSearchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewsTotal(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var totals = await totalsQuery.ToListAsync(cancellationToken);\n\n    return totals;\n}\n\npublic sealed record BlogViewsTotal(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 8,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 128,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViews>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into grouped\n        select new BlogViews(grouped.Key, grouped.Sum(p => p.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 8,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViews>> TotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var matchingPosts =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViews(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var totals = await matchingPosts.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 9,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 332,
+      "outputTokens": 130,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViews>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into grouped\n        select new BlogViews(grouped.Key, grouped.Sum(post => post.Views));\n\n    var totals = await query.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic record BlogViews(int BlogId, int TotalViews);\n```\n"
+    },
+    {
+      "model": "swe-2",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 9,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 141,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<IReadOnlyList<BlogViews>> GetViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var viewsPerBlog =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViews(blogPosts.Key, blogPosts.Sum(post => post.Views));\n\n    var totals = await viewsPerBlog.ToListAsync(cancellationToken);\n    return totals;\n}\n\npublic sealed record BlogViews(int BlogId, int TotalViews);\n```\n"
+    }
+  ]
+}

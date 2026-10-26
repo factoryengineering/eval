@@ -1,0 +1,309 @@
+{
+  "summary": {
+    "runId": "2026-10-26T19-48-03-967Z",
+    "at": "2026-10-26T19:48:03.967Z",
+    "skillHash": "4d208742187e",
+    "trials": 10,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      }
+    ],
+    "guards": [],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 6800,
+        "output": 4157,
+        "estimated": true,
+        "calls": 20
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, g, x"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 192,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewQueries\n{\n    public static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from p in context.Posts\n            where p.Title.Contains(searchTerm)\n            group p by p.BlogId into g\n            select new BlogViewTotal(g.Key, g.Sum(x => x.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 214,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotalQueries\n{\n    public static async Task<List<BlogViewTotal>> GetViewTotalsByBlogAsync(BlogContext blogContext, string searchTerm, CancellationToken cancellationToken)\n    {\n        var blogViewTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into postsInBlog\n            select new BlogViewTotal(postsInBlog.Key, postsInBlog.Sum(postInBlog => postInBlog.Views));\n\n        var blogViewTotals = await blogViewTotalsQuery.ToListAsync(cancellationToken);\n        return blogViewTotals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 140,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var totalsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(p => p.Views) };\n\n    var totals = await totalsQuery.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 205,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var blogViewTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogPosts\n            select new { BlogId = blogPosts.Key, TotalViews = blogPosts.Sum(post => post.Views) };\n\n        var totalViewsByBlogId = await blogViewTotalsQuery.ToDictionaryAsync(\n            blogViewTotal => blogViewTotal.BlogId,\n            blogViewTotal => blogViewTotal.TotalViews,\n            cancellationToken);\n\n        return totalViewsByBlogId;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 211,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViewTotal(int BlogId, long TotalViews);\n\npublic static class PostViewQueries\n{\n    public static async Task<Dictionary<int, long>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(p => (long)p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n\n        return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 311,
+      "estimated": true,
+      "output": "```csharp\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing System.Collections.Generic;\nusing Microsoft.EntityFrameworkCore;\n\nnamespace EfFixtures\n{\n    public static class PostViewQueries\n    {\n        public static async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n            BlogContext blogContext,\n            string searchTerm,\n            CancellationToken cancellationToken)\n        {\n            var matchingPostsQuery =\n                from post in blogContext.Posts\n                where post.Title.Contains(searchTerm)\n                group post by post.BlogId into blogGroup\n                select new BlogViewTotal\n                {\n                    BlogId = blogGroup.Key,\n                    TotalViews = blogGroup.Sum(groupedPost => (long)groupedPost.Views)\n                };\n\n            var blogViewTotals = await matchingPostsQuery.ToListAsync(cancellationToken);\n\n            return blogViewTotals.ToDictionary(\n                blogViewTotal => blogViewTotal.BlogId,\n                blogViewTotal => blogViewTotal.TotalViews);\n        }\n    }\n\n    public class BlogViewTotal\n    {\n        public int BlogId { get; set; }\n        public long TotalViews { get; set; }\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 195,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotals\n{\n    public static async Task<List<BlogViewTotal>> GetViewTotalsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 243,
+      "estimated": true,
+      "output": "```csharp\nusing System.Threading;\nusing System.Threading.Tasks;\nusing System.Collections.Generic;\nusing System.Linq;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var matchingViewTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(postInBlog => postInBlog.Views));\n\n        var blogViewTotals = await matchingViewTotalsQuery.ToListAsync(cancellationToken);\n\n        return blogViewTotals.ToDictionary(blogViewTotal => blogViewTotal.BlogId, blogViewTotal => blogViewTotal.TotalViews);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, g, x"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 201,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, long>> GetViewTotalsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var totalsQuery =\n            from p in context.Posts\n            where p.Title.Contains(searchTerm)\n            group p by p.BlogId into g\n            select new { BlogId = g.Key, Total = g.Sum(p => (long)p.Views) };\n\n        var totals = await totalsQuery.ToDictionaryAsync(\n            x => x.BlogId,\n            x => x.Total,\n            cancellationToken);\n\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 204,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class BlogViewReports\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var totalViewsByBlogQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post.Views by post.BlogId into blogViews\n            select new { BlogId = blogViews.Key, TotalViews = blogViews.Sum() };\n\n        var totalViewsByBlogId = await totalViewsByBlogQuery.ToDictionaryAsync(\n            blogTotal => blogTotal.BlogId,\n            blogTotal => blogTotal.TotalViews,\n            cancellationToken);\n\n        return totalViewsByBlogId;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 5,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 176,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var totalsQuery =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(p => p.Views) };\n\n    var totals = await totalsQuery.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 5,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 239,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var blogTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new\n            {\n                BlogId = blogGroup.Key,\n                TotalViews = blogGroup.Sum(groupedPost => groupedPost.Views)\n            };\n\n        var totalViewsByBlogId = await blogTotalsQuery.ToDictionaryAsync(\n            blogTotal => blogTotal.BlogId,\n            blogTotal => blogTotal.TotalViews,\n            cancellationToken);\n\n        return totalViewsByBlogId;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 6,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p, t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 164,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetViewTotalsByBlogAsync(\n        BlogContext context, string searchTerm, CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(p => p.Views) };\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 6,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 279,
+      "estimated": true,
+      "output": "```csharp\nusing System;\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\nnamespace EfFixtures\n{\n    public class BlogViewTotal\n    {\n        public int BlogId { get; set; }\n        public long TotalViews { get; set; }\n    }\n\n    public static class PostViewQueries\n    {\n        public static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n            BlogContext blogContext,\n            string searchTerm,\n            CancellationToken cancellationToken)\n        {\n            var viewTotalsQuery =\n                from post in blogContext.Posts\n                where post.Title.Contains(searchTerm)\n                group post by post.BlogId into blogGroup\n                select new BlogViewTotal\n                {\n                    BlogId = blogGroup.Key,\n                    TotalViews = blogGroup.Sum(blogPost => (long)blogPost.Views)\n                };\n\n            var blogViewTotals = await viewTotalsQuery.ToListAsync(cancellationToken);\n            return blogViewTotals;\n        }\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 7,
+      "pass": false,
+      "failures": [
+        "names not meaningful: t"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 153,
+      "estimated": true,
+      "output": "```csharp\npublic static class PostTotals\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n        BlogContext context, string searchTerm, CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post.Views by post.BlogId into blogGroup\n            select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum() };\n\n        var totals = await query.ToListAsync(cancellationToken);\n\n        return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 7,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 215,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotals\n{\n    public static async Task<List<BlogViewTotal>> GetTotalViewsPerBlogAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var blogViewTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(postInGroup => postInGroup.Views));\n\n        var blogViewTotals = await blogViewTotalsQuery.ToListAsync(cancellationToken);\n        return blogViewTotals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 8,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 168,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewQueries\n{\n    public static async Task<List<BlogViewTotal>> GetTotalViewsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n        return totals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 8,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 206,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing EfFixtures;\n\npublic record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotalQueries\n{\n    public static async Task<List<BlogViewTotal>> GetViewTotalsByBlogAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var blogViewTotalsQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(post => post.Views));\n\n        var blogViewTotals = await blogViewTotalsQuery.ToListAsync(cancellationToken);\n        return blogViewTotals;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 9,
+      "pass": false,
+      "failures": [
+        "names not meaningful: p"
+      ],
+      "inputTokens": 332,
+      "outputTokens": 191,
+      "estimated": true,
+      "output": "```csharp\nusing EfFixtures;\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record BlogViewTotal(int BlogId, int TotalViews);\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetViewTotalsByBlogAsync(\n        BlogContext context,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var query =\n            from post in context.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogGroup\n            select new BlogViewTotal(blogGroup.Key, blogGroup.Sum(p => p.Views));\n\n        var totals = await query.ToListAsync(cancellationToken);\n\n        return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 9,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 348,
+      "outputTokens": 250,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\nusing EfFixtures;\n\npublic static class PostViewTotals\n{\n    public static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n        BlogContext blogContext,\n        string searchTerm,\n        CancellationToken cancellationToken)\n    {\n        var totalViewsByBlogIdQuery =\n            from post in blogContext.Posts\n            where post.Title.Contains(searchTerm)\n            group post by post.BlogId into blogPosts\n            select new\n            {\n                BlogId = blogPosts.Key,\n                TotalViews = blogPosts.Sum(blogPost => blogPost.Views)\n            };\n\n        var totalViewsByBlogId = await totalViewsByBlogIdQuery.ToDictionaryAsync(\n            totalViewsRow => totalViewsRow.BlogId,\n            totalViewsRow => totalViewsRow.TotalViews,\n            cancellationToken);\n\n        return totalViewsByBlogId;\n    }\n}\n```\n"
+    }
+  ]
+}

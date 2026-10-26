@@ -1,0 +1,1137 @@
+{
+  "summary": {
+    "runId": "2026-10-26T18-05-52-205Z",
+    "at": "2026-10-26T18:05:52.205Z",
+    "skillHash": "6ecabd3f5378",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "sonnet-5.5",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 0.2,
+        "delta": 0.8,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0.4,
+        "delta": 0.6,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "separate-spec",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "keyword-syntax",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "sonnet-5.5",
+        "line": "values-only",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      }
+    ],
+    "guards": [
+      {
+        "model": "sonnet-5.5",
+        "caseId": "load-entity-for-edit",
+        "rate": 0.6,
+        "n": 5
+      }
+    ],
+    "tokens": {
+      "sonnet-5.5": {
+        "input": 20945,
+        "output": 9290,
+        "estimated": true,
+        "calls": 75
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "compile: CS1061: 'Post' does not contain a definition for 'PostId' and no accessible extension method 'PostId' accepting a first argument of type 'Post' could be found (are you missing a using directive or an assembly reference?)"
+      ],
+      "inputTokens": 245,
+      "outputTokens": 188,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int PostId, string Title);\n\npublic static async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(\n    BlogContext blogContext,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.PostId, post.Title);\n\n    var allPosts = await postQuery.ToListAsync(cancellationToken);\n\n    // TitleRules.HasPrefix is a C# method and can't be translated to SQL,\n    // so the prefix filter runs in memory after the projection.\n    var matchingPosts =\n        from postSummary in allPosts\n        where TitleRules.HasPrefix(postSummary.Title, prefix)\n        select postSummary;\n\n    return matchingPosts.ToList();\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 101,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPostTitlesByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken = default)\n{\n    var titlesQuery =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post.Title;\n\n    var matchingTitles = await titlesQuery.ToListAsync(cancellationToken);\n    return matchingTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 245,
+      "outputTokens": 158,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int Id, string Title);\n\npublic static async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(\n    BlogContext blogContext,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    // TitleRules.HasPrefix is a plain C# method that EF Core can't translate to SQL,\n    // so the equivalent StartsWith is used to keep the filter on the server.\n    var query =\n        from post in blogContext.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPostTitlesByPrefixAsync(\n    BlogContext blogContext,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var postTitlesQuery =\n        from post in blogContext.Posts\n        where post.Title.StartsWith(prefix)\n        select post.Title;\n\n    var postTitles = await postTitlesQuery.ToListAsync(cancellationToken);\n\n    return postTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "compile: CS1061: 'Post' does not contain a definition for 'PostId' and no accessible extension method 'PostId' accepting a first argument of type 'Post' could be found (are you missing a using directive or an assembly reference?)"
+      ],
+      "inputTokens": 245,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int PostId, string Title);\n\npublic static async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(\n    BlogContext blogContext,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.PostId, post.Title);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n    var matchingPostSummaries =\n        from postSummary in postSummaries\n        where TitleRules.HasPrefix(postSummary.Title, prefix)\n        select postSummary;\n\n    return matchingPostSummaries.ToList();\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 181,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPostTitlesByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var titlesQuery =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post.Title;\n\n    var titles = await titlesQuery.ToListAsync(cancellationToken);\n\n    return titles;\n}\n```\n\nNotes: `TitleRules.HasPrefix` is not used because EF Core can't translate user-defined helpers, so the filter uses the translatable `StartsWith`. The query projects values instead of entities, so nothing is tracked and `AsNoTracking()` isn't needed. If you need more than the title, project an anonymous type or DTO with the required fields.\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "sql missing /WHERE/",
+        "sql missing /LIKE|substr|instr/"
+      ],
+      "inputTokens": 245,
+      "outputTokens": 163,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic static async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Id, post.Title);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n\n    // TitleRules.HasPrefix is a C# method and cannot be translated to SQL,\n    // so the filter runs in memory after the projection.\n    return summaries\n        .Where(summary => TitleRules.HasPrefix(summary.Title, prefix))\n        .ToList();\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 165,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPostTitlesByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var titlesQuery =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post.Title;\n\n    var titles = await titlesQuery.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n\nThe query returns post titles instead of `Post` entities, because the rules say read-only queries project values, not entities. I didn't use `TitleRules.HasPrefix`. A user-defined C# helper can't be translated to SQL, so `StartsWith` does the filtering in the database instead.\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "compile: CS1061: 'Post' does not contain a definition for 'PostId' and no accessible extension method 'PostId' accepting a first argument of type 'Post' could be found (are you missing a using directive or an assembly reference?)"
+      ],
+      "inputTokens": 245,
+      "outputTokens": 160,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int PostId, string Title);\n\npublic static async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    // TitleRules.HasPrefix is a plain C# method, so EF Core can't translate it to SQL.\n    // string.StartsWith translates, so the filter runs in the database.\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.PostId, post.Title);\n\n    var matchingPosts = await query.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 89,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 89,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var popularTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync();\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 81,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var popularTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await popularTitles.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync(cancellationToken);\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var popularTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync();\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var titlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await titlesQuery.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 266,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context)\n{\n    var popularTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync();\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 279,
+      "outputTokens": 106,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsForUpdateAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        (from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n         select blog)\n        .AsSplitQuery();\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 104,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsForEditingAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var blogQuery =\n        (from blog in context.Blogs\n                .Include(blog => blog.Posts)\n                .Include(blog => blog.Contributors)\n         select blog)\n        .AsSplitQuery();\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "sql commands 1 < 3"
+      ],
+      "inputTokens": 279,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n        select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 143,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        (from blog in context.Blogs\n                .Include(blog => blog.Posts)\n                .Include(blog => blog.Contributors)\n         select blog)\n        .AsSplitQuery();\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "sql commands 1 < 3"
+      ],
+      "inputTokens": 279,
+      "outputTokens": 160,
+      "estimated": true,
+      "output": "Tracked entities are required here because the caller will modify and save them. So the query returns entities and the `AsNoTracking()` rule doesn't apply. The query is written in query syntax, with `Include` applied to the source.\n\n```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n        select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 115,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<Blog>> LoadBlogsForUpdateAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/",
+        "sql commands 1 < 3"
+      ],
+      "inputTokens": 279,
+      "outputTokens": 196,
+      "estimated": true,
+      "output": "The query returns entities, not projections, because the caller wants to modify and save them. The rules say never to write `AsNoTracking()`, and tracking is on by default, so I left it out. I used `Include` through the extension-method form, since query syntax has no way to express eager loading.\n\n```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery = from blog in context.Blogs\n                         .Include(blog => blog.Posts)\n                         .Include(blog => blog.Contributors)\n                     select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsForEditingAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        (from blog in blogContext.Blogs\n             .Include(blog => blog.Posts)\n             .Include(blog => blog.Contributors)\n         select blog)\n        .AsSplitQuery();\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 279,
+      "outputTokens": 110,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 296,
+      "outputTokens": 110,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogQuery =\n        (from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n         select blog);\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularTitles =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync(cancellationToken);\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 97,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitles =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync(cancellationToken);\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 101,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var popularTitlesQuery =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularTitles = await popularTitlesQuery.ToListAsync(cancellationToken);\n\n    return popularTitles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 101,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitles =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await popularPostTitles.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 123,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPosts =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await popularPosts.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 123,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPosts =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await popularPosts.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "method syntax on a queryable: Where, Select, OrderByDescending"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostsQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new { BlogId = blogPosts.Key, TotalViews = blogPosts.Sum(p => p.Views) };\n\n    var totals = await query.ToDictionaryAsync(x => x.BlogId, x => x.TotalViews, cancellationToken);\n\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 174,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n    BlogContext blogContext,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var totalViewsQuery =\n        from post in blogContext.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(blogPost => (long)blogPost.Views)\n        };\n\n    var totalViews = await totalViewsQuery.ToDictionaryAsync(\n        blogTotal => blogTotal.BlogId,\n        blogTotal => blogTotal.TotalViews,\n        cancellationToken);\n\n    return totalViews;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\binto\\s+[a-z]\\b/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 135,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, long>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into g\n        select new { BlogId = g.Key, TotalViews = g.Sum(p => (long)p.Views) };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(blogPost => blogPost.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 151,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(p => p.Views)\n        };\n\n    var totals = await query.ToDictionaryAsync(\n        x => x.BlogId,\n        x => x.TotalViews,\n        cancellationToken);\n\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(blogPost => (long)blogPost.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 160,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<Dictionary<int, long>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(p => (long)p.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(blogPost => (long)blogPost.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 149,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(p => (long)p.Views)\n        };\n\n    var totals = await query.ToDictionaryAsync(x => x.BlogId, x => x.TotalViews, cancellationToken);\n\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, long>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(blogPost => (long)blogPost.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(\n        blogTotal => blogTotal.BlogId,\n        blogTotal => blogTotal.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 109,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummariesQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n    return summaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 109,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 97,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var query =\n        from post in blogContext.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n    return summaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 130,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in context.Posts.AsNoTracking()\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var postSummaries = await postsQuery.ToListAsync(cancellationToken);\n\n    return postSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; }\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 112,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var postSummariesQuery =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 132,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var postSummaries = await postsQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; }\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> ListPostsAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n    return summaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /(FirstOrDefault|SingleOrDefault|First|Single|Find)Async\\(/"
+      ],
+      "inputTokens": 286,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "The query here loads a single tracked entity so it can be modified, so it isn't a read-only projection. I used query syntax and a `var` that is executed in a separate `await` statement.\n\n```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPosts = await postQuery.ToListAsync(cancellationToken);\n    var existingPost = matchingPosts.Single();\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 197,
+      "estimated": true,
+      "output": "Because this loads the post in order to modify it, the entity must be tracked, so it isn't a read-only query. I used query syntax, a `var` query run in a separate awaited statement, and a `CancellationToken`.\n\n```csharp\npublic static async Task RenamePostAsync(\n    BlogContext blogContext,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in blogContext.Posts\n        where post.Id == postId\n        select post;\n\n    var matchingPost = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (matchingPost is null)\n    {\n        throw new InvalidOperationException($\"Post {postId} was not found.\");\n    }\n\n    matchingPost.Title = newTitle;\n\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "compile: CS0111: Type 'Generated' already defines a member called 'RenamePostAsync' with the same parameter types"
+      ],
+      "inputTokens": 286,
+      "outputTokens": 233,
+      "estimated": true,
+      "output": "```csharp\npublic async Task RenamePostAsync(BlogContext context, int id, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == id\n        select post;\n\n    var post = await postQuery.SingleAsync(cancellationToken);\n\n    post.Title = newTitle;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n\nNote: this won't compile as written, because `post` is declared both as the range variable and as the local. Here is the corrected version:\n\n```csharp\npublic async Task RenamePostAsync(BlogContext context, int id, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from candidate in context.Posts\n        where candidate.Id == id\n        select candidate;\n\n    var post = await postQuery.SingleAsync(cancellationToken);\n\n    post.Title = newTitle;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 111,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int postId,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var existingPost = await postQuery.SingleAsync(cancellationToken);\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task RenamePostAsync(BlogContext context, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == postId\n        select post;\n\n    var existingPost = await postQuery.SingleAsync(cancellationToken);\n\n    existingPost.Title = newTitle;\n\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    }
+  ]
+}
