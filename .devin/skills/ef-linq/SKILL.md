@@ -1,6 +1,6 @@
 ---
 name: ef-linq
-description: Write Entity Framework Core LINQ queries.
+description: Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL.
 ---
 Rules for EF Core LINQ queries:
 - [translatable] Filter only in the database: never call user-defined C# helper methods in a query, and never filter results after `ToList()` or `ToListAsync()`. Use built-in translatable members such as `StartsWith`.
