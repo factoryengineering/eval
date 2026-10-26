@@ -1,0 +1,220 @@
+{
+  "summary": {
+    "runId": "2026-10-26T13-24-18-374Z",
+    "at": "2026-10-26T13:24:18.374Z",
+    "skillHash": "d2151feef2ee",
+    "trials": 1,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "no-tracking",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "project",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 1605,
+        "output": 752,
+        "estimated": true,
+        "calls": 9
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "no-tracking",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsNoTracking\\(\\)/"
+      ],
+      "inputTokens": 187,
+      "outputTokens": 76,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db, CancellationToken cancellationToken)\n{\n    return await db.Posts\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "no-tracking",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 199,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n{\n    return await _context.Posts\n        .AsNoTracking()\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "project",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 176,
+      "outputTokens": 78,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n{\n    return await db.Posts\n        .AsNoTracking()\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "project",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 199,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n{\n    return await _context.Posts\n        .AsNoTracking()\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 158,
+      "outputTokens": 140,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic static class PostSearch\n{\n    public static async Task<List<PostSummary>> FindPostsByTitleAsync(\n        BlogContext db,\n        string searchTerm,\n        CancellationToken cancellationToken = default)\n    {\n        var term = searchTerm.ToLowerInvariant();\n\n        return await db.Posts\n            .AsNoTracking()\n            .Where(p => p.Title.ToLower().Contains(term))\n            .Select(p => new PostSummary(p.Id, p.Title))\n            .ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 186,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> SearchPostsByTitleAsync(\n    BlogContext db,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var term = searchTerm.ToLower();\n\n    return await db.Posts\n        .AsNoTracking()\n        .Where(p => p.Title.ToLower().Contains(term))\n        .Select(p => new PostSummary(p.Id, p.Title))\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 174,
+      "outputTokens": 68,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    return await db.Posts\n        .AsNoTracking()\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 199,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n{\n    return await _context.Posts\n        .AsNoTracking()\n        .Where(p => p.Views > 100)\n        .OrderByDescending(p => p.Views)\n        .Select(p => p.Title)\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 162,
+      "outputTokens": 112,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> SearchPostsByTitleAsync(BlogContext db, string searchTerm, CancellationToken cancellationToken = default)\n{\n    var term = searchTerm.ToLower();\n\n    return await db.Posts\n        .AsNoTracking()\n        .Where(p => p.Title.ToLower().Contains(term))\n        .Select(p => new PostSummary(p.Id, p.Title))\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 186,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> SearchPostsByTitleAsync(\n    BlogContext db,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var term = searchTerm.ToLower();\n\n    return await db.Posts\n        .AsNoTracking()\n        .Where(p => p.Title.ToLower().Contains(term))\n        .Select(p => new PostSummary(p.Id, p.Title))\n        .ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 173,
+      "outputTokens": 41,
+      "estimated": true,
+      "output": "```csharp\nvar blogs = await context.Blogs\n    .AsNoTracking()\n    .Include(b => b.Posts)\n    .Include(b => b.Contributors)\n    .ToListAsync(cancellationToken);\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 190,
+      "outputTokens": 45,
+      "estimated": true,
+      "output": "```csharp\nvar blogs = await db.Blogs\n    .AsNoTracking()\n    .AsSplitQuery()\n    .Include(b => b.Posts)\n    .Include(b => b.Contributors)\n    .ToListAsync(cancellationToken);\n```\n"
+    }
+  ]
+}

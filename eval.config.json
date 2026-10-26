@@ -1,0 +1,13 @@
+{
+  "skill": "skills/ef-linq/SKILL.md",
+  "cases": "evals/cases.json",
+  "trials": 3,
+  "minDelta": 0.3,
+  "models": [
+    { "id": "mock", "provider": "mock", "model": "mock" },
+    { "id": "haiku-5.5", "provider": "devin-cli", "model": "claude-haiku-5.5" },
+    { "id": "sonnet-5.5", "provider": "devin-cli", "model": "claude-sonnet-5.5" },
+    { "id": "gpt-6-luna", "provider": "devin-cli", "model": "gpt-6-luna-low" },
+    { "id": "api-haiku-5.5", "provider": "anthropic", "model": "claude-haiku-5-5" }
+  ]
+}

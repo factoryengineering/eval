@@ -1,0 +1,226 @@
+{
+  "summary": {
+    "runId": "2026-10-26T13-23-19-455Z",
+    "at": "2026-10-26T13:23:19.455Z",
+    "skillHash": "d2151feef2ee",
+    "trials": 1,
+    "lines": [
+      {
+        "model": "mock",
+        "line": "no-tracking",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "mock",
+        "line": "project",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "mock",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      },
+      {
+        "model": "mock",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "mock",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "mock": {
+        "input": 1425,
+        "output": 247,
+        "estimated": true,
+        "calls": 9
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "mock",
+      "line": "no-tracking",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsNoTracking\\(\\)/"
+      ],
+      "inputTokens": 167,
+      "outputTokens": 28,
+      "estimated": true,
+      "output": "```csharp\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "no-tracking",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 179,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "project",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /Select\\(/"
+      ],
+      "inputTokens": 156,
+      "outputTokens": 29,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "project",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 179,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 138,
+      "outputTokens": 28,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 166,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(/"
+      ],
+      "inputTokens": 154,
+      "outputTokens": 20,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 179,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "async",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /Async\\(/"
+      ],
+      "inputTokens": 142,
+      "outputTokens": 20,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "async",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 166,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    },
+    {
+      "model": "mock",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 153,
+      "outputTokens": 26,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\n```"
+    },
+    {
+      "model": "mock",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 170,
+      "outputTokens": 32,
+      "estimated": true,
+      "output": "```csharp\nAsNoTracking()\nSelect(...)\nWhere\nToList()\nToListAsync(cancellationToken)\nCancellationToken\nAsSplitQuery()\nInclude\n```"
+    }
+  ]
+}

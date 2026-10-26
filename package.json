@@ -1,0 +1,20 @@
+{
+  "name": "ef-linq-skill-eval",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Evaluation framework for a minimal Entity Framework LINQ skill",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node --test \"dist/test/*.test.js\"",
+    "test:dotnet": "dotnet test dotnet/Stage3.sln",
+    "eval": "tsc && node dist/src/cli.js run",
+    "eval:change": "tsc && node dist/src/cli.js change",
+    "eval:compare": "tsc && node dist/src/cli.js compare"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2"
+  }
+}

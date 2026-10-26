@@ -1,0 +1,21 @@
+[
+  {
+    "id": "list-popular-posts",
+    "prompt": "Using a BlogContext db (DbSet<Post> Posts with Title, Views), write a method returning the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "targets": ["no-tracking", "project", "async"],
+    "must": ["AsNoTracking\\(\\)", "Select\\(", "ToListAsync\\("]
+  },
+  {
+    "id": "blog-with-posts-and-tags",
+    "prompt": "Using a BlogContext db where Blog has collections Posts and Contributors, write a query loading all blogs with both collections. Return only a C# code block.",
+    "targets": ["split-query"],
+    "must": ["AsSplitQuery\\(\\)"]
+  },
+  {
+    "id": "search-by-title",
+    "prompt": "Using a BlogContext db, write a method that finds posts whose Title contains a search term, case-insensitively. Return only a C# code block.",
+    "targets": ["translatable", "async"],
+    "must": ["Async\\("],
+    "mustNot": ["ToList\\(\\)\\s*\\.Where", "AsEnumerable\\(\\)\\s*\\.Where"]
+  }
+]
