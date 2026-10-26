@@ -1,6 +1,6 @@
 # Skill iteration log (EDD: Red / Green / Refactor)
 
-Skill under test: `skills/ef-linq/SKILL.md`. Each iteration records baseline, hypothesis, change, measured result and reasoning.
+Skill under test: `.devin/skills/ef-linq/SKILL.md` (moved from `skills/ef-linq/` after Iteration 8 so the Devin coding agent loads it; text unchanged, hash 74acfcbbdcff). Each iteration records baseline, hypothesis, change, measured result and reasoning.
 Rates are "without the line -> with the full skill" pass rates. Command: `npm run eval -- --models <id> --lines <ids> --trials 5`.
 Evidence: `logs/evals.jsonl` (summaries), `logs/changes.jsonl` + `logs/snapshots/<hash>.md` (skill text per change), `runs/<runId>.json` (raw outputs).
 Model ids: `haiku-5.5`, `sonnet-5.5`, `gpt-6-luna` (all mid-tier or lower, via `devin-cli`; token counts are estimates).

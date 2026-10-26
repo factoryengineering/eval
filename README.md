@@ -30,7 +30,7 @@ There are no runtime npm dependencies. Anthropic API calls use `fetch`.
 ## Layout
 
 ```
-skills/ef-linq/SKILL.md    The skill under test. One rule per line: "- [id] text"
+.devin/skills/ef-linq/SKILL.md   The skill under test, in the folder Devin loads project skills from. One rule per line: "- [id] text"
 evals/cases.json           Eval cases: prompt, targeted line ids, must / mustNot regexes
 eval.config.json           Models, trials per case, minDelta
 src/                       skill parsing, providers, grading, runner, log store, CLI
@@ -44,6 +44,39 @@ runs/<runId>.json          Full per-trial record, including raw model output
 ```
 
 Rule ids (`[id]`) are stripped before the skill is sent to a model. They exist so cases and logs can refer to a line stably.
+
+## Skill structure and why it is not classic RTCC
+
+The skill targets a coding agent and must stay valid across projects and as schemas change. It records Entity Framework opinions only. That fixes which RTCC components can be load bearing, meaning removing them would flip an eval:
+
+| Component | In the skill? | Where it lives and why |
+| --- | --- | --- |
+| **Task** | Yes | The frontmatter `description` is what the agent reads to decide whether to load the skill. It is the only text present before the skill is chosen, so it is load bearing by discovery. An evaluation of it (the agent picks the skill for EF query work and ignores it for unrelated work) is planned, not yet built. |
+| **Constraints** | Yes | The `- [id]` rules. Each is ablated against a targeted case and must change pass rates (see `PROGRESS.md`). This is the whole body of the skill. |
+| **Context** | No | A schema in the skill would duplicate the repository, go stale as the model evolves, and tie the skill to one domain. The agent reads the entities and `DbContext` from the code, so context is supplied by the environment. The eval case prompts state the schema because there is no repository in the harness. That text belongs to the test, not the skill. |
+| **Output format** | No | The agent harness owns tool-call validity and file edits. The phrase "Return only a C# code block" appears in the case prompts only so graders can extract code. It is a test fixture, not a skill instruction. |
+| **Role** | No | See below. |
+
+Headings and section labels are not added, because they carry no instruction and no eval could measure them.
+
+### Why Role is absent
+
+1. **No measurable effect.** Zheng et al. evaluated 162 personas across 4 LLM families and 2,410 questions and found that adding personas to system prompts "does not improve model performance" against a no-persona control, and that the effect of any one persona is "largely random" (Findings of EMNLP 2024). A role line would fail this project's own test: it would show no delta when ablated.
+2. **The positive result does not apply.** Kong et al. found role-play prompting beat standard zero-shot prompting on reasoning benchmarks (NAACL 2024). Those gains came from a purpose-built multi-turn role immersion on reasoning tasks such as AQuA and Last Letter. They are not evidence that a one-line "You are an EF expert" helps code style rules. If an ablation ever shows a role line moving a case, it can be added back under the same load-bearing test.
+3. **Extra text has a cost.** Shi et al. showed that irrelevant context dramatically lowers model accuracy (ICML 2023). Levy et al. showed reasoning accuracy degrading at input lengths far below the technical maximum, with padding as the controlled variable (ACL 2024). Every unmeasured line in a skill is padding that the agent carries into every session where the skill loads.
+4. **Formatting is not free.** Sclar et al. found that meaning-preserving formatting changes alone shifted accuracy by up to 76 points on some models and correlated only weakly across models (ICLR 2024). Added structure is therefore a risk to be measured, not a safe default. That is why structure here is admitted only when an ablation shows it changing behavior, and why the skill is re-run on several models.
+
+### References
+
+- Zheng, M., Pei, J., Logeswaran, L., Lee, M., and Jurgens, D. (2024). When "A Helpful Assistant" Is Not Really Helpful: Personas in System Prompts Do Not Improve Performances of Large Language Models. Findings of EMNLP 2024. https://aclanthology.org/2024.findings-emnlp.888/
+- Kong, A., Zhao, S., Chen, H., et al. (2024). Better Zero-Shot Reasoning with Role-Play Prompting. NAACL 2024. https://aclanthology.org/2024.naacl-long.228/
+- Shi, F., Chen, X., Misra, K., et al. (2023). Large Language Models Can Be Easily Distracted by Irrelevant Context. ICML 2023. https://proceedings.mlr.press/v202/shi23a.html
+- Levy, M., Jacoby, A., and Goldberg, Y. (2024). Same Task, More Tokens: the Impact of Input Length on the Reasoning Performance of Large Language Models. ACL 2024. https://aclanthology.org/2024.acl-long.818/
+- Sclar, M., Choi, Y., Tsvetkov, Y., and Suhr, A. (2024). Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design. ICLR 2024. https://proceedings.iclr.cc/paper_files/paper/2024/hash/6c0e99d736da621403018ca7b32b1a4d-Abstract-Conference.html
+
+### Known gap: rule ids ship to the agent
+
+The `[id]` tags let the harness ablate lines, but the agent loads the file as written, so it also sees the ids. They are not load bearing text. Options are a sidecar mapping from id to line text, or a build step that strips them into the deployed file. This is not yet done.
 
 ## Usage
 

@@ -1,5 +1,5 @@
 {
-  "skill": "skills/ef-linq/SKILL.md",
+  "skill": ".devin/skills/ef-linq/SKILL.md",
   "cases": "evals/cases.json",
   "trials": 3,
   "minDelta": 0.3,
