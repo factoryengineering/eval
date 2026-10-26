@@ -13,6 +13,7 @@ export async function runEval(
   cases: EvalCase[],
   complete: Complete = realComplete,
   onTrial: (t: Trial) => void = () => {},
+  gradeFn: (c: EvalCase, text: string) => Promise<string[]> = async (c, text) => grade(c, text),
 ): Promise<{ summary: RunSummary; trials: Trial[] }> {
   const { lines } = parseSkill(skillSource);
   const ids = new Set(lines.map((l) => l.id));
@@ -44,7 +45,7 @@ export async function runEval(
         for (let n = 0; n < config.trials; n++) {
           for (const variant of ['without', 'with'] as const) {
             const r = await call(spec, c, variant === 'without' ? line.id : undefined, n);
-            const failures = grade(c, r.text);
+            const failures = await gradeFn(c, r.text);
             const t: Trial = {
               model: spec.id, line: line.id, variant, caseId: c.id, trial: n, pass: failures.length === 0, failures,
               inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text,
@@ -64,7 +65,7 @@ export async function runEval(
         const mine: Trial[] = [];
         for (let n = 0; n < config.trials; n++) {
           const r = await call(spec, c, undefined, n);
-          const failures = grade(c, r.text);
+          const failures = await gradeFn(c, r.text);
           const t: Trial = {
             model: spec.id, line: '(guard)', variant: 'with', caseId: c.id, trial: n, pass: failures.length === 0, failures,
             inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text,

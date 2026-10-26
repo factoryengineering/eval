@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { ExecRunner, makeGrader } from './exec.js';
 import { runEval } from './runner.js';
 import { annotate } from './skill.js';
 import { compare, logChange, readRuns, saveRun, table } from './store.js';
@@ -24,8 +25,9 @@ switch (cmd) {
     if (flag('lines')) config.lines = flag('lines')!.split(',');
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = JSON.parse(await readFile(config.cases, 'utf8')) as EvalCase[];
+    const runner = new ExecRunner();
     const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
-      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`));
+      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner)).finally(() => runner.close());
     await saveRun(summary, trials);
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);
     break;

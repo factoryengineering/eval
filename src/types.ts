@@ -19,11 +19,19 @@ export interface SkillLine {
   text: string;
 }
 
+export interface ExecSpec {
+  args?: { string?: string; int?: number };
+  sqlMust?: string[];
+  sqlMustNot?: string[];
+  minCommands?: number;
+}
+
 export interface EvalCase {
   id: string;
   prompt: string;
   targets: string[];
   guard?: boolean;
+  exec?: ExecSpec;
   must: string[];
   mustNot?: string[];
 }
