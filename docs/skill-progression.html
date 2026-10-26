@@ -25,9 +25,9 @@
 <body>
 
 <h1>ef-linq skill refinement</h1>
-<p class="sub">Four LINQ opinions turned into skill lines, measured with the eval framework. Model: <code>haiku-5.5</code> via <code>devin-cli</code>. Source: <code>PROGRESS.md</code> and <code>runs/</code>.</p>
+<p class="sub">Four LINQ opinions turned into skill lines, measured with the eval framework. Model: <code>haiku-5.5</code> via <code>devin-cli</code>. Source: <code>PROGRESS.md</code> and <code>runs/</code>. Sections 1 to 5 cover the first four iterations; sections 6 to 8 complete the story through commit <code>a7f4501</code>.</p>
 
-<h2>1. Final result: pass rate without vs. with each line</h2>
+<h2>1. Early result: pass rate without vs. with each line</h2>
 <p>"Without" removes only that one skill line; "with" is the full 8-line skill. 5 trials per case (run <code>2026-10-26T14-20-12-879Z</code>, commit <code>67b1112</code>).</p>
 <div class="legend">
   <span><span class="sw" style="background:var(--without)"></span>without the line</span>
@@ -180,12 +180,129 @@
   <tr><td>4</td><td><code>67b1112</code></td><td>Logged the confirmation run: all four lines load bearing</td></tr>
 </table>
 
+<h2>6. The rest of the story</h2>
+<p>Steps 1 to 4 were not the end. Sections 1 to 5 describe the state at commit <code>67b1112</code>; the later commits (<code>PROGRESS.md</code> Iterations 5 to 22) changed several of their conclusions.</p>
+<table>
+  <tr><th>Phase</th><th>Iterations</th><th>What happened</th></tr>
+  <tr>
+    <td>C: dead weight</td><td>5 to 8</td>
+    <td>The full-skill baseline showed <code>project</code>, <code>translatable</code> and <code>async</code> at 1.00 without the line. Causes were weak cases and a grader that only checked <code>ToListAsync(</code>, not the token. Cases were hardened (<code>async</code> 0.00 to 1.00, <code>split-query</code> 0.00 to 1.00), <code>project</code> was deleted as redundant with <code>values-only</code>, and <code>translatable</code> was rewritten three times to ban user-defined helpers and post-materialization filters (0.00 to 1.00). Three-model confirmation: 19 of 21 line-model cells load bearing.</td>
+  </tr>
+  <tr>
+    <td>B2: probes</td><td>9</td>
+    <td>Hypothesis: <code>values-only</code> breaks write paths that need a tracked entity. Rejected. Models read "read-only" as the scope. The one failure was prose mentioning <code>AsNoTracking()</code>, so grading was limited to fenced code. No new skill text.</td>
+  </tr>
+  <tr>
+    <td>D: description</td><td>10 to 11b</td>
+    <td>A trigger eval for the frontmatter description. Positives saturated even with a name-only description, so the spec moved to near-miss negatives (LINQ to objects, raw SQL, Dapper). The <code>actions</code> clause was dead weight and was dropped. Description is now <em>"Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL."</em> It beats name-only by +0.06 to +0.20 on five models.</td>
+  </tr>
+  <tr>
+    <td>E: neutral directory</td><td>12 to 13</td>
+    <td>Runs moved to an empty temp directory so the model could not see the real skill. Regression checks became <em>guard</em> cases that do not dilute line deltas. SWE-1.7 and SWE-2 joined, and all lines passed 100% with the skill on 5 models. Rule ids were moved to a sidecar file so the shipped <code>SKILL.md</code> is clean and byte-identical to what was tested.</td>
+  </tr>
+  <tr>
+    <td>F: executable graders</td><td>17 to 22</td>
+    <td>Regexes were replaced by oracles: Roslyn compile, run on seeded SQLite, assertions on executed SQL, syntax-tree checks, and a calibrated LLM judge for identifier names. Graders are themselves tested against good and bad reference solutions.</td>
+  </tr>
+</table>
+
+<h2>7. The twist: the earlier result was partly wrong</h2>
+<p>Under compile-and-run graders, the "all lines at 1.00" result from the regex era did not hold. Iteration 17 found three causes in the compiler errors:</p>
+<ul>
+  <li>Test noise: models invented types such as <code>PostSummary</code>. The prompts were fixed. A first fix that told the model to define its own types made every model redefine <code>BlogContext</code>, so every cell scored 0.00. That run was discarded.</li>
+  <li><strong>The step 3 fix was wrong.</strong> Tuple projections like <code>select (post.Title, post.Views)</code> raise <code>CS8143</code> inside an expression tree. They are valid only after materialisation. Widening the <code>values-only</code> regex hid a real failure instead of fixing a grader false negative. Section 3 and its note are superseded.</li>
+  <li>A rule interaction no regex could see: query syntax, meaningful names and a separate statement together led models to write <code>from post in posts</code> then <code>var post = await ...</code>, which fails with <code>CS1931</code>. The edit guard failed on all five models, 0.00 to 0.80.</li>
+</ul>
+<p>The fix was a new line, <code>distinct-result-name</code>: <em>"Give the awaited result a different name from the query's range variable."</em> Adding a concrete example to it did not help, so it was reverted to the shorter text.</p>
+
+<h3>distinct-result-name, 30 pooled trials per model</h3>
+<div class="legend">
+  <span><span class="sw" style="background:var(--without)"></span>without the line</span>
+  <span><span class="sw" style="background:var(--with)"></span>with the line</span>
+</div>
+<svg viewBox="0 0 640 270" role="img" aria-label="Grouped bar chart of distinct-result-name pass rate per model">
+  <line class="grid" x1="60" y1="30" x2="620" y2="30"/>
+  <line class="grid" x1="60" y1="120" x2="620" y2="120"/>
+  <line class="axis" x1="60" y1="210" x2="620" y2="210"/>
+  <line class="axis" x1="60" y1="30" x2="60" y2="210"/>
+  <text x="52" y="34" text-anchor="end">1.0</text>
+  <text x="52" y="124" text-anchor="end">0.5</text>
+  <text x="52" y="214" text-anchor="end">0</text>
+
+  <rect x="80" y="79" width="40" height="131" fill="var(--without)"/>
+  <rect x="124" y="30" width="40" height="180" fill="var(--with)"/>
+  <text x="100" y="73" text-anchor="middle">0.73</text><text x="144" y="24" text-anchor="middle">1.00</text>
+  <text x="122" y="228" text-anchor="middle">haiku-5.5</text>
+  <text x="122" y="244" text-anchor="middle" fill="#667">p = 0.002</text>
+
+  <rect x="190" y="30" width="40" height="180" fill="var(--without)"/>
+  <rect x="234" y="30" width="40" height="180" fill="var(--with)"/>
+  <text x="210" y="24" text-anchor="middle">1.00</text><text x="254" y="24" text-anchor="middle">1.00</text>
+  <text x="232" y="228" text-anchor="middle">sonnet-5.5</text>
+  <text x="232" y="244" text-anchor="middle" fill="#667">p = 1.0</text>
+
+  <rect x="300" y="97" width="40" height="113" fill="var(--without)"/>
+  <rect x="344" y="71" width="40" height="139" fill="var(--with)"/>
+  <text x="320" y="91" text-anchor="middle">0.63</text><text x="364" y="65" text-anchor="middle">0.77</text>
+  <text x="342" y="228" text-anchor="middle">gpt-6-luna</text>
+  <text x="342" y="244" text-anchor="middle" fill="#667">p = 0.20</text>
+
+  <rect x="410" y="97" width="40" height="113" fill="var(--without)"/>
+  <rect x="454" y="30" width="40" height="180" fill="var(--with)"/>
+  <text x="430" y="91" text-anchor="middle">0.63</text><text x="474" y="24" text-anchor="middle">1.00</text>
+  <text x="452" y="228" text-anchor="middle">swe-1.7</text>
+  <text x="452" y="244" text-anchor="middle" fill="#667">p = 0.0002</text>
+
+  <rect x="520" y="61" width="40" height="149" fill="var(--without)"/>
+  <rect x="564" y="30" width="40" height="180" fill="var(--with)"/>
+  <text x="540" y="55" text-anchor="middle">0.83</text><text x="584" y="24" text-anchor="middle">1.00</text>
+  <text x="562" y="228" text-anchor="middle">swe-2</text>
+  <text x="562" y="244" text-anchor="middle" fill="#667">p = 0.03</text>
+</svg>
+<p class="note">Pooled over all five models: 115/150 (0.77) without versus 143/150 (0.95) with, one-sided Fisher p = 1.7e-6. It misses the per-model 0.3 bar everywhere except swe-1.7, so it is a judgement call. It stays because it prevents a compile error in roughly a quarter of single-entity lookups.</p>
+
+<h2>8. Final result: five models, eight lines</h2>
+<p>Iteration 22, skill hash <code>4d208742187e</code>, graded by the executable oracles. Cells are pass rate without the line, then with the full skill. 5 trials unless noted. Load bearing means a delta of at least 0.3.</p>
+<table>
+  <tr><th>Line</th><th>haiku-5.5</th><th>sonnet-5.5</th><th>gpt-6-luna</th><th>swe-1.7</th><th>swe-2</th><th>Load bearing</th></tr>
+  <tr><td><code>translatable</code></td><td>0.00 &rarr; 0.80</td><td>0.80 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>4 of 5</td></tr>
+  <tr><td><code>async</code></td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>5 of 5</td></tr>
+  <tr><td><code>split-query</code></td><td>0.20 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.40 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>5 of 5</td></tr>
+  <tr><td><code>separate-spec</code> (10)</td><td>0.20 &rarr; 1.00</td><td>1.00 &rarr; 1.00</td><td>0.70 &rarr; 1.00</td><td>0.80 &rarr; 1.00</td><td>0.60 &rarr; 1.00</td><td>3 of 5</td></tr>
+  <tr><td><code>distinct-result-name</code> (30)</td><td>0.73 &rarr; 1.00</td><td>1.00 &rarr; 1.00</td><td>0.63 &rarr; 0.77</td><td>0.63 &rarr; 1.00</td><td>0.83 &rarr; 1.00</td><td>1 of 5</td></tr>
+  <tr><td><code>keyword-syntax</code></td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.20 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>5 of 5</td></tr>
+  <tr><td><code>meaningful-names</code> (10, judge)</td><td>0.00 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>1.00 &rarr; 1.00</td><td>0.40 &rarr; 1.00</td><td>0.10 &rarr; 1.00</td><td>4 of 5</td></tr>
+  <tr><td><code>values-only</code></td><td>0.40 &rarr; 1.00</td><td>0.00 &rarr; 1.00</td><td>0.60 &rarr; 1.00</td><td>1.00 &rarr; 1.00</td><td>1.00 &rarr; 1.00</td><td>3 of 5</td></tr>
+  <tr><td>guard <code>load-entity-for-edit</code></td><td>5/5</td><td>5/5</td><td>5/5</td><td>5/5</td><td>5/5</td><td>n/a</td></tr>
+</table>
+<p>With the skill, 38 of 40 line-model cells are at 1.00. The exceptions are haiku <code>translatable</code> (0.80) and luna <code>distinct-result-name</code> (0.77). 30 of 40 cells are load bearing. The shipped skill went from 5 lines (Iteration 0) to 8 rules. The earlier <code>project</code> line was deleted and <code>no-tracking</code> was replaced. The rules <code>split-query</code>, <code>async</code> and <code>translatable</code> were kept, and <code>distinct-result-name</code> was added.</p>
+<p>The <code>meaningful-names</code> judge was calibrated first. A rubric with an unstated "generic placeholder" clause split four judge models on 7 of 24 ordinary words. After the rubric was changed to mirror the skill's wording, all four judges matched 59 of 59 hand-labelled identifiers. Sonnet is the default judge, and it only labels bare identifier strings.</p>
+
+<h2>Commit log, continued</h2>
+<table>
+  <tr><th>Commit</th><th>Change</th></tr>
+  <tr><td><code>3a0484e</code></td><td>This report</td></tr>
+  <tr><td><code>b165382</code></td><td>Removed dead-weight lines, hardened cases, logged Iterations 5 to 8</td></tr>
+  <tr><td><code>94c3e08</code></td><td>Moved the skill to <code>.devin/skills</code> and documented the structure rationale</td></tr>
+  <tr><td><code>cd87669</code></td><td>Graded only fenced code so prose mentions do not fail cases</td></tr>
+  <tr><td><code>349a73d</code></td><td>Added the <code>load-entity-for-edit</code> probe (Iteration 9), no precedence line needed</td></tr>
+  <tr><td><code>48f96fb</code>, <code>10fad55</code>, <code>8f25116</code>, <code>a629525</code></td><td>Trigger eval harness, near-miss negatives, tightened description, documented Iterations 10 and 11</td></tr>
+  <tr><td><code>2813479</code>, <code>ee0c591</code></td><td>Guard cases, SWE-1.7 and SWE-2, neutral-directory five-model confirmation</td></tr>
+  <tr><td><code>f9b82ab</code>, <code>1bb9a68</code></td><td>Removed rule ids from the shipped skill via a sidecar mapping and corrected the byte-identical claim</td></tr>
+  <tr><td><code>c618c1b</code>, <code>bba5348</code>, <code>ddf618e</code></td><td>Roslyn EvalRunner, async exec grader, SQL and syntax oracles, audited against reference solutions</td></tr>
+  <tr><td><code>34aebc8</code></td><td>Calibrated LLM judge for identifier names</td></tr>
+  <tr><td><code>89564b5</code></td><td>Graded <code>separate-spec</code> semantically instead of by regex</td></tr>
+  <tr><td><code>6cf12b6</code></td><td>Added <code>distinct-result-name</code>, logged Iterations 17 to 22 with the Iteration 3 correction</td></tr>
+  <tr><td><code>a7f4501</code></td><td>Rewrote the repository's own <code>LinqTests</code> to follow the skill (query syntax, no <code>AsNoTracking</code>, separate statements, <code>CancellationToken</code>, meaningful names)</td></tr>
+</table>
+
 <h2>Caveats</h2>
 <ul class="note">
-  <li>One model (<code>haiku-5.5</code>) only. The other configured models are not yet measured.</li>
-  <li>Graders are regex and check form, not correctness.</li>
+  <li>Sections 1 to 5 are the original snapshot at <code>67b1112</code>: one model, regex graders, 3 to 5 trials. Section 3's grader fix is retracted in section 7, and the Iteration 1 to 16 rates should not be compared with Iterations 17 to 22.</li>
+  <li>The trigger eval spec was revised twice after seeing results, so its final numbers are likely optimistic. It has not been re-measured under the final graders, though it does not use them.</li>
+  <li>The judge calibration labels were written by the repository author and cover clear cases only. Sonnet is both a model under test and the default judge.</li>
+  <li>5-trial cells are coarse, so deltas of 0.2 are noise. 10 and 30 trial cells are marked.</li>
   <li>Token counts are estimates because the Devin CLI reports no usage.</li>
-  <li>Step 1 used 3 trials and later steps used 5, so small differences between steps are noisy.</li>
 </ul>
 
 </body>
