@@ -44,6 +44,7 @@ async function devinCli(model: string, system: string, prompt: string): Promise<
   await writeFile(file, full);
   try {
     var { stdout } = await run('devin', ['-p', '--prompt-file', file, '--model', model, '--respect-workspace-trust', 'false'], {
+      cwd: dir,
       maxBuffer: 10 * 1024 * 1024,
       timeout: 300_000,
     });

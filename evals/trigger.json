@@ -1,0 +1,34 @@
+{
+  "skillName": "ef-linq",
+  "distractors": [
+    { "name": "ef-migrations", "description": "Create, review and apply Entity Framework Core migrations." },
+    { "name": "ef-modeling", "description": "Configure Entity Framework Core entities, relationships and DbContext options." },
+    { "name": "sql-tuning", "description": "Diagnose slow SQL using execution plans and indexes." },
+    { "name": "xunit-tests", "description": "Write xUnit tests for .NET code." },
+    { "name": "react-components", "description": "Generate React components." },
+    { "name": "git-commit", "description": "Write commit messages and commit staged changes." }
+  ],
+  "clauses": [
+    { "id": "scope", "text": "Opinions for LINQ queries against an Entity Framework Core DbContext." },
+    { "id": "actions", "text": "Use when writing, reviewing, or refactoring them." },
+    { "id": "exclusions", "text": "Not for migrations, model configuration, raw SQL, or in-memory LINQ." }
+  ],
+  "baseline": "Write Entity Framework Core LINQ queries.",
+  "cases": [
+    { "id": "write-explicit", "expect": true, "targets": ["scope"], "prompt": "Write a method that returns the titles of posts with more than 100 views using our EF Core context." },
+    { "id": "write-implicit", "expect": true, "targets": ["scope"], "prompt": "Add a repository method that gets the ten most-viewed posts for a blog id from db.Posts." },
+    { "id": "write-report", "expect": true, "targets": ["scope"], "prompt": "I need a report of total views per blog. The data is in our DbContext." },
+    { "id": "review-query", "expect": true, "targets": ["actions"], "prompt": "Review this for problems:\n```csharp\nvar posts = db.Posts.ToList().Where(p => p.Views > 100);\n```" },
+    { "id": "refactor-n-plus-one", "expect": true, "targets": ["actions"], "prompt": "Refactor this so it stops making one query per blog:\n```csharp\nforeach (var b in db.Blogs.ToList()) b.Posts = db.Posts.Where(p => p.BlogId == b.Id).ToList();\n```" },
+    { "id": "fix-untranslatable", "expect": true, "targets": ["actions"], "prompt": "This throws 'could not be translated'. Fix it: db.Posts.Where(p => Slug.IsValid(p.Title))" },
+    { "id": "add-paging", "expect": true, "targets": ["actions"], "prompt": "Add paging to the existing GetPosts method. It queries db.Posts ordered by Views." },
+    { "id": "migration", "expect": false, "targets": ["exclusions"], "prompt": "Add a migration that adds a Slug column to Blog." },
+    { "id": "fluent-config", "expect": false, "targets": ["exclusions"], "prompt": "Configure the one-to-many relationship between Blog and Post with the Fluent API, with cascade delete." },
+    { "id": "dapper", "expect": false, "targets": ["exclusions"], "prompt": "Write a Dapper query that returns the top 10 posts by views from SQL Server." },
+    { "id": "in-memory", "expect": false, "targets": ["exclusions"], "prompt": "Given a List<Post> already in memory, group by BlogId and sum Views." },
+    { "id": "slow-sql", "expect": false, "targets": ["exclusions"], "prompt": "This SQL is slow, add the right index: SELECT Title FROM Posts WHERE BlogId = 7 ORDER BY Views DESC" },
+    { "id": "react", "expect": false, "targets": [], "prompt": "Build a React component that shows a list of posts." },
+    { "id": "django", "expect": false, "targets": [], "prompt": "Write a Django ORM query for posts with more than 100 views." },
+    { "id": "unit-tests", "expect": false, "targets": [], "prompt": "Write xUnit tests for a PriceCalculator class." }
+  ]
+}
