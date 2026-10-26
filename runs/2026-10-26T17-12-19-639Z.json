@@ -1,0 +1,1144 @@
+{
+  "summary": {
+    "runId": "2026-10-26T17-12-19-639Z",
+    "at": "2026-10-26T17:12:19.639Z",
+    "skillHash": "4ae7fc1326d4",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "swe-1.7",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "separate-spec",
+        "withRate": 1,
+        "withoutRate": 0.2,
+        "delta": 0.8,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "keyword-syntax",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "swe-1.7",
+        "line": "values-only",
+        "withRate": 1,
+        "withoutRate": 1,
+        "delta": 0,
+        "verdict": "not-load-bearing"
+      }
+    ],
+    "guards": [
+      {
+        "model": "swe-1.7",
+        "caseId": "load-entity-for-edit",
+        "rate": 1,
+        "n": 5
+      }
+    ],
+    "tokens": {
+      "swe-1.7": {
+        "input": 20895,
+        "output": 7768,
+        "estimated": true,
+        "calls": 75
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 115,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext blogContext,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var postsByPrefix =\n        from post in blogContext.Posts\n        where TitleRules.HasPrefix(post.Title, prefix)\n        select new PostSummary\n        {\n            Id = post.Id,\n            Title = post.Title\n        };\n\n    return await postsByPrefix.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(int Id, string Title);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 114,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic async Task<IReadOnlyList<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var matchingPosts =\n        from post in context.Posts\n        where TitleRules.HasPrefix(post.Title, prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    return await matchingPosts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 132,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostSummary(int Id, string Title, string Content, DateTime PublishedAt);\n\npublic async Task<List<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.Id, post.Title, post.Content, post.PublishedAt);\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where TitleRules.HasPrefix(post.Title, prefix)\n        select post;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 82,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var posts =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    return await posts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where TitleRules.HasPrefix(post.Title, prefix)\n        select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 109,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var matchingPosts =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    return await matchingPosts.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(int Id, string Title);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where TitleRules.HasPrefix(post.Title, prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(int Id, string Title);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<PostSummary>> GetPostsByPrefixAsync(\n    BlogContext context,\n    string prefix,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.StartsWith(prefix)\n        select new PostSummary(post.Id, post.Title);\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(int Id, string Title);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 73,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var query = from post in db.Posts\n                where post.Views > 100\n                orderby post.Views descending\n                select post.Title;\n\n    return await query.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 88,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext db,\n    CancellationToken cancellationToken)\n{\n    var query = from post in db.Posts\n                where post.Views > 100\n                orderby post.Views descending\n                select post.Title;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 75,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var query =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var titles = await query.ToListAsync();\n\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 84,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext db,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 79,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var query = from post in db.Posts\n                where post.Views > 100\n                orderby post.Views descending\n                select post.Title;\n\n    var titles = await query.ToListAsync();\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 84,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext db,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 75,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var popularPostTitles =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 88,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext db,\n    CancellationToken cancellationToken)\n{\n    var query = from post in db.Posts\n                where post.Views > 100\n                orderby post.Views descending\n                select post.Title;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 75,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var popularPostTitles =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext db,\n    CancellationToken cancellationToken)\n{\n    var titles = from post in db.Posts\n                 where post.Views > 100\n                 orderby post.Views descending\n                 select post.Title;\n\n    return await titles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from blog in context.Blogs\n                    .Include(b => b.Posts)\n                    .Include(b => b.Contributors)\n                select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadAllBlogsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> GetBlogsWithPostsAndContributorsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from blog in context.Blogs\n                    .Include(b => b.Posts)\n                    .Include(b => b.Contributors)\n                select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 102,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsForEditAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithCollectionsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var blogsQuery = from blog in context.Blogs\n                        .Include(blog => blog.Posts)\n                        .Include(blog => blog.Contributors)\n                     select blog;\n\n    var blogs = await blogsQuery.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithCollectionsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n            .AsSplitQuery()\n            .Include(eachBlog => eachBlog.Posts)\n            .Include(eachBlog => eachBlog.Contributors)\n        select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithCollectionsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken = default)\n{\n    var query = from blog in context.Blogs\n                    .Include(b => b.Posts)\n                    .Include(b => b.Contributors)\n                select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsForEditingAsync(\n    BlogContext context,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    var blogs = await query.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithCollectionsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from blog in context.Blogs\n            .Include(b => b.Posts)\n            .Include(b => b.Contributors)\n        select blog;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 98,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithRelatedDataAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from blog in context.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n            .AsSplitQuery()\n        select blog;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    return await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 97,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from post in context.Posts\n                where post.Views > 100\n                orderby post.Views descending\n                select post.Title;\n\n    var titles = await query.ToListAsync(cancellationToken);\n    return titles;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    return await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var titles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await titles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 81,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext context, CancellationToken cancellationToken)\n{\n    return await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 89,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 269,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var titles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await titles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    return await (\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPostTitles =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitles.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic record PopularPost(string Title, int Views);\n\npublic async Task<List<PopularPost>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPosts = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PopularPost(post.Title, post.Views));\n\n    return await popularPosts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 97,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPosts =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select (post.Title, post.Views);\n\n    return await popularPosts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 121,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var popularPostSummaries = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    return await popularPostSummaries.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetTopPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    var result = await query.ToListAsync(cancellationToken);\n\n    return result;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPosts = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    return await popularPosts.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 114,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var popularPosts = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        });\n\n    return await popularPosts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select (post.Title, post.Views);\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 121,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<PostSummary>> GetPopularPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = context.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPosts = await query.ToListAsync(cancellationToken);\n\n    return popularPosts;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 109,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> GetPopularPostsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary(post.Title, post.Views);\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\binto\\s+[a-z]\\b/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 134,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into g\n        select new { BlogId = g.Key, TotalViews = g.Sum(p => p.Views) };\n\n    var result = await query.ToDictionaryAsync(\n        x => x.BlogId,\n        x => x.TotalViews,\n        cancellationToken);\n\n    return result;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 135,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(int BlogId, int TotalViews)>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select (\n            BlogId: blogGroup.Key,\n            TotalViews: blogGroup.Sum(post => post.Views)\n        );\n\n    var results = await query.ToListAsync(cancellationToken);\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\binto\\s+[a-z]\\b/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 127,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into g\n        select new { g.Key, TotalViews = g.Sum(p => p.Views) };\n\n    var results = await query.ToListAsync(cancellationToken);\n\n    return results.ToDictionary(r => r.Key, r => r.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 126,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<(int BlogId, int TotalViews)>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select (BlogId: blogGroup.Key, TotalViews: blogGroup.Sum(groupedPost => groupedPost.Views));\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\binto\\s+[a-z]\\b/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 133,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query = from post in context.Posts\n                where post.Title.Contains(searchTerm)\n                group post by post.BlogId into g\n                select new { BlogId = g.Key, TotalViews = g.Sum(p => p.Views) };\n\n    return await query.ToDictionaryAsync(\n        x => x.BlogId,\n        x => x.TotalViews,\n        cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 156,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViews>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new BlogViews\n        {\n            BlogId = blogGroup.Key,\n            TotalViews = blogGroup.Sum(post => post.Views)\n        };\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic class BlogViews\n{\n    public int BlogId { get; set; }\n    public int TotalViews { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 159,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<BlogViewSummary>> GetTotalViewsPerBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new BlogViewSummary\n        {\n            BlogId = blogPosts.Key,\n            TotalViews = blogPosts.Sum(p => p.Views)\n        };\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic class BlogViewSummary\n{\n    public int BlogId { get; init; }\n    public int TotalViews { get; init; }\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new\n        {\n            BlogId = blogGroup.Key,\n            TotalViews = blogGroup.Sum(post => post.Views)\n        };\n\n    var summaries = await query.ToListAsync(cancellationToken);\n\n    return summaries.ToDictionary(summary => summary.BlogId, summary => summary.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\binto\\s+[a-z]\\b/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 129,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into g\n        select new { BlogId = g.Key, TotalViews = g.Sum(p => p.Views) };\n\n    var results = await query.ToListAsync(cancellationToken);\n\n    return results.ToDictionary(r => r.BlogId, r => r.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 133,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(int BlogId, int TotalViews)>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var blogViewTotals =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select (BlogId: blogGroup.Key, TotalViews: blogGroup.Sum(post => post.Views));\n\n    var results = await blogViewTotals.ToListAsync(cancellationToken);\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 91,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic async Task<IReadOnlyList<PostSummary>> ListPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from post in context.Posts\n                select new PostSummary(post.Title, post.Views);\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic record PostView(string Title, int Views);\n\npublic async Task<List<PostView>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var postViews = from post in context.Posts\n                    select new PostView(post.Title, post.Views);\n\n    return await postViews.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<(string Title, int Views)>> ListPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from post in context.Posts\n                select (post.Title, post.Views);\n\n    var posts = await query.ToListAsync(cancellationToken);\n\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 97,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> ListPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var result = await query.ToListAsync(cancellationToken);\n\n    return result;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 76,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var posts = from post in context.Posts\n                select (post.Title, post.Views);\n\n    return await posts.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> GetPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task<IReadOnlyList<PostSummary>> ListPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken = default)\n{\n    var query = from post in context.Posts\n                select new PostSummary(post.Title, post.Views);\n\n    var summaries = await query.ToListAsync(cancellationToken);\n    return summaries;\n}\n\npublic record PostSummary(string Title, long Views);\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 84,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> ListPostsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select (Title: post.Title, Views: post.Views);\n\n    var posts = await query.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 129,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<PostSummary>> ListPostSummariesAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query = from post in context.Posts\n                select new PostSummary\n                {\n                    Title = post.Title,\n                    Views = post.Views\n                };\n\n    return await query.ToListAsync(cancellationToken);\n}\n\npublic record PostSummary\n{\n    public string Title { get; init; }\n    public int Views { get; init; }\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<IReadOnlyList<(string Title, int Views)>> ListPostViewsAsync(\n    BlogContext context,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        select (post.Title, post.Views);\n\n    var results = await query.ToListAsync(cancellationToken);\n\n    return results;\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 121,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var postQuery = from post in context.Posts\n                    where post.Id == id\n                    select post;\n\n    var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (post is null)\n        return;\n\n    post.Title = newTitle;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 116,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var postQuery =\n        from p in context.Posts\n        where p.Id == id\n        select p;\n\n    var post = await postQuery.FirstOrDefaultAsync(cancellationToken);\n\n    if (post is not null)\n    {\n        post.Title = newTitle;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string newTitle,\n    CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in context.Posts\n        where post.Id == id\n        select post;\n\n    var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n\n    if (post is null)\n    {\n        return;\n    }\n\n    post.Title = newTitle;\n    await context.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 124,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var query = from post in context.Posts\n                where post.Id == id\n                select post;\n\n    var existingPost = await query.FirstOrDefaultAsync(cancellationToken);\n\n    if (existingPost is not null)\n    {\n        existingPost.Title = newTitle;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "swe-1.7",
+      "line": "(guard)",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 118,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(\n    BlogContext context,\n    int id,\n    string newTitle,\n    CancellationToken cancellationToken = default)\n{\n    var query = from post in context.Posts\n                where post.Id == id\n                select post;\n\n    var post = await query.FirstOrDefaultAsync(cancellationToken);\n\n    if (post is not null)\n    {\n        post.Title = newTitle;\n        await context.SaveChangesAsync(cancellationToken);\n    }\n}\n```\n"
+    }
+  ]
+}

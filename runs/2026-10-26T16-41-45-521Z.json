@@ -1,0 +1,1201 @@
+{
+  "summary": {
+    "runId": "2026-10-26T16-41-45-521Z",
+    "at": "2026-10-26T16:41:45.521Z",
+    "skillHash": "4ae7fc1326d4",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "translatable",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "async",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "split-query",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "separate-spec",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "keyword-syntax",
+        "withRate": 1,
+        "withoutRate": 0,
+        "delta": 1,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "meaningful-names",
+        "withRate": 1,
+        "withoutRate": 0.4,
+        "delta": 0.6,
+        "verdict": "load-bearing"
+      },
+      {
+        "model": "haiku-5.5",
+        "line": "values-only",
+        "withRate": 1,
+        "withoutRate": 0.7,
+        "delta": 0.30000000000000004,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 22195,
+        "output": 9576,
+        "estimated": true,
+        "calls": 80
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 163,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(int Id, string Title);\n\npublic class PostQueries(BlogContext blogContext)\n{\n    public async Task<List<PostSummary>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n    {\n        var candidatePosts =\n            from post in blogContext.Posts\n            where post.Title.StartsWith(titlePrefix)\n            select new PostSummary(post.Id, post.Title);\n\n        var candidateList = await candidatePosts.ToListAsync(cancellationToken);\n\n        return candidateList\n            .Where(summary => TitleRules.HasPrefix(summary.Title, titlePrefix))\n            .ToList();\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 101,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsWithTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithPrefix = from post in blogContext.Posts\n                          where post.Title.StartsWith(titlePrefix)\n                          select post;\n\n    var matchingPosts = await postsWithPrefix.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithPrefix = from post in blogContext.Posts\n                          where TitleRules.HasPrefix(post.Title, titlePrefix)\n                          select post;\n\n    var matchingPosts = await postsWithPrefix.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 76,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string prefix, CancellationToken cancellationToken)\n{\n    var query =\n        from post in blogContext.Posts\n        where post.Title.StartsWith(prefix)\n        select post;\n\n    return await query.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 132,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(int Id, string Title);\n\npublic async Task<List<PostSummary>> GetPostsWithTitlePrefixAsync(string prefix, CancellationToken cancellationToken)\n{\n    var postSummaries = from post in blogContext.Posts\n                        select new PostSummary(post.Id, post.Title);\n    var loadedPostSummaries = await postSummaries.ToListAsync(cancellationToken);\n    return loadedPostSummaries\n        .Where(postSummary => TitleRules.HasPrefix(postSummary.Title, prefix))\n        .ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(BlogContext blogContext, string titlePrefix, CancellationToken cancellationToken)\n{\n    var postQuery =\n        from post in blogContext.Posts\n        where post.Title.StartsWith(titlePrefix)\n        select post;\n\n    var posts = await postQuery.ToListAsync(cancellationToken);\n    return posts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithMatchingTitle =\n        from post in blogContext.Posts\n        where TitleRules.HasPrefix(post.Title, titlePrefix)\n        select post;\n\n    var matchingPosts = await postsWithMatchingTitle.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 100,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithPrefix = from post in blogContext.Posts\n                          where post.Title.StartsWith(titlePrefix)\n                          select post;\n\n    var matchingPosts = await postsWithPrefix.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "without",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /HasPrefix\\(/"
+      ],
+      "inputTokens": 242,
+      "outputTokens": 96,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsWithPrefix =\n        from post in blogContext.Posts\n        where TitleRules.HasPrefix(post.Title, titlePrefix)\n        select post;\n\n    var matchingPosts = await postsWithPrefix.ToListAsync(cancellationToken);\n    return matchingPosts;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "translatable",
+      "variant": "with",
+      "caseId": "search-by-title",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Post>> GetPostsByTitlePrefixAsync(string titlePrefix, CancellationToken cancellationToken)\n{\n    var postsQuery =\n        from post in blogContext.Posts\n        where post.Title.StartsWith(titlePrefix)\n        select new { post.Id, post.Title };\n\n    var postProjections = await postsQuery.ToListAsync(cancellationToken);\n    ...\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 82,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext)\n{\n    var popularPostTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitlesQuery.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 154,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic class BlogPostService\n{\n    private readonly BlogContext blogContext;\n\n    public BlogPostService(BlogContext blogContext)\n    {\n        this.blogContext = blogContext;\n    }\n\n    public async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n    {\n        var popularPostTitlesQuery =\n            from post in blogContext.Posts\n            where post.Views > 100\n            orderby post.Views descending\n            select post.Title;\n\n        return await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 82,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext)\n{\n    var popularPostTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitlesQuery.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 88,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in dbContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitleQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 81,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitleQuery.ToListAsync();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 106,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitleQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitleQuery.ToListAsync();\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 106,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitleQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "without",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /ToListAsync\\(\\s*\\w*[Cc]ancellationToken\\w*\\s*\\)/"
+      ],
+      "inputTokens": 265,
+      "outputTokens": 98,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext db)\n{\n    var popularPostTitlesQuery =\n        from post in db.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitlesQuery.ToListAsync();\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "async",
+      "variant": "with",
+      "caseId": "list-popular-posts",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 289,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitleQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 82,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> GetBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors)\n        select blog;\n\n    return await blogQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in blogContext.Blogs.AsSplitQuery()\n                                      .Include(blog => blog.Posts)\n                                      .Include(blog => blog.Contributors)\n        select blog;\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 82,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors)\n        select blog;\n\n    return await blogQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogQuery = from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors).AsSplitQuery()\n                    select blog;\n\n    return await blogQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 103,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var blogsWithCollectionsQuery =\n        from blog in blogContext.Blogs\n            .Include(blog => blog.Posts)\n            .Include(blog => blog.Contributors)\n        select blog;\n\n    return await blogsWithCollectionsQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 93,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors).AsSplitQuery()\n        select blog;\n\n    return await blogsQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 94,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogQuery = from blog in blogContext.Blogs select blog;\n    blogQuery = blogQuery.Include(blog => blog.Posts).Include(blog => blog.Contributors);\n\n    var loadedBlogs = await blogQuery.ToListAsync(cancellationToken);\n    return loadedBlogs;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 86,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogsQuery =\n        from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors).AsSplitQuery()\n        select blog;\n\n    return await blogsQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "without",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /AsSplitQuery\\(\\)/"
+      ],
+      "inputTokens": 278,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(\n    BlogContext blogContext,\n    CancellationToken cancellationToken)\n{\n    var blogsWithRelatedEntitiesQuery =\n        from blog in blogContext.Blogs\n            .Include(blogWithPosts => blogWithPosts.Posts)\n            .Include(blogWithContributors => blogWithContributors.Contributors)\n        select blog;\n\n    var blogsWithRelatedEntities = await blogsWithRelatedEntitiesQuery.ToListAsync(cancellationToken);\n    return blogsWithRelatedEntities;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "split-query",
+      "variant": "with",
+      "caseId": "blog-with-posts-and-tags",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 295,
+      "outputTokens": 92,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<Blog>> LoadBlogsWithPostsAndContributorsAsync(CancellationToken cancellationToken)\n{\n    var blogQuery =\n        from blog in blogContext.Blogs.Include(blog => blog.Posts).Include(blog => blog.Contributors).AsSplitQuery()\n        select blog;\n\n    var blogs = await blogQuery.ToListAsync(cancellationToken);\n    return blogs;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    return await (\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 106,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitleQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    return await (\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitlesQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    return await (\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitles = await (\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 95,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitleQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    return await popularPostTitleQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "without",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)/",
+        "missing /await\\s+\\w+\\.\\w+Async\\(/",
+        "forbidden /await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)/"
+      ],
+      "inputTokens": 269,
+      "outputTokens": 83,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    return await (\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title\n    ).ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "separate-spec",
+      "variant": "with",
+      "caseId": "spec-then-execute",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 290,
+      "outputTokens": 107,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<string>> GetPopularPostTitlesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostTitlesQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select post.Title;\n\n    var popularPostTitles = await popularPostTitlesQuery.ToListAsync(cancellationToken);\n    return popularPostTitles;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 148,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        });\n\n    return await popularPostsQuery.ToListAsync(cancellationToken);\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 182,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPosts = from post in blogContext.Posts\n                       where post.Views > 100\n                       orderby post.Views descending\n                       select new PostSummary\n                       {\n                           Title = post.Title,\n                           Views = post.Views\n                       };\n\n    var popularPostSummaries = await popularPosts.ToListAsync(cancellationToken);\n\n    return popularPostSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 171,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostSummariesQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary(post.Title, post.Views));\n\n    var popularPostSummaries = await popularPostSummariesQuery.ToListAsync(cancellationToken);\n    return popularPostSummaries;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 155,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var popularPostSummaries = await popularPostQuery.ToListAsync(cancellationToken);\n    return popularPostSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; }\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 145,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        });\n\n    var popularPostSummaries = await popularPostsQuery.ToListAsync(cancellationToken);\n\n    return popularPostSummaries;\n}\n\npublic record PostSummary(string Title, int Views);\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 155,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var popularPosts = await popularPostQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        });\n\n    var popularPostSummaries = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPostSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 157,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostViewSummary>> GetPopularPostsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostViewSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var popularPosts = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPosts;\n}\n\npublic class PostViewSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "without",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /\\bfrom\\s+\\w+\\s+in\\b/",
+        "missing /\\bselect\\b/",
+        "forbidden /\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\(/"
+      ],
+      "inputTokens": 275,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostsQuery = blogContext.Posts\n        .Where(post => post.Views > 100)\n        .OrderByDescending(post => post.Views)\n        .Select(post => new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        });\n\n    var popularPostSummaries = await popularPostsQuery.ToListAsync(cancellationToken);\n    return popularPostSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "keyword-syntax",
+      "variant": "with",
+      "caseId": "keyword-filter-order-project",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 293,
+      "outputTokens": 159,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<PostSummary>> GetPopularPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var popularPostQuery =\n        from post in blogContext.Posts\n        where post.Views > 100\n        orderby post.Views descending\n        select new PostSummary\n        {\n            Title = post.Title,\n            Views = post.Views\n        };\n\n    var popularPostSummaries = await popularPostQuery.ToListAsync(cancellationToken);\n    return popularPostSummaries;\n}\n\npublic class PostSummary\n{\n    public string Title { get; set; } = string.Empty;\n    public int Views { get; set; }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 145,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new\n        {\n            BlogId = blogGroup.Key,\n            TotalViews = blogGroup.Sum(p => p.Views)\n        };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 150,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(BlogContext blogContext, string searchTerm, CancellationToken cancellationToken)\n{\n    var totalViewsQuery =\n        from post in blogContext.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(post => post.Views) };\n\n    var totalViews = await totalViewsQuery.ToListAsync(cancellationToken);\n\n    return totalViews.ToDictionary(blogTotal => blogTotal.BlogId, blogTotal => blogTotal.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 276,
+      "outputTokens": 179,
+      "estimated": true,
+      "output": "```csharp\nusing System.Collections.Generic;\nusing System.Linq;\nusing System.Threading;\nusing System.Threading.Tasks;\nusing Microsoft.EntityFrameworkCore;\n\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(post => post.Views) };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 162,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(BlogContext blogContext, string searchTerm, CancellationToken cancellationToken)\n{\n    var matchingPosts = from post in blogContext.Posts\n                        where post.Title.Contains(searchTerm)\n                        group post by post.BlogId into blogGroup\n                        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(post => post.Views) };\n\n    var totalViewsByBlog = await matchingPosts.ToListAsync(cancellationToken);\n\n    return totalViewsByBlog.ToDictionary(blogTotal => blogTotal.BlogId, blogTotal => blogTotal.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post.Views by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum() };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(t => t.BlogId, t => t.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 152,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(\n    BlogContext blogContext,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var totalViewsPerBlogQuery =\n        from post in blogContext.Posts\n        where post.Title.Contains(searchTerm)\n        group post.Views by post.BlogId into blogGroup\n        select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum() };\n\n    var totalViewsPerBlog = await totalViewsPerBlogQuery.ToListAsync(cancellationToken);\n\n    return totalViewsPerBlog.ToDictionary(blog => blog.BlogId, blog => blog.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 276,
+      "outputTokens": 137,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsPerBlogAsync(BlogContext context, string searchTerm, CancellationToken cancellationToken)\n{\n    var query =\n        from post in context.Posts\n        where post.Title.Contains(searchTerm)\n        group post by post.BlogId into blogPosts\n        select new { BlogId = blogPosts.Key, TotalViews = blogPosts.Sum(post => post.Views) };\n\n    var totals = await query.ToListAsync(cancellationToken);\n\n    return totals.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 151,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<Dictionary<int, int>> GetTotalViewsByBlogIdAsync(BlogContext blogContext, string searchTerm, CancellationToken cancellationToken)\n{\n    var matchingViewTotals = from post in blogContext.Posts\n                             where post.Title.Contains(searchTerm)\n                             group post by post.BlogId into blogGroup\n                             select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(post => post.Views) };\n\n    return await matchingViewTotals.ToDictionaryAsync(total => total.BlogId, total => total.TotalViews, cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "without",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /\\b[a-z]\\s*=>/",
+        "forbidden /\\b[a-z]\\.[A-Z]/"
+      ],
+      "inputTokens": 276,
+      "outputTokens": 142,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken = default)\n{\n    var query = from post in context.Posts\n                where post.Title.Contains(searchTerm)\n                group post by post.BlogId into blogGroup\n                select new { BlogId = blogGroup.Key, TotalViews = blogGroup.Sum(post => post.Views) };\n\n    var totals = await query.ToDictionaryAsync(x => x.BlogId, x => x.TotalViews, cancellationToken);\n    return totals;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "meaningful-names",
+      "variant": "with",
+      "caseId": "names-grouped-totals",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 292,
+      "outputTokens": 197,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<Dictionary<int, int>> GetTotalViewsByBlogAsync(\n    BlogContext context,\n    string searchTerm,\n    CancellationToken cancellationToken)\n{\n    var postsMatchingTitle = from post in context.Posts\n                             where post.Title.Contains(searchTerm)\n                             group post by post.BlogId into blogGroup\n                             select new\n                             {\n                                 BlogId = blogGroup.Key,\n                                 TotalViews = blogGroup.Sum(post => post.Views)\n                             };\n\n    var totalsPerBlog = await postsMatchingTitle.ToListAsync(cancellationToken);\n\n    return totalsPerBlog.ToDictionary(total => total.BlogId, total => total.TotalViews);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> ListPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaries =\n        from post in blogContext.Posts\n        select new { post.Title, post.Views };\n\n    var postSummaryList = await postSummaries.ToListAsync(cancellationToken);\n\n    return postSummaryList\n        .Select(postSummary => (postSummary.Title, postSummary.Views))\n        .ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 90,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> GetPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitlesAndViewsQuery =\n        from post in blogContext.Posts\n        select (Title: post.Title, Views: post.Views);\n\n    return await postTitlesAndViewsQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 87,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> GetPostTitleAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select (post.Title, post.Views);\n\n    return await postSummaryQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 99,
+      "estimated": true,
+      "output": "```csharp\npublic record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummariesQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    return await postSummariesQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 255,
+      "outputTokens": 115,
+      "estimated": true,
+      "output": "```csharp\npublic async Task ListPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaries = from post in blogContext.Posts\n                        select new { post.Title, post.Views };\n\n    var postSummaryList = await postSummaries.ToListAsync(cancellationToken);\n\n    foreach (var postSummary in postSummaryList)\n    {\n        Console.WriteLine($\"{postSummary.Title}: {postSummary.Views}\");\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 113,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<List<(string Title, int Views)>> GetPostTitleViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaries = from post in blogContext.Posts\n                        select new { post.Title, post.Views };\n\n    var postSummaryList = await postSummaries.ToListAsync(cancellationToken);\n\n    return postSummaryList.Select(postSummary => (postSummary.Title, postSummary.Views)).ToList();\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class PostReport\n{\n    public static async Task<List<PostSummary>> GetPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var postSummaryQuery =\n            from post in blogContext.Posts.AsNoTracking()\n            select new PostSummary(post.Title, post.Views);\n\n        var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 106,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<(string Title, int Views)>> ListPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitlesAndViewsQuery = from post in blogContext.Posts\n                                  select (post.Title, post.Views);\n\n    var postTitlesAndViews = await postTitlesAndViewsQuery.ToListAsync(cancellationToken);\n\n    return postTitlesAndViews;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 255,
+      "outputTokens": 85,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<(string Title, int Views)>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postViewQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select (post.Title, post.Views);\n\n    return await postViewQuery.ToListAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 281,
+      "outputTokens": 108,
+      "estimated": true,
+      "output": "```csharp\npublic sealed record PostSummary(string Title, int Views);\n\npublic async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n    return postSummaries;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 260,
+      "outputTokens": 135,
+      "estimated": true,
+      "output": "```csharp\npublic async Task<bool> UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var postToUpdate = await postQuery.FirstOrDefaultAsync(cancellationToken);\n    if (postToUpdate is null)\n    {\n        return false;\n    }\n\n    postToUpdate.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n    return true;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 147,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task<bool> UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken = default)\n{\n    var matchingPostQuery =\n        from post in blogContext.Posts\n        where post.Id == postId\n        select post;\n\n    var postToUpdate = await matchingPostQuery.FirstOrDefaultAsync(cancellationToken);\n    if (postToUpdate is null)\n    {\n        return false;\n    }\n\n    postToUpdate.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n    return true;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 260,
+      "outputTokens": 145,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var matchingPostQuery = from post in blogContext.Posts\n                            where post.Id == postId\n                            select post;\n\n    var postToUpdate = await matchingPostQuery.FirstOrDefaultAsync(cancellationToken);\n    if (postToUpdate is null)\n    {\n        return;\n    }\n\n    postToUpdate.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 153,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var matchingPostQuery = from candidatePost in blogContext.Posts\n                            where candidatePost.Id == postId\n                            select candidatePost;\n\n    var post = await matchingPostQuery.FirstOrDefaultAsync(cancellationToken)\n        ?? throw new KeyNotFoundException($\"No post found with id {postId}.\");\n\n    post.Title = newTitle;\n\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 260,
+      "outputTokens": 144,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic async Task<bool> UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var matchingPost = await postQuery.FirstOrDefaultAsync(cancellationToken);\n    if (matchingPost is null)\n    {\n        return false;\n    }\n\n    matchingPost.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n    return true;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 2,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\npublic async Task ChangePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n    if (post is null)\n    {\n        throw new InvalidOperationException($\"Post with id {postId} was not found.\");\n    }\n\n    post.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 260,
+      "outputTokens": 176,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostTitleEditor\n{\n    public static async Task<bool> ChangePostTitleAsync(\n        BlogContext blogContext,\n        int postId,\n        string newTitle,\n        CancellationToken cancellationToken)\n    {\n        var postQuery =\n            from post in blogContext.Posts\n            where post.Id == postId\n            select post;\n\n        var matchingPost = await postQuery.SingleOrDefaultAsync(cancellationToken);\n        if (matchingPost is null)\n        {\n            return false;\n        }\n\n        matchingPost.Title = newTitle;\n        await blogContext.SaveChangesAsync(cancellationToken);\n        return true;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 128,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var matchingPost = await postQuery.SingleOrDefaultAsync(cancellationToken);\n    if (matchingPost is null)\n    {\n        return;\n    }\n\n    matchingPost.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 260,
+      "outputTokens": 128,
+      "estimated": true,
+      "output": "```csharp\npublic async Task UpdatePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var matchingPost = await postQuery.FirstOrDefaultAsync(cancellationToken);\n    if (matchingPost is null)\n    {\n        return;\n    }\n\n    matchingPost.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "load-entity-for-edit",
+      "trial": 4,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 286,
+      "outputTokens": 122,
+      "estimated": true,
+      "output": "```csharp\npublic async Task ChangePostTitleAsync(BlogContext blogContext, int postId, string newTitle, CancellationToken cancellationToken)\n{\n    var postQuery = from post in blogContext.Posts\n                    where post.Id == postId\n                    select post;\n\n    var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n    if (post is null)\n    {\n        return;\n    }\n\n    post.Title = newTitle;\n    await blogContext.SaveChangesAsync(cancellationToken);\n}\n```\n"
+    }
+  ]
+}

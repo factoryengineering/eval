@@ -117,10 +117,41 @@ The frontmatter `description` is the only skill text the agent sees before decid
 
 - **Reasoning:** the description gains +0.06 to +0.14 overall over name-only, and negatives improve most (haiku 0.77 -> 0.95, sonnet 0.87 -> 0.97, luna 0.62 -> 0.85). Both remaining clauses are load bearing on 2 of 3 models. Recall is about 1.00 in every variant, so the description does not help recall at all; the name does that.
 
+### Iteration 11b - add SWE-1.7 and SWE-2 to the trigger suite
+Same spec and description (hash 4ae7fc1326d4), 3 trials. SWE models: `swe-1-7-medium` and `swe-2-medium`.
+
+| Model | `none` | `baseline` | `full` | `scope` without -> with | `exclusions` without -> with |
+| --- | --- | --- | --- | --- | --- |
+| swe-1.7 | 0.76 | 0.79 | 0.89 | 0.25 -> 0.42 (0.17, not) | 0.67 -> 1.00 (load bearing) |
+| swe-2 | 0.77 | 0.91 | 0.97 | 0.25 -> 0.92 (load bearing) | 0.44 -> 0.89 (load bearing) |
+
+Across all 5 models `scope` is load bearing on 3 (haiku, sonnet, swe-2) and `exclusions` on 4 (all but luna). `full` beats name-only on every model (+0.06 to +0.20).
+
+## Phase E: neutral-directory re-run and five-model confirmation
+
+### Iteration 12 - REFACTOR: guard cases; GREEN: confirmation on 5 models (skill hash 4ae7fc1326d4, skill text unchanged)
+- **Baseline:** Iteration 9 ran after the skill moved, from the project directory, so the model could see the one-line description of `ef-linq`. A first neutral-directory re-run of all 7 lines on 5 models (runs 2026-10-26T16-3x to T16-4x) also exposed a harness flaw: the `load-entity-for-edit` probe targeted `values-only`, so its always-passing results were pooled into that line and diluted its delta (haiku 0.70 -> 1.00, delta 0.30; swe-2 1.00 -> 1.00).
+- **Hypothesis:** a regression check is not an ablation. Run it with the full skill only and report it separately, and the `values-only` delta reflects only the case that tests it.
+- **Change (harness only):** `EvalCase.guard`. Guard cases run with the full skill, skip line deltas, and appear as a `guards` section in the summary (unit test added). `load-entity-for-edit` is now a guard. SWE-1.7 and SWE-2 added to `eval.config.json`.
+- **Result (5 trials, neutral directory, without -> with):**
+
+| Line | haiku-5.5 | sonnet-5.5 | gpt-6-luna | swe-1.7 | swe-2 |
+| --- | --- | --- | --- | --- | --- |
+| `translatable` | 0.00 -> 1.00 | 0.60 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 |
+| `async` | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 |
+| `split-query` | 0.00 -> 1.00 | 0.60 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 |
+| `separate-spec` | 0.00 -> 1.00 | 1.00 -> 1.00 (not) | 0.00 -> 1.00 | 0.20 -> 1.00 | 0.20 -> 1.00 |
+| `keyword-syntax` | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 | 0.00 -> 1.00 |
+| `meaningful-names` | 0.20 -> 1.00 | 0.00 -> 1.00 | 1.00 -> 1.00 (not) | 0.00 -> 1.00 | 0.00 -> 1.00 |
+| `values-only` | 0.40 -> 1.00 | 0.00 -> 1.00 | 0.60 -> 1.00 | 1.00 -> 1.00 (not) | 0.80 -> 1.00 (0.20, not) |
+| guard `load-entity-for-edit` | 5/5 | 5/5 | 5/5 | 5/5 | 5/5 |
+
+- **Reasoning:** every line passes 100% with the skill on every model, and the Iteration 9 conclusion (`values-only` does not break tracked-entity writes) holds from a neutral directory, now on 5 models. 31 of 35 line-model cells are load bearing; every line is load bearing on at least 3 of 5 models (`values-only` is weakest: haiku, sonnet and luna, with the SWE models already avoiding `AsNoTracking()` unprompted). The first neutral re-run is kept in `runs/` as superseded evidence.
+
 ## Caveats
 
 - Trigger eval: the spec was revised twice after seeing results (Iterations 10 and 11), so the final numbers are tuned to the final cases and likely optimistic. Cells are 18-39 trials. Distractor skills are synthetic and the model's own agent harness lists other skills too, though `devin-cli` now runs from an empty directory so the real `ef-linq` skill is not visible to the model under test.
-- Iteration 9 ran after the skill moved into `.devin/skills/`, from the project directory, so the model could see the one-line description of `ef-linq` in its own skill list (not the rules). The rule-ablation evidence in Iterations 1-8 predates the move and is unaffected. A re-run of Iteration 9 from the neutral directory is pending.
+- Iteration 9 ran after the skill moved into `.devin/skills/`, from the project directory, so the model could see the one-line description of `ef-linq` in its own skill list (not the rules). The rule-ablation evidence in Iterations 1-8 predates the move and is unaffected. Iteration 12 re-ran it from a neutral directory with the same conclusion.
 - Token counts are estimated (chars / 4) for `devin-cli` models; consistent between runs, so deltas are valid.
 - Graders are regex, so they measure form, not correctness. Case defects (Iterations 5-7) were found by reading raw outputs. A compile-and-`ToQueryString()` grader is the planned next step.
 - `translatable` cannot detect a client-side filter written in a separate statement without a banned token; it relies on the `HasPrefix(` ban.
