@@ -152,7 +152,7 @@ Across all 5 models `scope` is load bearing on 3 (haiku, sonnet, swe-2) and `exc
 - **Baseline:** the deployed `SKILL.md` carried `[id]` tags that the agent would read as text. They are not instructions and no eval covers them (dead weight, against the load-bearing rule).
 - **Hypothesis:** moving id -> text to a sidecar (`evals/skill-lines.json`) and tagging in memory removes the tags from the shipped file without changing what any model sees during evaluation.
 - **Change:** `annotate()` in `src/skill.ts` (3 unit tests: tagging, round trip, loud failure on drift); `SKILL.md` is now untagged; the run hash is computed on the rendered text.
-- **Result:** the new `SKILL.md` is byte-identical (SHA-256 prefix `6ecabd3f5378`) to the rendered text every model received in Iterations 8-12, so those results apply unchanged and no re-run was needed. The CLI path was checked with a mock run (discarded). 15 unit tests pass.
+- **Result:** the new `SKILL.md` is byte-identical (SHA-256 prefix `6ecabd3f5378`) to the rendered text every model received in Iteration 12 (the rule bullets were also identical in Iterations 8-11; only the frontmatter description differed before Iteration 11), so the Iteration 12 results apply unchanged and no re-run was needed. The CLI path was checked with a mock run (discarded). 15 unit tests pass.
 - **Reasoning:** an identical model input cannot change a pass rate, so a byte comparison is stronger evidence than a re-run. Hashes in earlier logs (e.g. 74acfcbbdcff, 4ae7fc1326d4) were computed over the tagged text; 6ecabd3f5378 is the hash of the shipped text.
 
 ## Caveats
