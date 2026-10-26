@@ -22,6 +22,13 @@ test('grade reports missing and forbidden patterns', () => {
   assert.deepEqual(grade(c, ''), ['missing /A/']);
 });
 
+test('grade checks only fenced code when present, so prose mentions do not count', () => {
+  const c: EvalCase = { id: 'x', prompt: '', targets: [], must: ['A'], mustNot: ['B'] };
+  assert.deepEqual(grade(c, 'I avoided B.\n```csharp\nA\n```'), []);
+  assert.deepEqual(grade(c, 'text\n```csharp\nA B\n```'), ['forbidden /B/']);
+  assert.deepEqual(grade(c, 'A\nB'), ['forbidden /B/']);
+});
+
 test('runEval marks a line load-bearing when removing it breaks the case', async () => {
   const fake = async (_s: unknown, system: string) => ({
     text: system.includes('Alpha') ? 'Alpha' : 'nope', inputTokens: 10, outputTokens: 2, estimated: false,
