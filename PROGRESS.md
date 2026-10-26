@@ -16,3 +16,4 @@ Opinions under evaluation:
 
 | Step | Commit | Change | Result |
 | --- | --- | --- | --- |
+| 1 | 0b53e56 | Initial terse line per opinion; replaced old `no-tracking` line with `values-only` | haiku-5.5, 3 trials, without -> with: `separate-spec` 0.00 -> 1.00, `keyword-syntax` 0.00 -> 1.00, `meaningful-names` 0.33 -> 1.00, `values-only` 0.00 -> 0.33. Weak: `values-only` (model still writes `AsNoTracking()` on "read-only" prompts). |

@@ -1,0 +1,174 @@
+{
+  "summary": {
+    "runId": "2026-10-26T14-11-29-297Z",
+    "at": "2026-10-26T14:11:29.297Z",
+    "skillHash": "35deadefb012",
+    "trials": 5,
+    "lines": [
+      {
+        "model": "haiku-5.5",
+        "line": "values-only",
+        "withRate": 0.6,
+        "withoutRate": 0,
+        "delta": 0.6,
+        "verdict": "load-bearing"
+      }
+    ],
+    "tokens": {
+      "haiku-5.5": {
+        "input": 2480,
+        "output": 1212,
+        "estimated": true,
+        "calls": 10
+      }
+    }
+  },
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": false,
+      "failures": [
+        "missing /\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+/",
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 235,
+      "outputTokens": 105,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<(string Title, int Views)>> GetPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitlesAndViewsQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select (post.Title, post.Views);\n\n    var postTitlesAndViews = await postTitlesAndViewsQuery.ToListAsync(cancellationToken);\n    return postTitlesAndViews;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 0,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery =\n        from post in blogContext.Posts\n        select new PostSummary(post.Title, post.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n    return postSummaries;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": false,
+      "failures": [
+        "missing /\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+/",
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 235,
+      "outputTokens": 117,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostReport\n{\n    public static async Task<List<(string Title, int Views)>> ListPostTitleAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var postTitleAndViewsQuery =\n            from post in blogContext.Posts.AsNoTracking()\n            select (post.Title, post.Views);\n\n        return await postTitleAndViewsQuery.ToListAsync(cancellationToken);\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 1,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 136,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic sealed record PostSummary(string Title, int Views);\n\npublic static class PostReader\n{\n    public static async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var postSummariesQuery =\n            from post in blogContext.Posts\n            select new PostSummary(post.Title, post.Views);\n\n        var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 235,
+      "outputTokens": 142,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic static class PostReporter\n{\n    public static async Task ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n    {\n        var postViewsQuery =\n            from post in blogContext.Posts.AsNoTracking()\n            select new { post.Title, post.Views };\n\n        var postViews = await postViewsQuery.ToListAsync(cancellationToken);\n\n        foreach (var postView in postViews)\n        {\n            Console.WriteLine($\"{postView.Title}: {postView.Views} views\");\n        }\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 2,
+      "pass": false,
+      "failures": [
+        "missing /\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+/"
+      ],
+      "inputTokens": 261,
+      "outputTokens": 99,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<(string Title, int Views)>> GetPostTitleViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitleViewsQuery =\n        from post in blogContext.Posts\n        select (Title: post.Title, Views: post.Views);\n\n    var postTitleViews = await postTitleViewsQuery.ToListAsync(cancellationToken);\n    return postTitleViews;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 235,
+      "outputTokens": 128,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostSummary(string Title, int Views);\n\npublic static async Task<List<PostSummary>> ListPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postSummaryQuery = from blogPost in blogContext.Posts.AsNoTracking()\n                           select new PostSummary(blogPost.Title, blogPost.Views);\n\n    var postSummaries = await postSummaryQuery.ToListAsync(cancellationToken);\n\n    return postSummaries;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 3,
+      "pass": true,
+      "failures": [],
+      "inputTokens": 261,
+      "outputTokens": 139,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostSummary(string Title, int Views);\n\npublic static class PostReport\n{\n    public static async Task<List<PostSummary>> ListPostSummariesAsync(BlogContext blogContext, CancellationToken cancellationToken = default)\n    {\n        var postSummariesQuery = from post in blogContext.Posts\n                                 select new PostSummary(post.Title, post.Views);\n\n        var postSummaries = await postSummariesQuery.ToListAsync(cancellationToken);\n        return postSummaries;\n    }\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "without",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "forbidden /AsNoTracking/"
+      ],
+      "inputTokens": 235,
+      "outputTokens": 125,
+      "estimated": true,
+      "output": "```csharp\nusing Microsoft.EntityFrameworkCore;\n\npublic record PostViewSummary(string Title, int Views);\n\npublic async Task<List<PostViewSummary>> ListPostViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postViewSummaryQuery =\n        from post in blogContext.Posts.AsNoTracking()\n        select new PostViewSummary(post.Title, post.Views);\n\n    var postViewSummaries = await postViewSummaryQuery.ToListAsync(cancellationToken);\n    return postViewSummaries;\n}\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "line": "values-only",
+      "variant": "with",
+      "caseId": "read-only-values",
+      "trial": 4,
+      "pass": false,
+      "failures": [
+        "missing /\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+/"
+      ],
+      "inputTokens": 261,
+      "outputTokens": 104,
+      "estimated": true,
+      "output": "```csharp\npublic static async Task<List<(string Title, int Views)>> ListPostTitlesAndViewsAsync(BlogContext blogContext, CancellationToken cancellationToken)\n{\n    var postTitlesAndViews = from post in blogContext.Posts\n                             select (post.Title, post.Views);\n\n    var postTitlesAndViewsList = await postTitlesAndViews.ToListAsync(cancellationToken);\n\n    return postTitlesAndViewsList;\n}\n```\n"
+    }
+  ]
+}

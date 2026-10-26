@@ -10,4 +10,4 @@ Rules for EF Core LINQ queries:
 - [separate-spec] Assign the query to a `var`, then execute it in a separate statement with `await`.
 - [keyword-syntax] Prefer query syntax (`from ... select`) over extension-method syntax.
 - [meaningful-names] Use meaningful words for variable and lambda parameter names.
-- [values-only] Do not use `AsNoTracking()`; project values from read-only queries.
+- [values-only] Read-only queries project values, never entities, so nothing is tracked: never write `AsNoTracking()`.
