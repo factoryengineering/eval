@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ef-linq skill refinement: progression</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --without: #c0504d; --with: #2e7d4f; --accent: #2b5fab; --muted: #667; --grid: #dde1e7; }
+  body { font: 16px/1.5 -apple-system, "Segoe UI", sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1d2330; }
+  h1 { margin-bottom: .2rem; }
+  h2 { margin-top: 2.5rem; border-bottom: 1px solid var(--grid); padding-bottom: .3rem; }
+  .sub { color: var(--muted); margin-top: 0; }
+  svg { width: 100%; height: auto; background: #fafbfc; border: 1px solid var(--grid); border-radius: 6px; }
+  svg text { font: 12px -apple-system, "Segoe UI", sans-serif; fill: #333; }
+  .axis { stroke: #888; }
+  .grid { stroke: var(--grid); }
+  .legend { display: flex; gap: 1.2rem; flex-wrap: wrap; margin: .5rem 0; font-size: 14px; }
+  .sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  code { background: #eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  .note { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h1>ef-linq skill refinement</h1>
+<p class="sub">Four LINQ opinions turned into skill lines, measured with the eval framework. Model: <code>haiku-5.5</code> via <code>devin-cli</code>. Source: <code>PROGRESS.md</code> and <code>runs/</code>.</p>
+
+<h2>1. Final result: pass rate without vs. with each line</h2>
+<p>"Without" removes only that one skill line; "with" is the full 8-line skill. 5 trials per case (run <code>2026-10-26T14-20-12-879Z</code>, commit <code>67b1112</code>).</p>
+<div class="legend">
+  <span><span class="sw" style="background:var(--without)"></span>without the line</span>
+  <span><span class="sw" style="background:var(--with)"></span>with the line</span>
+</div>
+<svg viewBox="0 0 640 290" role="img" aria-label="Grouped bar chart of pass rate without and with each skill line">
+  <line class="grid" x1="60" y1="30" x2="620" y2="30"/>
+  <line class="grid" x1="60" y1="75" x2="620" y2="75"/>
+  <line class="grid" x1="60" y1="120" x2="620" y2="120"/>
+  <line class="grid" x1="60" y1="165" x2="620" y2="165"/>
+  <line class="axis" x1="60" y1="210" x2="620" y2="210"/>
+  <line class="axis" x1="60" y1="30" x2="60" y2="210"/>
+  <text x="52" y="34" text-anchor="end">1.0</text>
+  <text x="52" y="79" text-anchor="end">0.75</text>
+  <text x="52" y="124" text-anchor="end">0.5</text>
+  <text x="52" y="169" text-anchor="end">0.25</text>
+  <text x="52" y="214" text-anchor="end">0</text>
+
+  <!-- separate-spec -->
+  <rect x="85" y="209" width="45" height="1" fill="var(--without)"/>
+  <rect x="140" y="30" width="45" height="180" fill="var(--with)"/>
+  <text x="107" y="203" text-anchor="middle">0.00</text>
+  <text x="162" y="24" text-anchor="middle">1.00</text>
+  <text x="132" y="232" text-anchor="middle">separate-spec</text>
+
+  <!-- keyword-syntax -->
+  <rect x="225" y="209" width="45" height="1" fill="var(--without)"/>
+  <rect x="280" y="30" width="45" height="180" fill="var(--with)"/>
+  <text x="247" y="203" text-anchor="middle">0.00</text>
+  <text x="302" y="24" text-anchor="middle">1.00</text>
+  <text x="272" y="232" text-anchor="middle">keyword-syntax</text>
+
+  <!-- meaningful-names -->
+  <rect x="365" y="174" width="45" height="36" fill="var(--without)"/>
+  <rect x="420" y="30" width="45" height="180" fill="var(--with)"/>
+  <text x="387" y="168" text-anchor="middle">0.20</text>
+  <text x="442" y="24" text-anchor="middle">1.00</text>
+  <text x="412" y="232" text-anchor="middle">meaningful-names</text>
+
+  <!-- values-only -->
+  <rect x="505" y="209" width="45" height="1" fill="var(--without)"/>
+  <rect x="560" y="30" width="45" height="180" fill="var(--with)"/>
+  <text x="527" y="203" text-anchor="middle">0.00</text>
+  <text x="582" y="24" text-anchor="middle">1.00</text>
+  <text x="552" y="232" text-anchor="middle">values-only</text>
+
+  <text x="340" y="266" text-anchor="middle" fill="#667">Deltas: +1.00, +1.00, +0.80, +1.00 (all load bearing, minDelta 0.3)</text>
+</svg>
+
+<h2>2. Progression across the session</h2>
+<p><code>values-only</code> was the only line that needed work. The other three were already at 1.00 on the first run, and were re-measured in the confirmation run. Steps 2 and 3 re-ran only <code>values-only</code>.</p>
+<div class="legend">
+  <span><span class="sw" style="background:var(--accent)"></span><code>values-only</code> pass rate with the line</span>
+  <span><span class="sw" style="background:var(--with)"></span>other three lines (not re-run at steps 2-3, dashed)</span>
+</div>
+<svg viewBox="0 0 640 310" role="img" aria-label="Line chart of pass rate with the skill across four steps">
+  <line class="grid" x1="60" y1="30" x2="610" y2="30"/>
+  <line class="grid" x1="60" y1="75" x2="610" y2="75"/>
+  <line class="grid" x1="60" y1="120" x2="610" y2="120"/>
+  <line class="grid" x1="60" y1="165" x2="610" y2="165"/>
+  <line class="axis" x1="60" y1="210" x2="610" y2="210"/>
+  <line class="axis" x1="60" y1="30" x2="60" y2="210"/>
+  <text x="52" y="34" text-anchor="end">1.0</text>
+  <text x="52" y="79" text-anchor="end">0.75</text>
+  <text x="52" y="124" text-anchor="end">0.5</text>
+  <text x="52" y="169" text-anchor="end">0.25</text>
+  <text x="52" y="214" text-anchor="end">0</text>
+
+  <!-- other three lines: dashed at 1.0 between steps 1 and 4 -->
+  <polyline points="110,30 560,30" fill="none" stroke="var(--with)" stroke-width="2" stroke-dasharray="6 5"/>
+  <circle cx="110" cy="30" r="4" fill="var(--with)"/>
+  <circle cx="560" cy="30" r="4" fill="var(--with)"/>
+
+  <!-- values-only: 0.33, 0.60, 1.00, 1.00 -->
+  <polyline points="110,150 253,102 397,30 560,30" fill="none" stroke="var(--accent)" stroke-width="3"/>
+  <circle cx="110" cy="150" r="5" fill="var(--accent)"/>
+  <circle cx="253" cy="102" r="5" fill="var(--accent)"/>
+  <circle cx="397" cy="30" r="5" fill="var(--accent)"/>
+  <circle cx="560" cy="30" r="5" fill="var(--accent)"/>
+  <text x="124" y="154">0.33 (3 trials)</text>
+  <text x="267" y="106">0.60 (5 trials)</text>
+  <text x="411" y="52">1.00</text>
+  <text x="560" y="52" text-anchor="middle">1.00</text>
+
+  <text x="110" y="232" text-anchor="middle">1</text>
+  <text x="110" y="248" text-anchor="middle">0b53e56</text>
+  <text x="110" y="264" text-anchor="middle" fill="#667">initial lines</text>
+  <text x="253" y="232" text-anchor="middle">2</text>
+  <text x="253" y="248" text-anchor="middle">e0a91c3</text>
+  <text x="253" y="264" text-anchor="middle" fill="#667">add the reason</text>
+  <text x="397" y="232" text-anchor="middle">3</text>
+  <text x="397" y="248" text-anchor="middle">36fffe0</text>
+  <text x="397" y="264" text-anchor="middle" fill="#667">fix grader</text>
+  <text x="560" y="232" text-anchor="middle">4</text>
+  <text x="560" y="248" text-anchor="middle">67b1112</text>
+  <text x="560" y="264" text-anchor="middle" fill="#667">confirm all four</text>
+</svg>
+
+<h2>3. Why <code>values-only</code> moved</h2>
+<table>
+  <tr><th>Step</th><th>What changed</th><th>Why</th></tr>
+  <tr>
+    <td>1 to 2</td>
+    <td>Skill text: <em>"Do not use <code>AsNoTracking()</code>; project values from read-only queries."</em> became <em>"Read-only queries project values, never entities, so nothing is tracked: never write <code>AsNoTracking()</code>."</em></td>
+    <td>A bare prohibition lost to the model's habit of adding <code>AsNoTracking()</code> to anything described as read-only. Giving the reason raised the rate from 0.33 to 0.60.</td>
+  </tr>
+  <tr>
+    <td>2 to 3</td>
+    <td>Grader only: <code>read-only-values</code> now accepts tuple projections such as <code>select (post.Title, post.Views)</code>.</td>
+    <td>Every remaining failure was a correct answer the regex did not recognise. The skill text did not change, and the measured rate rose from 0.60 to 1.00.</td>
+  </tr>
+</table>
+<p class="note">Step 3 is a measurement fix, not a skill improvement. Of the 0.33 to 1.00 total, the skill-text change accounts for the 0.33 to 0.60 portion; the rest is the grader being corrected.</p>
+
+<h2>4. Cost of the skill</h2>
+<p>Estimated tokens (characters / 4) across all calls in a run. The confirmation run has more trials and four lines, so its totals are higher; these are totals, not per-call figures.</p>
+<svg viewBox="0 0 640 230" role="img" aria-label="Bar chart of estimated tokens in two runs">
+  <line class="axis" x1="60" y1="190" x2="620" y2="190"/>
+  <line class="axis" x1="60" y1="20" x2="60" y2="190"/>
+  <line class="grid" x1="60" y1="105" x2="620" y2="105"/>
+  <text x="52" y="194" text-anchor="end">0</text>
+  <text x="52" y="109" text-anchor="end">6k</text>
+  <text x="52" y="24" text-anchor="end">12k</text>
+
+  <!-- run 1: 6027 in, 2889 out -->
+  <rect x="120" y="88" width="55" height="102" fill="var(--accent)" />
+  <rect x="180" y="141" width="55" height="49" fill="#8aa9d6" />
+  <text x="147" y="82" text-anchor="middle">6,027</text>
+  <text x="207" y="135" text-anchor="middle">2,889</text>
+  <text x="177" y="212" text-anchor="middle">step 1: 24 calls, 3 trials</text>
+
+  <!-- run 4: 10355 in, 4877 out -->
+  <rect x="380" y="14" width="55" height="176" fill="var(--accent)" />
+  <rect x="440" y="107" width="55" height="83" fill="#8aa9d6" />
+  <text x="407" y="10" text-anchor="middle">10,355</text>
+  <text x="467" y="101" text-anchor="middle">4,877</text>
+  <text x="437" y="212" text-anchor="middle">step 4: 40 calls, 5 trials</text>
+</svg>
+<div class="legend">
+  <span><span class="sw" style="background:var(--accent)"></span>input tokens</span>
+  <span><span class="sw" style="background:#8aa9d6"></span>output tokens</span>
+</div>
+
+<h2>5. Commit log</h2>
+<table>
+  <tr><th>#</th><th>Commit</th><th>Change</th></tr>
+  <tr><td>1</td><td><code>0b53e56</code></td><td>Added <code>--lines</code> CLI filter, four skill lines and cases; replaced <code>no-tracking</code> with <code>values-only</code></td></tr>
+  <tr><td>2</td><td><code>e0a91c3</code></td><td>Explained why <code>values-only</code> forbids <code>AsNoTracking()</code></td></tr>
+  <tr><td>3</td><td><code>36fffe0</code></td><td>Accepted tuple projections in the <code>read-only-values</code> grader</td></tr>
+  <tr><td>4</td><td><code>67b1112</code></td><td>Logged the confirmation run: all four lines load bearing</td></tr>
+</table>
+
+<h2>Caveats</h2>
+<ul class="note">
+  <li>One model (<code>haiku-5.5</code>) only. The other configured models are not yet measured.</li>
+  <li>Graders are regex and check form, not correctness.</li>
+  <li>Token counts are estimates because the Devin CLI reports no usage.</li>
+  <li>Step 1 used 3 trials and later steps used 5, so small differences between steps are noisy.</li>
+</ul>
+
+</body>
+</html>
