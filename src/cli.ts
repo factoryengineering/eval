@@ -16,6 +16,7 @@ switch (cmd) {
   case 'run': {
     const only = flag('models')?.split(',');
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
+    if (flag('lines')) config.lines = flag('lines')!.split(',');
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = JSON.parse(await readFile(config.cases, 'utf8')) as EvalCase[];
     const { summary, trials } = await runEval(config, skill, cases, undefined, (t) =>
@@ -37,5 +38,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.log('usage: cli <run [--models a,b] [--trials n] | change <note> | compare>');
+    console.log('usage: cli <run [--models a,b] [--lines x,y] [--trials n] | change <note> | compare>');
 }

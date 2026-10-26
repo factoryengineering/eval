@@ -9,6 +9,7 @@ export interface Config {
   cases: string;
   trials: number;
   minDelta: number;
+  lines?: string[];
   models: ModelSpec[];
 }
 

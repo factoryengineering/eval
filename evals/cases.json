@@ -2,8 +2,8 @@
   {
     "id": "list-popular-posts",
     "prompt": "Using a BlogContext db (DbSet<Post> Posts with Title, Views), write a method returning the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
-    "targets": ["no-tracking", "project", "async"],
-    "must": ["AsNoTracking\\(\\)", "Select\\(", "ToListAsync\\("]
+    "targets": ["project", "async"],
+    "must": ["Select\\(|select\\s", "ToListAsync\\("]
   },
   {
     "id": "blog-with-posts-and-tags",
@@ -17,5 +17,33 @@
     "targets": ["translatable", "async"],
     "must": ["Async\\("],
     "mustNot": ["ToList\\(\\)\\s*\\.Where", "AsEnumerable\\(\\)\\s*\\.Where"]
+  },
+  {
+    "id": "spec-then-execute",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "targets": ["separate-spec"],
+    "must": ["var\\s+\\w+\\s*=\\s*(from\\b|\\w+\\.(Posts|Blogs)\\b)", "await\\s+\\w+\\.\\w+Async\\("],
+    "mustNot": ["await\\s+\\(?\\s*(from\\b|\\w+\\.(Posts|Blogs|Set)\\b)", "IQueryable<[^>]*>\\s+\\w+\\s*="]
+  },
+  {
+    "id": "keyword-filter-order-project",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the Title and Views of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "targets": ["keyword-syntax"],
+    "must": ["\\bfrom\\s+\\w+\\s+in\\b", "\\bselect\\b"],
+    "mustNot": ["\\.(Where|Select|OrderBy|OrderByDescending|ThenBy|ThenByDescending|GroupBy|Join|SelectMany)\\("]
+  },
+  {
+    "id": "names-grouped-totals",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with BlogId, Title and Views) and returns the total Views per BlogId for posts whose Title contains a search term. Return only a C# code block.",
+    "targets": ["meaningful-names"],
+    "must": ["Async\\("],
+    "mustNot": ["\\bfrom\\s+[a-z]\\s+in\\b", "\\b[a-z]\\s*=>", "\\(\\s*[a-z]\\s*\\)\\s*=>", "\\binto\\s+[a-z]\\b", "\\b[a-z]\\.[A-Z]", "\\b(db|ctx|qry|res|tmp|cnt|dto|conn|cfg)\\b"]
+  },
+  {
+    "id": "read-only-values",
+    "prompt": "Write a read-only method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and lists each post's Title and Views. Return only a C# code block.",
+    "targets": ["values-only"],
+    "must": ["\\.Select\\(|\\bselect\\s+new\\b|\\bselect\\s+\\w+\\.\\w+"],
+    "mustNot": ["AsNoTracking", "\\bselect\\s+\\w+\\s*;"]
   }
 ]

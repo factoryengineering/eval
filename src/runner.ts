@@ -39,7 +39,7 @@ export async function runEval(
   };
 
   for (const spec of config.models) {
-    for (const line of lines) {
+    for (const line of lines.filter((l) => !config.lines || config.lines.includes(l.id))) {
       for (const c of cases.filter((x) => x.targets.includes(line.id))) {
         for (let n = 0; n < config.trials; n++) {
           for (const variant of ['without', 'with'] as const) {
