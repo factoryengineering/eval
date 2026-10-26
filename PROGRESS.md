@@ -93,8 +93,34 @@ Full 7-line skill, 5 trials per line, three models. Runs 2026-10-26T15-31-58 (so
 - **Reasoning:** hypothesis rejected. The models read "read-only queries" as scoping `values-only` and load a tracked entity for writes. The one failure (sonnet) was a grader false positive: the model's prose said it "leaves out `AsNoTracking()`" and the regex matched prose. No precedence line is justified, so none was added (adding one would be dead weight).
 - **Refactor:** `grade()` now checks only fenced code blocks when any are present (`src/grade.ts`, unit test added). Re-grading all stored trials from the Iteration 8 and later runs gave identical results except that one false positive, so earlier conclusions stand.
 
+## Phase D: the skill description (discovery)
+
+The frontmatter `description` is the only skill text the agent sees before deciding to load the skill, so it is a prompt component and needs its own evaluation. `npm run eval:trigger` shows a model a skill list (this skill plus 6 plausible neighbours such as `ef-migrations` and `sql-tuning`), gives it a user request, and asks which skills it would invoke. A trial passes when `ef-linq` is chosen exactly when it should be. Description variants are built from named clauses: `none` (name only), `baseline`, `full`, and `full` minus one clause. A clause is load bearing when removing it lowers the pass rate on the cases that target it by at least 0.3. Runs: `runs/trigger-*.json`, summaries in `logs/trigger.jsonl`.
+
+### Iteration 10 - RED: the trigger eval was too easy (runs 2026-10-26T16-08 to T16-11, spec v1)
+- **Baseline:** description "Write Entity Framework Core LINQ queries." 15 cases, 3 clauses (`scope`, `actions` = "Use when writing, reviewing, or refactoring them.", `exclusions`), 3 trials, 3 models.
+- **Hypothesis:** the description changes which skill gets chosen, so each clause shows a delta.
+- **Result:** `none` (name only) already scored 0.91 / 1.00 / 0.93 (haiku / sonnet / luna) overall. All clause deltas were below 0.3 (range -0.13 to 0.08).
+- **Reasoning:** the name `ef-linq` plus distinct neighbour descriptions does nearly all the work, and the cases were not hard enough to need the description. Per-case failure counts showed only one case discriminated: LINQ over an in-memory list, which no neighbour claims. The evidence says to test near-miss negatives, not more positives.
+
+### Iteration 11 - GREEN: scope and exclusions (spec v3; skill hash 4ae7fc1326d4)
+- **Baseline:** spec v2 (22 cases adding LINQ-to-XML, DataTable, JSON, `FromSqlRaw`, `ExecuteSqlRawAsync`, Dapper and oblique positives), same three clauses. `actions` deltas were 0.07 / -0.07 / 0.00, so it was dead weight. `exec-sql` failed 7/9 under the baseline description and 0/9 under `full`; non-EF LINQ cases dropped from 6/9 failures to 1-2/9 once the scope clause was present.
+- **Hypothesis:** dropping `actions` and keeping `scope` + `exclusions` keeps the gain with fewer words. Positives saturate even with no description, so they become untargeted recall guards and only near-miss negatives target a clause.
+- **Change:** `description` is now "Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL." (was "Write Entity Framework Core LINQ queries."). Spec: `actions` clause removed, positive cases untargeted.
+- **Result (3 trials, 66 trials per variant per model):**
+
+| Model | `none` | `baseline` | `full` | `scope` without -> with | `exclusions` without -> with |
+| --- | --- | --- | --- | --- | --- |
+| haiku-5.5 | 0.85 | 0.85 | 0.97 | 0.58 -> 0.92 (load bearing) | 0.67 -> 1.00 (load bearing) |
+| sonnet-5.5 | 0.92 | 0.91 | 0.98 | 0.58 -> 1.00 (load bearing) | 0.44 -> 0.89 (load bearing) |
+| gpt-6-luna | 0.77 | 0.86 | 0.91 | 0.50 -> 0.67 (0.17, not) | 0.78 -> 0.78 (0.00, not) |
+
+- **Reasoning:** the description gains +0.06 to +0.14 overall over name-only, and negatives improve most (haiku 0.77 -> 0.95, sonnet 0.87 -> 0.97, luna 0.62 -> 0.85). Both remaining clauses are load bearing on 2 of 3 models. Recall is about 1.00 in every variant, so the description does not help recall at all; the name does that.
+
 ## Caveats
 
+- Trigger eval: the spec was revised twice after seeing results (Iterations 10 and 11), so the final numbers are tuned to the final cases and likely optimistic. Cells are 18-39 trials. Distractor skills are synthetic and the model's own agent harness lists other skills too, though `devin-cli` now runs from an empty directory so the real `ef-linq` skill is not visible to the model under test.
+- Iteration 9 ran after the skill moved into `.devin/skills/`, from the project directory, so the model could see the one-line description of `ef-linq` in its own skill list (not the rules). The rule-ablation evidence in Iterations 1-8 predates the move and is unaffected. A re-run of Iteration 9 from the neutral directory is pending.
 - Token counts are estimated (chars / 4) for `devin-cli` models; consistent between runs, so deltas are valid.
 - Graders are regex, so they measure form, not correctness. Case defects (Iterations 5-7) were found by reading raw outputs. A compile-and-`ToQueryString()` grader is the planned next step.
 - `translatable` cannot detect a client-side filter written in a separate statement without a banned token; it relies on the `HasPrefix(` ban.

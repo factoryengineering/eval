@@ -51,7 +51,7 @@ The skill targets a coding agent and must stay valid across projects and as sche
 
 | Component | In the skill? | Where it lives and why |
 | --- | --- | --- |
-| **Task** | Yes | The frontmatter `description` is what the agent reads to decide whether to load the skill. It is the only text present before the skill is chosen, so it is load bearing by discovery. An evaluation of it (the agent picks the skill for EF query work and ignores it for unrelated work) is planned, not yet built. |
+| **Task** | Yes | The frontmatter `description` is what the agent reads to decide whether to load the skill. It is the only text present before the skill is chosen, so it is load bearing by discovery. `npm run eval:trigger` measures it: a model sees a skill list with neighbouring skills and must pick `ef-linq` exactly when it applies. Its two clauses (scope, exclusions) are each load bearing on 2 of 3 models, mainly by rejecting near-miss requests such as in-memory LINQ and raw SQL. It adds nothing for recall, because the skill name already drives that (`PROGRESS.md`, Iterations 10-11). |
 | **Constraints** | Yes | The `- [id]` rules. Each is ablated against a targeted case and must change pass rates (see `PROGRESS.md`). This is the whole body of the skill. |
 | **Context** | No | A schema in the skill would duplicate the repository, go stale as the model evolves, and tie the skill to one domain. The agent reads the entities and `DbContext` from the code, so context is supplied by the environment. The eval case prompts state the schema because there is no repository in the harness. That text belongs to the test, not the skill. |
 | **Output format** | No | The agent harness owns tool-call validity and file edits. The phrase "Return only a C# code block" appears in the case prompts only so graders can extract code. It is a test fixture, not a skill instruction. |
@@ -90,6 +90,7 @@ npm run test:dotnet      # EF Core fixture tests
 npm run eval -- --models mock                # cheap harness check
 npm run eval -- --models haiku-5.5 --trials 3
 npm run eval                                  # all configured models
+npm run eval:trigger -- --models haiku-5.5 --trials 3   # description discovery eval (evals/trigger.json)
 npm run eval:change -- "Added split-query rule"   # log a skill edit + snapshot
 npm run eval:compare                          # last two runs: token and verdict deltas
 ```
