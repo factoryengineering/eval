@@ -1,0 +1,11 @@
+{
+  "post": true, "posts": true, "popularPosts": true, "blogContext": true, "cancellationToken": true, "searchTerm": true,
+  "prefix": true, "totalViews": true, "blogId": true, "matchingPost": true, "postQuery": true, "titles": true,
+  "newTitle": true, "contributorId": true, "id": true, "blog": true, "contributor": true, "viewCount": true,
+  "minimumViewCount": true, "summary": true, "blogPosts": true, "titleMatches": true, "popularTitlesQuery": true,
+  "totalsByBlog": true, "renamedContributor": true,
+  "p": false, "g": false, "x": false, "t": false, "q": false, "b": false, "c": false, "db": false, "ctx": false,
+  "qry": false, "res": false, "tmp": false, "cnt": false, "dto": false, "conn": false, "cfg": false, "val": false,
+  "e": false, "i": false, "r": false, "ps": false, "bp": false, "pq": false, "ttl": false, "vws": false, "usr": false,
+  "itm": false, "lst": false, "arr": false, "obj": false, "rslt": false, "svc": false, "x1": false, "item2": false
+}

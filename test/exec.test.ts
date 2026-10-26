@@ -35,6 +35,14 @@ test('runEval uses the injected async grader', async () => {
   assert.equal(summary.lines[0]!.delta, 1);
 });
 
+test('judgeNames fails a case when the judge rejects a declared identifier', async () => {
+  const fakeRunner = { run: async () => ({ ...ok, syntax: { queryExpressions: 1, methodCalls: [], queryableOperators: [], identifiers: ['post', 'p', 'post'] } }) } as unknown as ExecRunner;
+  const judge = { bad: async (ids: string[]) => [...new Set(ids)].filter((id) => id === 'p') };
+  const spec = c({ judgeNames: true });
+  assert.deepEqual(await makeGrader(fakeRunner, judge)(spec, '```csharp\nx\n```'), ['names not meaningful: p']);
+  assert.deepEqual(await makeGrader(fakeRunner, judge)(c({}), '```csharp\nx\n```'), []);
+});
+
 test('guard cases also use the injected grader', async () => {
   const cfg: Config = { skill: '', ids: '', cases: '', trials: 1, minDelta: 0.3, models: [{ id: 'm', provider: 'mock', model: 'm' }] };
   const complete = async () => ({ text: 'x', inputTokens: 1, outputTokens: 1, estimated: false });

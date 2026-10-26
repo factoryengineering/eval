@@ -73,8 +73,18 @@ export function execFailures(c: EvalCase, r: ExecResult): string[] {
   return failures;
 }
 
-export const makeGrader = (runner: ExecRunner) => async (c: EvalCase, text: string): Promise<string[]> => {
+export interface NameChecker {
+  bad(ids: string[]): Promise<string[]>;
+}
+
+export const makeGrader = (runner: ExecRunner, judge?: NameChecker) => async (c: EvalCase, text: string): Promise<string[]> => {
   const failures = grade(c, text);
   if (!c.exec) return failures;
-  return [...failures, ...execFailures(c, await runner.run(codeOf(text), c.exec.args))];
+  const r = await runner.run(codeOf(text), c.exec.args);
+  failures.push(...execFailures(c, r));
+  if (c.exec.judgeNames && judge && r.compiled && r.syntax) {
+    const bad = await judge.bad(r.syntax.identifiers);
+    if (bad.length) failures.push(`names not meaningful: ${bad.join(', ')}`);
+  }
+  return failures;
 };

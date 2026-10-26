@@ -46,6 +46,19 @@
       "no-tracking": "public async Task<List<(string Title, int Views)>> ListPosts(BlogContext blogContext)\n{\n    var postsQuery = blogContext.Posts.AsNoTracking().Select(post => new { post.Title, post.Views });\n    var posts = await postsQuery.ToListAsync();\n    return posts.Select(item => (item.Title, item.Views)).ToList();\n}"
     }
   },
+  "get-blog-by-id": {
+    "good": "public async Task<Blog?> GetBlog(BlogContext blogContext, int blogId)\n{\n    var blogQuery = from blog in blogContext.Blogs where blog.Id == blogId select blog;\n    var matchingBlog = await blogQuery.SingleOrDefaultAsync();\n    return matchingBlog;\n}",
+    "bad": {
+      "reused-range-variable-name": "public async Task<Blog?> GetBlog(BlogContext blogContext, int blogId)\n{\n    var blogQuery = from blog in blogContext.Blogs where blog.Id == blogId select blog;\n    var blog = await blogQuery.SingleOrDefaultAsync();\n    return blog;\n}"
+    }
+  },
+  "rename-contributor": {
+    "good": "public async Task Rename(BlogContext blogContext, int contributorId, string newName)\n{\n    var contributorQuery = from contributor in blogContext.Contributors where contributor.Id == contributorId select contributor;\n    var matchingContributor = await contributorQuery.SingleAsync();\n    matchingContributor.Name = newName;\n    await blogContext.SaveChangesAsync();\n}",
+    "bad": {
+      "reused-range-variable-name": "public async Task Rename(BlogContext blogContext, int contributorId, string newName)\n{\n    var contributorQuery = from contributor in blogContext.Contributors where contributor.Id == contributorId select contributor;\n    var contributor = await contributorQuery.SingleAsync();\n    contributor.Name = newName;\n    await blogContext.SaveChangesAsync();\n}",
+      "no-save": "public async Task Rename(BlogContext blogContext, int contributorId, string newName)\n{\n    var contributorQuery = from contributor in blogContext.Contributors where contributor.Id == contributorId select contributor;\n    var matchingContributor = await contributorQuery.SingleAsync();\n    matchingContributor.Name = newName;\n}"
+    }
+  },
   "load-entity-for-edit": {
     "good": "public async Task Rename(BlogContext blogContext, int postId, string newTitle)\n{\n    var postQuery = from post in blogContext.Posts where post.Id == postId select post;\n    var matchingPost = await postQuery.SingleAsync();\n    matchingPost.Title = newTitle;\n    await blogContext.SaveChangesAsync();\n}",
     "bad": {

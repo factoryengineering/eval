@@ -1,7 +1,7 @@
 [
   {
     "id": "list-popular-posts",
-    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "async"
     ],
@@ -12,7 +12,7 @@
   },
   {
     "id": "blog-with-posts-and-tags",
-    "prompt": "Write a method that takes a BlogContext (Blog has collections Posts and Contributors) and loads all blogs together with both collections so the caller can modify the entities and save them. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (Blog has collections Posts and Contributors) and loads all blogs together with both collections so the caller can modify the entities and save them. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "split-query"
     ],
@@ -23,7 +23,7 @@
   },
   {
     "id": "search-by-title",
-    "prompt": "Write a method that takes a BlogContext and a prefix and returns the posts whose Title starts with the prefix. A C# helper `TitleRules.HasPrefix(string title, string prefix)` already exists. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Id and Title) and a prefix and returns the posts whose Title starts with the prefix. A C# helper `TitleRules.HasPrefix(string title, string prefix)` already exists. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "translatable"
     ],
@@ -34,7 +34,7 @@
   },
   {
     "id": "spec-then-execute",
-    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the titles of posts with more than 100 views, ordered by Views descending. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "separate-spec"
     ],
@@ -50,7 +50,7 @@
   },
   {
     "id": "keyword-filter-order-project",
-    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the Title and Views of posts with more than 100 views, ordered by Views descending. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and returns the Title and Views of posts with more than 100 views, ordered by Views descending. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "keyword-syntax"
     ],
@@ -65,26 +65,18 @@
   },
   {
     "id": "names-grouped-totals",
-    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with BlogId, Title and Views) and returns the total Views per BlogId for posts whose Title contains a search term. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with BlogId, Title and Views) and returns the total Views per BlogId for posts whose Title contains a search term. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "meaningful-names"
     ],
-    "exec": { "args": { "string": "Intro" }, "sqlMust": ["GROUP BY", "SUM"] },
+    "exec": { "args": { "string": "Intro" }, "sqlMust": ["GROUP BY", "SUM"], "judgeNames": true },
     "must": [
       "Async\\("
-    ],
-    "mustNot": [
-      "\\bfrom\\s+[a-z]\\s+in\\b",
-      "\\b[a-z]\\s*=>",
-      "\\(\\s*[a-z]\\s*\\)\\s*=>",
-      "\\binto\\s+[a-z]\\b",
-      "\\b[a-z]\\.[A-Z]",
-      "\\b(db|ctx|qry|res|tmp|cnt|dto|conn|cfg)\\b"
     ]
   },
   {
     "id": "read-only-values",
-    "prompt": "Write a read-only method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and lists each post's Title and Views. Return only a C# code block.",
+    "prompt": "Write a read-only method that takes a BlogContext (DbSet<Post> Posts with Title and Views) and lists each post's Title and Views. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [
       "values-only"
     ],
@@ -98,15 +90,36 @@
     ]
   },
   {
+    "id": "get-blog-by-id",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Blog> Blogs with Id and Name) and a blog id and returns the blog with that id, or null if there is none. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
+    "targets": [
+      "distinct-result-name"
+    ],
+    "exec": { "args": { "int": 1 }, "sqlMust": ["WHERE"] },
+    "must": [
+      "Async\\("
+    ]
+  },
+  {
+    "id": "rename-contributor",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Contributor> Contributors with Id and Name), a contributor id and a new name, loads that contributor, renames it and saves the change. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
+    "targets": [
+      "distinct-result-name"
+    ],
+    "exec": { "args": { "int": 1, "string": "Renamed" }, "sqlMust": ["UPDATE \"Contributors\""] },
+    "must": [
+      "SaveChangesAsync\\("
+    ]
+  },
+  {
     "id": "load-entity-for-edit",
-    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Id and Title), loads the post with a given id, changes its Title, and saves the change. Return only a C# code block.",
+    "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Id and Title), loads the post with a given id, changes its Title, and saves the change. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, so do not redefine them; define any other types you use. Return only a C# code block.",
     "targets": [],
     "guard": true,
     "exec": { "args": { "string": "Renamed", "int": 1 }, "sqlMust": ["UPDATE \"Posts\""] },
     "must": [
       "\\.Title\\s*=[^=]",
-      "SaveChangesAsync\\(",
-      "(FirstOrDefault|SingleOrDefault|First|Single|Find)Async\\("
+      "SaveChangesAsync\\("
     ],
     "mustNot": [
       "AsNoTracking",

@@ -16,7 +16,7 @@ test('every case has a reference solution', () => {
 test('graders accept the good reference and reject every bad one', { skip: !existsSync(dll) && 'build with: npm run build:runner' }, async () => {
   const runner = new ExecRunner(dll);
   try {
-    const grade = makeGrader(runner);
+    const grade = makeGrader(runner, { bad: async (ids) => ids.filter((id) => id.length < 2) });
     for (const c of cases) {
       const ref = refs[c.id]!;
       assert.deepEqual(await grade(c, fence(ref.good)), [], `${c.id}: good reference should pass`);

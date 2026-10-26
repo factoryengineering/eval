@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ExecRunner, makeGrader } from './exec.js';
+import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
 import { runEval } from './runner.js';
 import { annotate } from './skill.js';
 import { compare, logChange, readRuns, saveRun, table } from './store.js';
@@ -20,16 +21,29 @@ const tagged = () => annotate(skill, JSON.parse(readFileSync(config.ids, 'utf8')
 
 switch (cmd) {
   case 'run': {
+    const judgeSpec = config.models.find((m) => m.id === (flag('judge') ?? 'sonnet-5.5'));
+    if (!judgeSpec) throw new Error('unknown judge model');
     const only = flag('models')?.split(',');
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
     if (flag('lines')) config.lines = flag('lines')!.split(',');
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = JSON.parse(await readFile(config.cases, 'utf8')) as EvalCase[];
     const runner = new ExecRunner();
+    const judge = await NameJudge.open('evals/name-verdicts.json', judgeSpec);
     const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
-      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner)).finally(() => runner.close());
+      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner, judge))
+      .finally(async () => { runner.close(); await judge.save(); });
     await saveRun(summary, trials);
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);
+    break;
+  }
+  case 'calibrate-names': {
+    const spec = config.models.find((m) => m.id === (flag('judge') ?? 'sonnet-5.5'));
+    if (!spec) throw new Error('unknown judge model');
+    const labels = JSON.parse(await readFile('evals/name-labels.json', 'utf8')) as Record<string, boolean>;
+    const verdicts = await judgeIdentifiers(Object.keys(labels), {}, spec);
+    const a = agreement(labels, verdicts);
+    console.log(`judge ${spec.id}: ${a.agree}/${a.n} agree (${((a.agree / a.n) * 100).toFixed(0)}%)${a.disagreements.length ? `; disagreements: ${a.disagreements.map((d) => `${d} (judge ${verdicts[d]}, label ${labels[d]})`).join(', ')}` : ''}`);
     break;
   }
   case 'trigger': {
