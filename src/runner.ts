@@ -57,6 +57,25 @@ export async function runEval(
     }
   }
 
+  const guards: NonNullable<RunSummary['guards']> = [];
+  if (!config.lines)
+    for (const spec of config.models)
+      for (const c of cases.filter((x) => x.guard)) {
+        const mine: Trial[] = [];
+        for (let n = 0; n < config.trials; n++) {
+          const r = await call(spec, c, undefined, n);
+          const failures = grade(c, r.text);
+          const t: Trial = {
+            model: spec.id, line: '(guard)', variant: 'with', caseId: c.id, trial: n, pass: failures.length === 0, failures,
+            inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text,
+          };
+          mine.push(t);
+          trials.push(t);
+          onTrial(t);
+        }
+        guards.push({ model: spec.id, caseId: c.id, rate: rate(mine), n: mine.length });
+      }
+
   const results: LineResult[] = [];
   for (const spec of config.models) {
     for (const line of lines) {
@@ -73,7 +92,7 @@ export async function runEval(
 
   const at = new Date().toISOString();
   const summary: RunSummary = {
-    runId: at.replace(/[:.]/g, '-'), at, skillHash: hashSkill(skillSource), trials: config.trials, lines: results, tokens,
+    runId: at.replace(/[:.]/g, '-'), at, skillHash: hashSkill(skillSource), trials: config.trials, lines: results, guards, tokens,
   };
   return { summary, trials };
 }

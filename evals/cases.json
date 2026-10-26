@@ -99,9 +99,8 @@
   {
     "id": "load-entity-for-edit",
     "prompt": "Write a method that takes a BlogContext (DbSet<Post> Posts with Id and Title), loads the post with a given id, changes its Title, and saves the change. Return only a C# code block.",
-    "targets": [
-      "values-only"
-    ],
+    "targets": [],
+    "guard": true,
     "must": [
       "\\.Title\\s*=[^=]",
       "SaveChangesAsync\\(",

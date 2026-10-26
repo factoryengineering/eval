@@ -61,5 +61,6 @@ export function table(s: RunSummary): string {
   const rows = s.lines.map((l) =>
     `${l.model.padEnd(14)} ${l.line.padEnd(18)} without ${l.withoutRate.toFixed(2)}  with ${l.withRate.toFixed(2)}  delta ${l.delta.toFixed(2).padStart(5)}  ${l.verdict}`);
   const toks = Object.entries(s.tokens).map(([m, t]) => `${m.padEnd(14)} in ${t.input}  out ${t.output}  calls ${t.calls}${t.estimated ? '  (estimated)' : ''}`);
-  return [...rows, '', ...toks].join('\n');
+  const guards = (s.guards ?? []).map((g) => `${g.model.padEnd(14)} guard ${g.caseId.padEnd(18)} with ${g.rate.toFixed(2)} (n=${g.n})`);
+  return [...rows, '', ...guards, ...(guards.length ? [''] : []), ...toks].join('\n');
 }

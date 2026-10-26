@@ -22,6 +22,7 @@ export interface EvalCase {
   id: string;
   prompt: string;
   targets: string[];
+  guard?: boolean;
   must: string[];
   mustNot?: string[];
 }
@@ -64,5 +65,6 @@ export interface RunSummary {
   skillHash: string;
   trials: number;
   lines: LineResult[];
+  guards?: { model: string; caseId: string; rate: number; n: number }[];
   tokens: Record<string, { input: number; output: number; estimated: boolean; calls: number }>;
 }

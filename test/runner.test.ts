@@ -40,6 +40,19 @@ test('runEval marks a line load-bearing when removing it breaks the case', async
   assert.equal(summary.tokens.m!.calls, 4);
 });
 
+test('guard cases run with the full skill and never affect line deltas', async () => {
+  const fake = async (_s: unknown, system: string) => ({
+    text: system.includes('Alpha') ? 'Alpha' : 'nope', inputTokens: 10, outputTokens: 2, estimated: false,
+  });
+  const guard: EvalCase = { id: 'g', prompt: 'p', targets: [], guard: true, must: ['Alpha'] };
+  const { summary, trials } = await runEval(config, skill, [...cases, guard], fake);
+  assert.equal(summary.lines[0]!.delta, 1);
+  assert.deepEqual(summary.guards, [{ model: 'm', caseId: 'g', rate: 1, n: 2 }]);
+  assert.equal(trials.filter((t) => t.line === '(guard)').length, 2);
+  const filtered = await runEval({ ...config, lines: ['a'] }, skill, [...cases, guard], fake);
+  assert.equal(filtered.summary.guards?.length ?? 0, 0);
+});
+
 test('runEval rejects cases targeting unknown lines', async () => {
   await assert.rejects(runEval(config, skill, [{ ...cases[0]!, targets: ['zzz'] }]), /unknown line/);
 });
