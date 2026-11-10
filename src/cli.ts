@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
-import { report, runBaseline, summarize } from './baseline.js';
+import { checksOf, monitor, monitorReport, report, runBaseline, summarize } from './baseline.js';
 import { loadCases } from './cases.js';
 import { ExecRunner, makeGrader } from './exec.js';
 import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
@@ -58,8 +58,9 @@ switch (cmd) {
     await mkdir(`${home}/runs`, { recursive: true });
     await mkdir(`${home}/logs`, { recursive: true });
     await writeFile(`${home}/runs/baseline-${runId}.json`, JSON.stringify({ runId, at, trialsPerCell: config.trials, cells, trials }, null, 2));
-    await appendFile(`${home}/logs/baseline.jsonl`, JSON.stringify({ runId, at, trials: config.trials, cells }) + '\n');
-    console.log(`\nbaseline ${runId}\n${report(cells)}`);
+    const rows = monitor(trials, checksOf(cases));
+    await appendFile(`${home}/logs/baseline.jsonl`, JSON.stringify({ runId, at, trials: config.trials, cells, monitor: rows }) + '\n');
+    console.log(`\nbaseline ${runId}\n${report(cells)}\n\n${monitorReport(rows)}`);
     break;
   }
   case 'calibrate-names': {

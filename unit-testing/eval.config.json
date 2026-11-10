@@ -5,7 +5,7 @@
   "home": "unit-testing",
   "judge": "terra",
   "judgeVerdicts": "unit-testing/evals/name-verdicts.json",
-  "trials": 3,
+  "trials": 7,
   "minDelta": 0.3,
   "models": [
     {

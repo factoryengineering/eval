@@ -1,3 +1,5 @@
+import { DEFAULT_MONITOR, criticalFailures, detectionPower, isSignal } from './monitor.js';
+import type { MonitorSpec } from './monitor.js';
 import { complete as realComplete } from './providers.js';
 import type { Completion, Config, EvalCase, ModelSpec, Trial } from './types.js';
 
@@ -63,4 +65,40 @@ export async function runBaseline(
   };
   await Promise.all(Array.from({ length: Math.min(concurrency, jobs.length) }, worker));
   return trials;
+}
+
+export interface MonitorRow {
+  model: string;
+  check: string;
+  failures: number;
+  n: number;
+  signal: boolean;
+}
+
+export function monitor(trials: Trial[], checks: string[], spec: MonitorSpec = DEFAULT_MONITOR): MonitorRow[] {
+  const models = [...new Set(trials.map((t) => t.model))];
+  return models.flatMap((model) => {
+    const mine = trials.filter((t) => t.model === model);
+    return checks.map((check) => {
+      const failures = mine.filter((t) => t.failures.some((f) => bucketOf(f) === check)).length;
+      return { model, check, failures, n: mine.length, signal: isSignal(failures, mine.length, spec) };
+    });
+  });
+}
+
+export const checksOf = (cases: EvalCase[]): string[] => {
+  const checks = new Set<string>(['compile', 'test failed']);
+  for (const c of cases) {
+    for (const rule of c.tests?.rules ?? []) checks.add(`rule ${rule}`);
+    if (c.tests?.mutants.length) checks.add('mutant survived');
+  }
+  return [...checks];
+};
+
+export function monitorReport(rows: MonitorRow[], spec: MonitorSpec = DEFAULT_MONITOR): string {
+  const n = rows[0]?.n ?? 0;
+  const k = criticalFailures(n, spec);
+  const head = `signal when failures >= ${k ?? 'never'} of ${n} per model (noise ${spec.noise}, alpha ${spec.alpha}); power to detect a true ${spec.effect} failure rate ${detectionPower(n, spec).toFixed(2)}`;
+  const lines = rows.map((r) => `${r.model.padEnd(12)} ${r.check.padEnd(28)} ${String(r.failures).padStart(2)}/${r.n}  ${r.signal ? 'SIGNAL' : 'quiet'}`);
+  return [head, ...lines].join('\n');
 }
