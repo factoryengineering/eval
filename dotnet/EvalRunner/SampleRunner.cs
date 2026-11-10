@@ -103,6 +103,11 @@ public static partial class SampleRunner
             if (receiver is null || !(receiver.Name == "IQueryable" || receiver.AllInterfaces.Any(i => i.Name == "IQueryable"))) continue;
             if (access.Expression is IdentifierNameSyntax) awaitedLocals++; else awaitedInline++;
         }
+        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, operators, Identifiers(root), awaitedLocals, awaitedInline);
+    }
+
+    static List<string> Identifiers(SyntaxNode root)
+    {
         var ids = new List<string>();
         foreach (var n in root.DescendantNodes())
             switch (n)
@@ -116,7 +121,7 @@ public static partial class SampleRunner
                 case LetClauseSyntax l: ids.Add(l.Identifier.ValueText); break;
                 case ForEachStatementSyntax fe: ids.Add(fe.Identifier.ValueText); break;
             }
-        return new(root.DescendantNodes().OfType<QueryExpressionSyntax>().Count(), calls, operators, ids.Where(i => i.Length > 0 && i != "_").ToList(), awaitedLocals, awaitedInline);
+        return ids.Where(i => i.Length > 0 && i != "_").ToList();
     }
 
     static List<string> Forbidden(CSharpCompilation compilation, SyntaxTree tree)

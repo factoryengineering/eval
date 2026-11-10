@@ -11,7 +11,8 @@ namespace EvalRunner;
 public record Mutant(string Name, string Find, string Replace);
 public record TestOutcome(string Name, bool Passed, string? Error);
 public record MutantOutcome(string Name, string Status);
-public record TestResult(string Id, bool Compiled, List<string> Diagnostics, List<string> Forbidden, List<TestOutcome> Tests, List<MutantOutcome> Mutants);
+public record TestFacts(List<string> TestMethods, List<string> HelperMethods, int DiscardUsings, int ConnectionsOpenedInTests, List<string> Identifiers);
+public record TestResult(string Id, bool Compiled, List<string> Diagnostics, List<string> Forbidden, List<TestOutcome> Tests, List<MutantOutcome> Mutants, TestFacts? Facts);
 
 public static partial class SampleRunner
 {
@@ -53,17 +54,34 @@ public static partial class SampleRunner
         var tests = CSharpSyntaxTree.ParseText(WrapTests(req.Code));
         var compilation = CompileTests(subject, tests);
         var assembly = Load(compilation, out var errors);
-        if (assembly is null) return new(req.Id, false, errors, [], [], []);
+        if (assembly is null) return new(req.Id, false, errors, [], [], [], null);
 
         var forbidden = Forbidden(compilation, tests);
-        if (forbidden.Count > 0) return new(req.Id, true, [], forbidden, [], []);
+        if (forbidden.Count > 0) return new(req.Id, true, [], forbidden, [], [], null);
 
         var outcomes = await RunAll(assembly, stopAtFirstFailure: false);
         var mutants = new List<MutantOutcome>();
         if (outcomes.Count > 0 && outcomes.All(o => o.Passed))
             foreach (var mutant in req.Mutants ?? [])
                 mutants.Add(new(mutant.Name, await Mutate(subject, tests, mutant)));
-        return new(req.Id, true, [], [], outcomes, mutants);
+        return new(req.Id, true, [], [], outcomes, mutants, TestFactsOf(compilation, tests));
+    }
+
+    static TestFacts TestFactsOf(CSharpCompilation compilation, SyntaxTree tree)
+    {
+        var root = tree.GetRoot();
+        var model = compilation.GetSemanticModel(tree);
+        static bool IsTest(MethodDeclarationSyntax method) =>
+            method.AttributeLists.SelectMany(list => list.Attributes).Any(attribute => attribute.Name.ToString() is "Fact" or "Theory" or "FactAttribute" or "TheoryAttribute" or "Xunit.Fact" or "Xunit.Theory");
+        var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToList();
+        var testMethods = methods.Where(IsTest).ToList();
+        var testClasses = testMethods.Select(method => method.Parent).ToHashSet();
+        var helpers = methods.Where(method => !IsTest(method) && testClasses.Contains(method.Parent)).Select(method => method.Identifier.ValueText).ToList();
+        var discards = root.DescendantNodes().OfType<LocalDeclarationStatementSyntax>()
+            .Count(statement => statement.UsingKeyword.RawKind != 0 && statement.Declaration.Variables.Any(variable => variable.Identifier.ValueText.All(letter => letter == '_')));
+        var connections = testMethods.Sum(method => method.DescendantNodes().OfType<BaseObjectCreationExpressionSyntax>()
+            .Count(creation => model.GetTypeInfo(creation).Type?.Name == "SqliteConnection"));
+        return new(testMethods.Select(method => method.Identifier.ValueText).ToList(), helpers, discards, connections, Identifiers(root));
     }
 
     static async Task<string> Mutate(string subject, SyntaxTree tests, Mutant mutant)

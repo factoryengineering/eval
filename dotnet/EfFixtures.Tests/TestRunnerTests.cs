@@ -185,6 +185,50 @@ public class TestRunnerTests
     }
 
     [Fact]
+    public async Task GivenTestThatUsesHelperAndDiscards_WhenRunning_ThenFactsDescribeTheStructure()
+    {
+        var result = await WhenRunningTests(SeedingHeader + """
+
+                [Fact]
+                public async Task GivenOnePost_WhenFilteringPopular_ThenItIsReturned()
+                {
+                    var (connection, database) = await GivenPosts(("big", 500));
+                    using var _ = connection;
+                    using var __ = database;
+
+                    var titles = await PostQueries.Popular(database, 100, CancellationToken.None);
+
+                    Assert.Equal(["big"], titles);
+                }
+            }
+            """);
+
+        var facts = result.Facts!;
+        Assert.Equal(["GivenOnePost_WhenFilteringPopular_ThenItIsReturned"], facts.TestMethods);
+        Assert.Equal(["GivenPosts"], facts.HelperMethods);
+        Assert.Equal(2, facts.DiscardUsings);
+        Assert.Equal(0, facts.ConnectionsOpenedInTests);
+    }
+
+    [Fact]
+    public async Task GivenTestThatOpensItsOwnConnection_WhenRunning_ThenTheConnectionIsCounted()
+    {
+        var result = await WhenRunningTests("""
+            public class T
+            {
+                [Fact]
+                public void Opens()
+                {
+                    using var connection = new SqliteConnection("DataSource=:memory:");
+                    connection.Open();
+                }
+            }
+            """);
+
+        Assert.Equal(1, result.Facts!.ConnectionsOpenedInTests);
+    }
+
+    [Fact]
     public async Task GivenFailingTests_WhenMutating_ThenMutantsAreNotEvaluated()
     {
         var result = await WhenRunningTests(
