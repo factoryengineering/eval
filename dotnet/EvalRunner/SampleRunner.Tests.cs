@@ -76,7 +76,11 @@ public static partial class SampleRunner
         var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToList();
         var testMethods = methods.Where(IsTest).ToList();
         var testClasses = testMethods.Select(method => method.Parent).ToHashSet();
-        var helpers = methods.Where(method => !IsTest(method) && testClasses.Contains(method.Parent)).Select(method => method.Identifier.ValueText).ToList();
+        bool ImplementsInterface(MethodDeclarationSyntax method) =>
+            model.GetDeclaredSymbol(method) is IMethodSymbol symbol &&
+            symbol.ContainingType.AllInterfaces.SelectMany(contract => contract.GetMembers())
+                .Any(member => SymbolEqualityComparer.Default.Equals(symbol.ContainingType.FindImplementationForInterfaceMember(member), symbol));
+        var helpers = methods.Where(method => !IsTest(method) && !ImplementsInterface(method) && testClasses.Contains(method.Parent)).Select(method => method.Identifier.ValueText).ToList();
         var discards = root.DescendantNodes().OfType<LocalDeclarationStatementSyntax>()
             .Count(statement => statement.UsingKeyword.RawKind != 0 && statement.Declaration.Variables.Any(variable => variable.Identifier.ValueText.All(letter => letter == '_')));
         var connections = testMethods.Sum(method => method.DescendantNodes().OfType<BaseObjectCreationExpressionSyntax>()

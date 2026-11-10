@@ -229,6 +229,22 @@ public class TestRunnerTests
     }
 
     [Fact]
+    public async Task GivenInterfaceImplementations_WhenRunning_ThenTheyAreNotCountedAsHelpers()
+    {
+        var result = await WhenRunningTests("""
+            public class T : IAsyncLifetime
+            {
+                public Task InitializeAsync() => Task.CompletedTask;
+                public Task DisposeAsync() => Task.CompletedTask;
+                Task GivenNothing() => Task.CompletedTask;
+                [Fact] public void Passes() { }
+            }
+            """);
+
+        Assert.Equal(["GivenNothing"], result.Facts!.HelperMethods);
+    }
+
+    [Fact]
     public async Task GivenTestThatOpensItsOwnConnection_WhenRunning_ThenTheConnectionIsCounted()
     {
         var result = await WhenRunningTests("""

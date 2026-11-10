@@ -487,3 +487,6 @@ dist/
 
 # Stage 3 evidence: keep eval logs and skill snapshots tracked
 !/logs/
+
+# Unit-testing skill evidence
+!/unit-testing/logs/

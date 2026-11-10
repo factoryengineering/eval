@@ -1,0 +1,68 @@
+[
+  {
+    "id": "popular-titles",
+    "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. xUnit is available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "given-when-then",
+        "gherkin-helpers",
+        "no-discard-usings",
+        "no-connection-in-tests"
+      ],
+      "mutants": [
+        {
+          "name": "boundary",
+          "find": "post.Views > minViews",
+          "replace": "post.Views >= minViews"
+        },
+        {
+          "name": "no-filter",
+          "find": "post.Views > minViews",
+          "replace": "true"
+        },
+        {
+          "name": "ascending",
+          "find": "orderby post.Views descending",
+          "replace": "orderby post.Views"
+        }
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "total-views-per-blog",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalViewsPerBlog`. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. xUnit is available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "given-when-then",
+        "gherkin-helpers",
+        "no-discard-usings",
+        "no-connection-in-tests"
+      ],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.Count()"
+        },
+        {
+          "name": "descending-order",
+          "find": "orderby blog.Name",
+          "replace": "orderby blog.Name descending"
+        },
+        {
+          "name": "first-post-only",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.OrderBy(post => post.Id).Select(post => post.Views).FirstOrDefault()"
+        }
+      ]
+    },
+    "must": []
+  }
+]
