@@ -1,8 +1,11 @@
 import json
 
 RULES = ["given-when-then", "gherkin-helpers", "no-discard-usings", "no-connection-in-tests"]
-COMMON = ("BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, "
-          "so do not redefine them; define any other types or helpers you need. xUnit is available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}")
+MODEL = ("The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, "
+         "Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. "
+         "BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. ")
+COMMON = (MODEL + "BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, "
+          "so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}")
 
 cases = [
     {
