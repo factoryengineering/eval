@@ -27,4 +27,7 @@ public static class BlogQueries
             select new BlogTotal(blog.Name, blog.Posts.Sum(post => post.Views));
         return await totalsQuery.ToListAsync(cancellationToken);
     }
+
+    public static async Task<int> TotalPostViews(BlogContext database, CancellationToken cancellationToken) =>
+        await database.Posts.SumAsync(post => post.Views, cancellationToken);
 }

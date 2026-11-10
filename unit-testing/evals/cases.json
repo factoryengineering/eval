@@ -1,6 +1,282 @@
 [
   {
-    "id": "popular-titles",
+    "id": "naming-popular-titles",
+    "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "given-when-then"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "given-when-then"
+      ],
+      "mutants": [
+        {
+          "name": "boundary",
+          "find": "post.Views > minViews",
+          "replace": "post.Views >= minViews"
+        },
+        {
+          "name": "no-filter",
+          "find": "post.Views > minViews",
+          "replace": "true"
+        },
+        {
+          "name": "ascending",
+          "find": "orderby post.Views descending",
+          "replace": "orderby post.Views"
+        }
+      ],
+      "graded": [
+        "rule given-when-then"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "naming-total-views-per-blog",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalViewsPerBlog`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "given-when-then"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "given-when-then"
+      ],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.Count()"
+        },
+        {
+          "name": "descending-order",
+          "find": "orderby blog.Name",
+          "replace": "orderby blog.Name descending"
+        },
+        {
+          "name": "first-post-only",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.OrderBy(post => post.Id).Select(post => post.Views).FirstOrDefault()"
+        }
+      ],
+      "graded": [
+        "rule given-when-then"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "helpers-popular-titles",
+    "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "gherkin-helpers"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "gherkin-helpers"
+      ],
+      "mutants": [
+        {
+          "name": "boundary",
+          "find": "post.Views > minViews",
+          "replace": "post.Views >= minViews"
+        },
+        {
+          "name": "no-filter",
+          "find": "post.Views > minViews",
+          "replace": "true"
+        },
+        {
+          "name": "ascending",
+          "find": "orderby post.Views descending",
+          "replace": "orderby post.Views"
+        }
+      ],
+      "graded": [
+        "rule gherkin-helpers"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "helpers-total-views-per-blog",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalViewsPerBlog`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "gherkin-helpers"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "gherkin-helpers"
+      ],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.Count()"
+        },
+        {
+          "name": "descending-order",
+          "find": "orderby blog.Name",
+          "replace": "orderby blog.Name descending"
+        },
+        {
+          "name": "first-post-only",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.OrderBy(post => post.Id).Select(post => post.Views).FirstOrDefault()"
+        }
+      ],
+      "graded": [
+        "rule gherkin-helpers"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "lifetime-popular-titles",
+    "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "setup-lifetime"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "no-connection-in-tests"
+      ],
+      "mutants": [
+        {
+          "name": "boundary",
+          "find": "post.Views > minViews",
+          "replace": "post.Views >= minViews"
+        },
+        {
+          "name": "no-filter",
+          "find": "post.Views > minViews",
+          "replace": "true"
+        },
+        {
+          "name": "ascending",
+          "find": "orderby post.Views descending",
+          "replace": "orderby post.Views"
+        }
+      ],
+      "graded": [
+        "rule no-connection-in-tests"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "lifetime-total-views-per-blog",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalViewsPerBlog`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "setup-lifetime"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "no-connection-in-tests"
+      ],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.Count()"
+        },
+        {
+          "name": "descending-order",
+          "find": "orderby blog.Name",
+          "replace": "orderby blog.Name descending"
+        },
+        {
+          "name": "first-post-only",
+          "find": "blog.Posts.Sum(post => post.Views)",
+          "replace": "blog.Posts.OrderBy(post => post.Id).Select(post => post.Views).FirstOrDefault()"
+        }
+      ],
+      "graded": [
+        "rule no-connection-in-tests"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "seed-popular-titles",
+    "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "seed-parents"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [],
+      "mutants": [
+        {
+          "name": "boundary",
+          "find": "post.Views > minViews",
+          "replace": "post.Views >= minViews"
+        },
+        {
+          "name": "no-filter",
+          "find": "post.Views > minViews",
+          "replace": "true"
+        },
+        {
+          "name": "ascending",
+          "find": "orderby post.Views descending",
+          "replace": "orderby post.Views"
+        }
+      ],
+      "graded": [
+        "test failed"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "seed-total-post-views",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalPostViews`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [
+      "seed-parents"
+    ],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "database.Posts.SumAsync(post => post.Views, cancellationToken)",
+          "replace": "database.Posts.CountAsync(cancellationToken)"
+        },
+        {
+          "name": "off-by-one",
+          "find": "post => post.Views, cancellationToken",
+          "replace": "post => post.Views + 1, cancellationToken"
+        },
+        {
+          "name": "max-not-sum",
+          "find": "database.Posts.SumAsync(post => post.Views, cancellationToken)",
+          "replace": "database.Posts.MaxAsync(post => post.Views, cancellationToken)"
+        }
+      ],
+      "graded": [
+        "test failed"
+      ]
+    },
+    "must": []
+  },
+  {
+    "id": "guard-popular-titles",
     "prompt": "Write xUnit tests for `BlogQueries.PopularTitles`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
     "targets": [],
     "tests": {
@@ -30,10 +306,11 @@
         }
       ]
     },
-    "must": []
+    "must": [],
+    "guard": true
   },
   {
-    "id": "total-views-per-blog",
+    "id": "guard-total-views-per-blog",
     "prompt": "Write xUnit tests for `BlogQueries.TotalViewsPerBlog`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
     "targets": [],
     "tests": {
@@ -63,6 +340,41 @@
         }
       ]
     },
-    "must": []
+    "must": [],
+    "guard": true
+  },
+  {
+    "id": "guard-total-post-views",
+    "prompt": "Write xUnit tests for `BlogQueries.TotalPostViews`. The entities are: Blog { int Id; required string Name; List<Post> Posts; List<Contributor> Contributors }, Post { int Id; required string Title; int Views; int BlogId; Blog Blog }, Contributor { int Id; required string Name; int BlogId; Blog Blog }. BlogContext has a public constructor taking DbContextOptions<BlogContext> and exposes DbSet properties Blogs, Posts and Contributors. BlogContext, Blog, Post and Contributor already exist in the imported namespace EfFixtures, and so do BlogQueries and BlogTotal, so do not redefine them; define any other types or helpers you need. The only packages available are xUnit and EF Core with its SQLite provider (Microsoft.Data.Sqlite, UseSqlite); the InMemory provider is not available. Return only a C# code block.\n\nThe code under test:\n\n{{subject}}",
+    "targets": [],
+    "tests": {
+      "subject": "unit-testing/evals/subjects/BlogQueries.cs",
+      "minTests": 1,
+      "rules": [
+        "given-when-then",
+        "gherkin-helpers",
+        "no-discard-usings",
+        "no-connection-in-tests"
+      ],
+      "mutants": [
+        {
+          "name": "count-not-sum",
+          "find": "database.Posts.SumAsync(post => post.Views, cancellationToken)",
+          "replace": "database.Posts.CountAsync(cancellationToken)"
+        },
+        {
+          "name": "off-by-one",
+          "find": "post => post.Views, cancellationToken",
+          "replace": "post => post.Views + 1, cancellationToken"
+        },
+        {
+          "name": "max-not-sum",
+          "find": "database.Posts.SumAsync(post => post.Views, cancellationToken)",
+          "replace": "database.Posts.MaxAsync(post => post.Views, cancellationToken)"
+        }
+      ]
+    },
+    "must": [],
+    "guard": true
   }
 ]

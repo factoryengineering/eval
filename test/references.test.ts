@@ -14,6 +14,7 @@ const reasons: Record<string, string> = {
   'weak-single-post': 'mutant survived',
   'connection-in-test': 'rule no-connection-in-tests',
   'discard-usings': 'rule no-discard-usings',
+  'orphan-posts': 'test failed',
 };
 const suites = [
   { name: 'ef-linq', cases: 'evals/cases.json', references: 'evals/references.json' },
