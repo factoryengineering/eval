@@ -1,0 +1,238 @@
+{
+  "skillName": "unit-testing",
+  "distractors": [
+    {
+      "name": "ef-linq",
+      "description": "Opinions for LINQ queries against an Entity Framework Core DbContext. Not for migrations, model configuration, or raw SQL."
+    },
+    {
+      "name": "ef-migrations",
+      "description": "Create, review and apply Entity Framework Core migrations."
+    },
+    {
+      "name": "ef-modeling",
+      "description": "Configure Entity Framework Core entities, relationships and DbContext options."
+    },
+    {
+      "name": "sql-tuning",
+      "description": "Diagnose slow SQL using execution plans and indexes."
+    },
+    {
+      "name": "xunit-tests",
+      "description": "Write xUnit tests for .NET code."
+    },
+    {
+      "name": "react-components",
+      "description": "Generate React components."
+    },
+    {
+      "name": "git-commit",
+      "description": "Write commit messages and commit staged changes."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "scope",
+      "text": "Opinions for writing xUnit tests against an Entity Framework Core DbContext backed by SQLite."
+    },
+    {
+      "id": "exclusions",
+      "text": "Not for production code, migrations, or tests that do not touch a DbContext."
+    }
+  ],
+  "baseline": "Write xUnit tests for Entity Framework Core code.",
+  "cases": [
+    {
+      "id": "write-explicit",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "Write xUnit tests for our OrderRepository. It uses AppDbContext and we run tests against in-memory SQLite."
+    },
+    {
+      "id": "write-implicit",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "Add a test that GetTopPosts returns posts in descending order of views. The method queries db.Posts."
+    },
+    {
+      "id": "review-test",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "Review this test for problems:\n```csharp\n[Fact]\npublic async Task Works()\n{\n    using var connection = new SqliteConnection(\"DataSource=:memory:\");\n    await connection.OpenAsync();\n    using var db = new ShopContext(new DbContextOptionsBuilder<ShopContext>().UseSqlite(connection).Options);\n    await db.Database.EnsureCreatedAsync();\n    Assert.Empty(db.Orders);\n}\n```"
+    },
+    {
+      "id": "fix-failing-test",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "This xUnit test throws a DbUpdateException when I save. Fix it:\n```csharp\ndb.Posts.Add(new Post { Title = \"a\", Views = 3 });\nawait db.SaveChangesAsync();\n```"
+    },
+    {
+      "id": "refactor-setup",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "These three tests each build their own BlogContext and SQLite connection. Clean up the duplication."
+    },
+    {
+      "id": "write-oblique",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "I need coverage for the cancel-order flow. It writes through AppDbContext and flips Order.Status."
+    },
+    {
+      "id": "write-paging",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "Write a theory test for the paging logic of our post queries against the blogging DbContext."
+    },
+    {
+      "id": "rename-tests",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "Rename these xUnit tests so they read better. They seed and query a CustomerContext:\n```csharp\n[Fact] public async Task Test1() { /* seeds customers, queries by city */ }\n```"
+    },
+    {
+      "id": "write-service",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "Add tests for the new CustomerService. It takes our DbContext and saves orders."
+    },
+    {
+      "id": "flaky-fixture",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "Our integration tests for the Orders table are flaky because they share one database. Fix the fixture."
+    },
+    {
+      "id": "write-cascade",
+      "expect": true,
+      "targets": [],
+      "split": "tune",
+      "prompt": "Test that deleting a Blog also deletes its Posts, using xUnit and EF Core."
+    },
+    {
+      "id": "write-aggregate",
+      "expect": true,
+      "targets": [],
+      "split": "holdout",
+      "prompt": "Write tests for the method that totals Views per Blog. It reads from BlogContext."
+    },
+    {
+      "id": "pure-function",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "tune",
+      "prompt": "Write xUnit tests for this pure function: static string Slugify(string title)."
+    },
+    {
+      "id": "react-hook",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "holdout",
+      "prompt": "Write Jest tests for this React hook that debounces a value."
+    },
+    {
+      "id": "production-query",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "tune",
+      "prompt": "Write the repository method that returns posts with more than 100 views from our EF Core context."
+    },
+    {
+      "id": "migration",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "holdout",
+      "prompt": "Create an EF Core migration for the new Order.Status column."
+    },
+    {
+      "id": "fluent-api",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "tune",
+      "prompt": "Configure the Post to Blog relationship with the Fluent API and a cascade delete."
+    },
+    {
+      "id": "moq-service",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "holdout",
+      "prompt": "Write xUnit tests for PriceCalculator. It takes an IDiscountService that I want to mock with Moq."
+    },
+    {
+      "id": "review-linq",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "tune",
+      "prompt": "Review this for problems:\n```csharp\nvar posts = db.Posts.ToList().Where(p => p.Views > 100);\n```"
+    },
+    {
+      "id": "explain-theory",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "holdout",
+      "prompt": "Explain what xUnit's [Theory] and [InlineData] attributes do."
+    },
+    {
+      "id": "commit-message",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "tune",
+      "prompt": "Write a commit message for the test changes I have staged."
+    },
+    {
+      "id": "csv-parser",
+      "expect": false,
+      "targets": [
+        "exclusions"
+      ],
+      "split": "holdout",
+      "prompt": "Write xUnit tests for a CSV line splitter that handles quoted commas."
+    },
+    {
+      "id": "sql-tuning",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "tune",
+      "prompt": "This SQL query is slow. Which index should I add?"
+    },
+    {
+      "id": "e2e-test",
+      "expect": false,
+      "targets": [
+        "scope"
+      ],
+      "split": "holdout",
+      "prompt": "Write a Playwright end-to-end test for the login page."
+    }
+  ]
+}

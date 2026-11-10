@@ -44,5 +44,6 @@
       "model": "gpt-6-1-terra-medium",
       "judgeOnly": true
     }
-  ]
+  ],
+  "trigger": "unit-testing/evals/trigger.json"
 }
