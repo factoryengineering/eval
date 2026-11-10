@@ -7,8 +7,8 @@ import { ExecRunner, makeGrader } from './exec.js';
 import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
 import { runEval } from './runner.js';
 import { annotate } from './skill.js';
-import { compare, logChange, readRuns, saveRun, table } from './store.js';
-import { clauseVerdicts, descriptionOf, rates, runTrigger } from './trigger.js';
+import { compare, logChange, readJsonl, readRuns, saveRun, table } from './store.js';
+import { clauseVerdicts, descriptionOf, holdoutSpent, rates, runTrigger, splitProblems } from './trigger.js';
 import type { TriggerSpec } from './trigger.js';
 import type { Config } from './types.js';
 
@@ -86,8 +86,18 @@ switch (cmd) {
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
     if (flag('trials')) config.trials = Number(flag('trials'));
     const spec = JSON.parse(await readFile(config.trigger ?? 'evals/trigger.json', 'utf8')) as TriggerSpec;
-    const { trials, variants } = await runTrigger(spec, config.models, config.trials, descriptionOf(skill), undefined, 6, (t) =>
-      console.error(`${t.model} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`));
+    const split = flag('split') as 'tune' | 'holdout' | undefined;
+    const variantIds = flag('variants')?.split(',');
+    const description = descriptionOf(skill);
+    if (split) {
+      const problems = splitProblems(spec);
+      if (problems.length) throw new Error(`trigger split is invalid: ${problems.join('; ')}`);
+      const history = await readJsonl<{ split?: string; description?: string }>(`${home}/logs/trigger.jsonl`);
+      if (split === 'holdout' && holdoutSpent(history, description) && !args.includes('--rerun'))
+        throw new Error('the held-out set was already run for this description; change the description or pass --rerun and record why');
+    }
+    const { trials, variants } = await runTrigger(spec, config.models, config.trials, description, undefined, 6, (t) =>
+      console.error(`${t.model} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), { split, variantIds });
     const cells = rates(trials, spec);
     const verdicts = clauseVerdicts(cells, spec, config.minDelta);
     const at = new Date().toISOString();
@@ -95,7 +105,7 @@ switch (cmd) {
     await mkdir(`${home}/runs`, { recursive: true });
     await mkdir(`${home}/logs`, { recursive: true });
     await writeFile(`${home}/runs/trigger-${runId}.json`, JSON.stringify({ runId, at, variants, cells, verdicts, trials }, null, 2));
-    await appendFile(`${home}/logs/trigger.jsonl`, JSON.stringify({ runId, at, trials: config.trials, variants, cells, verdicts }) + '\n');
+    await appendFile(`${home}/logs/trigger.jsonl`, JSON.stringify({ runId, at, split, description, trials: config.trials, variants, cells, verdicts }) + '\n');
     console.log(`\ntrigger run ${runId}`);
     for (const v of variants) console.log(`${v.id.padEnd(14)} ${JSON.stringify(v.description)}`);
     console.log('');
@@ -119,5 +129,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.log('usage: cli <analyze [runfile] | baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--models a,b] [--trials n] | change <note> | compare>');
+    console.log('usage: cli <analyze [runfile] | baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--split tune|holdout] [--variants a,b] [--models a,b] [--trials n] | change <note> | compare>');
 }

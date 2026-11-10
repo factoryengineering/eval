@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { buildSystem, clauseVerdicts, descriptionOf, gradeTrigger, parseSelection, rates, runTrigger, variantsOf } from '../src/trigger.js';
+import { buildSystem, clauseVerdicts, descriptionOf, gradeTrigger, holdoutSpent, parseSelection, rates, runTrigger, splitProblems, variantsOf } from '../src/trigger.js';
 import type { TriggerSpec } from '../src/trigger.js';
 
 const spec: TriggerSpec = {
@@ -56,4 +56,23 @@ test('a clause is load bearing when removing it breaks its targeted cases', asyn
     ['x', 1, 0, 'load-bearing'],
     ['y', 1, 0, 'load-bearing'],
   ]);
+});
+
+test('runTrigger can be limited to a split and to chosen variants', async () => {
+  const split: TriggerSpec = { ...spec, cases: [{ ...spec.cases[0]!, split: 'tune' }, { ...spec.cases[1]!, split: 'holdout' }] };
+  const fake = async () => ({ text: '["me"]', inputTokens: 1, outputTokens: 1, estimated: false });
+  const { trials, variants } = await runTrigger(split, [{ id: 'm', provider: 'mock', model: 'm' }], 1, undefined, fake, 2, undefined, { split: 'holdout', variantIds: ['full'] });
+  assert.deepEqual(variants.map((v) => v.id), ['full']);
+  assert.deepEqual(trials.map((t) => t.caseId), ['n']);
+});
+
+test('the held-out set is spent once per description', () => {
+  assert.equal(holdoutSpent([{ split: 'tune', description: 'D' }], 'D'), false);
+  assert.equal(holdoutSpent([{ split: 'holdout', description: 'D' }], 'D'), true);
+  assert.equal(holdoutSpent([{ split: 'holdout', description: 'D' }], 'E'), false);
+});
+
+test('splitProblems requires every case split and both polarities in each split', () => {
+  assert.deepEqual(splitProblems({ ...spec, cases: [{ ...spec.cases[0]!, split: 'tune' }, { ...spec.cases[1]!, split: 'tune' }] }), ['holdout has no positives', 'holdout has no negatives']);
+  assert.deepEqual(splitProblems(spec), ['case p has no split', 'case n has no split', 'tune has no positives', 'tune has no negatives', 'holdout has no positives', 'holdout has no negatives']);
 });

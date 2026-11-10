@@ -7,6 +7,7 @@ export interface TriggerCase {
   prompt: string;
   expect: boolean;
   targets: string[];
+  split?: 'tune' | 'holdout';
 }
 
 export interface TriggerSpec {
@@ -141,13 +142,15 @@ export async function runTrigger(
   complete: Complete = realComplete,
   concurrency = 4,
   onTrial: (t: TriggerTrial) => void = () => {},
+  options: { split?: 'tune' | 'holdout'; variantIds?: string[] } = {},
 ): Promise<{ trials: TriggerTrial[]; variants: DescriptionVariant[] }> {
-  const variants = variantsOf(spec, current);
+  const variants = variantsOf(spec, current).filter((v) => !options.variantIds || options.variantIds.includes(v.id));
+  const cases = spec.cases.filter((c) => !options.split || c.split === options.split);
   const jobs: (() => Promise<void>)[] = [];
   const results: TriggerTrial[] = [];
   for (const model of models)
     for (const v of variants)
-      for (const c of spec.cases)
+      for (const c of cases)
         for (let n = 0; n < trials; n++)
           jobs.push(async () => {
             const r = await complete(model, buildSystem(spec, v.description), ask(c.prompt));
@@ -165,3 +168,19 @@ export async function runTrigger(
 }
 
 export const triggerHash = (variants: DescriptionVariant[]) => hashSkill(JSON.stringify(variants));
+
+export const holdoutSpent = (entries: { split?: string; description?: string }[], description: string): boolean =>
+  entries.some((e) => e.split === 'holdout' && e.description === description);
+
+export function splitProblems(spec: TriggerSpec): string[] {
+  const problems: string[] = [];
+  for (const c of spec.cases) if (!c.split) problems.push(`case ${c.id} has no split`);
+  for (const split of ['tune', 'holdout'] as const) {
+    const mine = spec.cases.filter((c) => c.split === split);
+    if (!mine.some((c) => c.expect)) problems.push(`${split} has no positives`);
+    if (!mine.some((c) => !c.expect)) problems.push(`${split} has no negatives`);
+  }
+  const prompts = spec.cases.map((c) => c.prompt);
+  if (new Set(prompts).size !== prompts.length) problems.push('duplicate prompts');
+  return problems;
+}
