@@ -35,6 +35,15 @@ public class BlogServiceTests : IAsyncLifetime
         return blog.Id;
     }
 
+    private async Task<(int BlogId, int PostId)> GivenBlogWithPostSaved(string blogName, string postTitle)
+    {
+        using var seeding = new BlogContext(options);
+        var blog = new Blog { Name = blogName, Posts = [new Post { Title = postTitle }] };
+        seeding.Blogs.Add(blog);
+        await seeding.SaveChangesAsync();
+        return (blog.Id, blog.Posts[0].Id);
+    }
+
     private async Task<List<string>> ThenStoredBlogNames()
     {
         using var verification = new BlogContext(options);
@@ -118,5 +127,56 @@ public class BlogServiceTests : IAsyncLifetime
 
         Assert.Equal(missingId, failure.BlogId);
         Assert.Empty(await ThenStoredPosts());
+    }
+
+    [Fact]
+    public async Task GivenTwoBlogs_WhenRenamingOne_ThenOnlyThatBlogChanges()
+    {
+        var cancellationToken = CancellationToken.None;
+        var firstId = await GivenBlogSaved("first");
+        await GivenBlogSaved("second");
+
+        await service.RenameBlogAsync(firstId, "renamed", cancellationToken);
+
+        Assert.Equal(["renamed", "second"], await ThenStoredBlogNames());
+    }
+
+    [Fact]
+    public async Task GivenMissingBlog_WhenRenaming_ThenBlogNotFoundIsThrownAndNamesAreUnchanged()
+    {
+        var cancellationToken = CancellationToken.None;
+        var blogId = await GivenBlogSaved("first");
+        var missingId = blogId + 100;
+
+        var failure = await Assert.ThrowsAsync<BlogNotFoundException>(
+            () => service.RenameBlogAsync(missingId, "renamed", cancellationToken));
+
+        Assert.Equal(missingId, failure.BlogId);
+        Assert.Equal(["first"], await ThenStoredBlogNames());
+    }
+
+    [Fact]
+    public async Task GivenExistingPost_WhenRetitling_ThenTitleChangesAndBlogAndViewsAreKept()
+    {
+        var cancellationToken = CancellationToken.None;
+        var (blogId, postId) = await GivenBlogWithPostSaved("first", "old");
+
+        await service.RetitlePostAsync(postId, "new", cancellationToken);
+
+        Assert.Equal([("new", blogId, 0)], await ThenStoredPosts());
+    }
+
+    [Fact]
+    public async Task GivenMissingPost_WhenRetitling_ThenPostNotFoundIsThrownAndTitlesAreUnchanged()
+    {
+        var cancellationToken = CancellationToken.None;
+        var (blogId, postId) = await GivenBlogWithPostSaved("first", "old");
+        var missingId = postId + 100;
+
+        var failure = await Assert.ThrowsAsync<PostNotFoundException>(
+            () => service.RetitlePostAsync(missingId, "new", cancellationToken));
+
+        Assert.Equal(missingId, failure.PostId);
+        Assert.Equal([("old", blogId, 0)], await ThenStoredPosts());
     }
 }
