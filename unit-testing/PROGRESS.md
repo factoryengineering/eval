@@ -128,3 +128,31 @@ Misses worth naming:
 - **swe-2 / swe-2-flash** miss `fix-failing-test` by picking `ef-modeling`/`ef-migrations`.
 
 Limits: the held-out set shares authorship with the tune set (same author, same distractors, same style); the harness's model also lists its own real skills (e.g. `microsoft-code-reference` appeared in selections); and the near-miss negatives did not discriminate in tune, so held-out negatives mostly confirm rather than stress the description.
+
+## Iteration 6 - final ablation and guards on the frozen skill (hash da0be2a4d0a1)
+
+Re-run of Iteration 3 on the exact shipped text (the SHA-256 prefix of `SKILL.md` equals the run's `skillHash`), 5 models, 5 trials per case, run `2026-11-10T15-52-50-769Z`. Passing trials out of 10, without -> with:
+
+| Line | haiku-5.5 | sonnet-5.5 | gpt-6-luna | swe-2 | swe-2-flash | significant on |
+| --- | --- | --- | --- | --- | --- | --- |
+| `given-when-then` | 0 -> 10 | 0 -> 10 | 0 -> 10 | 0 -> 10 | 0 -> 9 | 5 of 5 |
+| `gherkin-helpers` | 4 -> 10 | 0 -> 10 | 10 -> 10 | 3 -> 10 | 2 -> 9 | 4 of 5 |
+| `setup-lifetime` | 10 -> 10 | 10 -> 10 | 0 -> 10 | 8 -> 10 | 10 -> 9 | 1 of 5 |
+| `seed-parents` | 10 -> 10 | 10 -> 10 | 5 -> 10 (p .016) | 8 -> 10 | 6 -> 7 | 1 of 5 |
+
+Compared with Iteration 3 the picture is the same, with `gherkin-helpers` now significant on swe-2-flash too (2 -> 9, p .0027; it was 5 -> 7 before) and luna `setup-lifetime` at 0 -> 10. 11 of the 20 comparisons survive the Bonferroni threshold (alpha 0.0025). The two single-model lines are unchanged: luna `setup-lifetime` survives Bonferroni; luna `seed-parents` (p .016) does not in this run, but its separate 20-trial replication (16/40 -> 38/40, Iteration 3) stands. That replication was run on the earlier description text; the rules text it measured is identical.
+
+Guards (full rule set plus mutants, with the skill, 15 trials per model; failing trials): luna `test failed` 1, haiku `gherkin-helpers` 1, sonnet `gherkin-helpers` 1, swe-2-flash `compile` 4. **No mutant survived in any guard trial.** At 15 trials a model signals at 3 or more failures, so the only signal is swe-2-flash `compile` (4 of 15): its own C# errors (tuple conversions, `new()` target typing), not a failure to follow a rule. No line is added for it: a rule cannot teach a model to write compiling C#, and the other four models do not show it.
+
+Status against the process:
+- Skill lines: 4, each load-bearing on at least one model at p < 0.05, so 4 of 4.
+- Trigger: tune (1500 trials) and held-out (600 trials, run once) both recorded; the description is the single clause that earned its place.
+- Shipped text equals tested text (this run) and is asserted by `test/skills.test.ts` (render round-trip, every line has a targeted case, shipped description is a measured variant).
+
+Known gaps, stated plainly:
+- `setup-lifetime` and `seed-parents` each help one model (gpt-6-luna). That is what the owner's rule allows, but it is thin evidence for four of the five models.
+- 5 trials per case (10 per cell) in the ablation; deltas of 0.2 are inside noise.
+- The mutation oracle has never been failed by a model; it is validated on references only.
+- Judge model (GPT-6.1 Terra) is configured but no check uses a judge, so the "judge is not under test" safeguard is untested here.
+- The trigger near-miss negatives did not discriminate in tune, and both trigger halves have a single author.
+- Token counts are estimates (chars / 4).
