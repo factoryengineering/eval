@@ -46,6 +46,7 @@ export interface TestSpec {
   mutants: MutantSpec[];
   minTests?: number;
   rules?: string[];
+  graded?: string[];
 }
 
 export interface EvalCase {

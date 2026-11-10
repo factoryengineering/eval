@@ -14,6 +14,7 @@ export async function runEval(
   complete: Complete = realComplete,
   onTrial: (t: Trial) => void = () => {},
   gradeFn: (c: EvalCase, text: string) => Promise<string[]> = async (c, text) => grade(c, text),
+  concurrency = 1,
 ): Promise<{ summary: RunSummary; trials: Trial[] }> {
   const { lines } = parseSkill(skillSource);
   const ids = new Set(lines.map((l) => l.id));
@@ -23,7 +24,7 @@ export async function runEval(
   const tokens: RunSummary['tokens'] = {};
   const memo = new Map<string, Promise<Completion>>();
   const call = (spec: ModelSpec, c: EvalCase, omit: string | undefined, n: number) => {
-    const key = `${spec.id}|${c.id}|${omit ?? '*'}|${n}`;
+    const key = `${spec.id}|${c.prompt}|${omit ?? '*'}|${n}`;
     let p = memo.get(key);
     if (!p) {
       p = complete(spec, renderSkill(skillSource, omit), c.prompt).then((r) => {
@@ -38,6 +39,22 @@ export async function runEval(
     }
     return p;
   };
+
+  if (concurrency > 1) {
+    const jobs: (() => Promise<unknown>)[] = [];
+    for (const spec of config.models) {
+      for (const line of lines.filter((l) => !config.lines || config.lines.includes(l.id)))
+        for (const c of cases.filter((x) => x.targets.includes(line.id)))
+          for (let n = 0; n < config.trials; n++)
+            for (const omit of [line.id, undefined]) jobs.push(() => call(spec, c, omit, n));
+      if (!config.lines)
+        for (const c of cases.filter((x) => x.guard)) for (let n = 0; n < config.trials; n++) jobs.push(() => call(spec, c, undefined, n));
+    }
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(concurrency, jobs.length) }, async () => {
+      for (let i = next++; i < jobs.length; i = next++) await jobs[i]!();
+    }));
+  }
 
   for (const spec of config.models) {
     for (const line of lines.filter((l) => !config.lines || config.lines.includes(l.id))) {

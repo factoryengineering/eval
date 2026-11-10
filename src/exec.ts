@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process';
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 import { createInterface } from 'node:readline';
+import { bucketOf } from './baseline.js';
 import { codeOf, grade } from './grade.js';
 import type { EvalCase, MutantSpec } from './types.js';
 
@@ -131,16 +132,19 @@ export function testFailures(c: EvalCase, r: TestExecResult): string[] {
   if (r.forbidden.length) return [`forbidden api: ${r.forbidden.join(', ')}`];
   const min = x.minTests ?? 1;
   if (r.tests.length < min) return [`tests found ${r.tests.length} < ${min}`];
-  const failed = r.tests.filter((t) => !t.passed).map((t) => `test failed ${t.name}: ${t.error}`);
-  if (failed.length) return failed;
-  const failures = r.mutants.filter((m) => m.status !== 'killed').map((m) => `mutant ${m.status}: ${m.name}`);
+  const failures = [
+    ...r.tests.filter((t) => !t.passed).map((t) => `test failed ${t.name}: ${t.error}`),
+    ...r.mutants.filter((m) => m.status !== 'killed').map((m) => `mutant ${m.status}: ${m.name}`),
+  ];
   for (const rule of x.rules ?? []) {
     const check = ruleChecks[rule];
     if (!check) throw new Error(`unknown rule check ${rule}`);
     const message = r.facts ? check(r.facts) : 'no facts';
     if (message) failures.push(`rule ${rule}: ${message}`);
   }
-  return failures;
+  if (!x.graded) return failures;
+  const ignorable = (bucket: string) => bucket === 'test failed' || bucket === 'mutant survived' || bucket.startsWith('rule ');
+  return failures.filter((f) => !ignorable(bucketOf(f)) || x.graded!.includes(bucketOf(f)));
 }
 
 export interface NameChecker {

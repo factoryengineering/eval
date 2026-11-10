@@ -37,7 +37,7 @@ switch (cmd) {
     const runner = new ExecRunner();
     const judge = await NameJudge.open(config.judgeVerdicts ?? 'evals/name-verdicts.json', judgeSpec);
     const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
-      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner, judge))
+      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner, judge), Number(flag('concurrency') ?? 1))
       .finally(async () => { runner.close(); await judge.save(); });
     await saveRun(summary, trials, home);
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);
