@@ -11,6 +11,10 @@ export interface Config {
   trials: number;
   minDelta: number;
   lines?: string[];
+  home?: string;
+  judge?: string;
+  judgeVerdicts?: string;
+  trigger?: string;
   models: ModelSpec[];
 }
 

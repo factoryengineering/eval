@@ -5,9 +5,9 @@ import type { RunSummary, Trial } from './types.js';
 const EVALS = 'logs/evals.jsonl';
 const CHANGES = 'logs/changes.jsonl';
 
-async function append(file: string, value: unknown) {
-  await mkdir('logs', { recursive: true });
-  await appendFile(file, JSON.stringify(value) + '\n');
+async function append(home: string, file: string, value: unknown) {
+  await mkdir(`${home}/logs`, { recursive: true });
+  await appendFile(`${home}/${file}`, JSON.stringify(value) + '\n');
 }
 
 export async function readJsonl<T>(file: string): Promise<T[]> {
@@ -18,21 +18,21 @@ export async function readJsonl<T>(file: string): Promise<T[]> {
   }
 }
 
-export async function saveRun(summary: RunSummary, trials: Trial[]) {
-  await mkdir('runs', { recursive: true });
-  await writeFile(`runs/${summary.runId}.json`, JSON.stringify({ summary, trials }, null, 2));
-  await append(EVALS, summary);
+export async function saveRun(summary: RunSummary, trials: Trial[], home = '.') {
+  await mkdir(`${home}/runs`, { recursive: true });
+  await writeFile(`${home}/runs/${summary.runId}.json`, JSON.stringify({ summary, trials }, null, 2));
+  await append(home, EVALS, summary);
 }
 
-export async function logChange(note: string, skillSource: string) {
+export async function logChange(note: string, skillSource: string, home = '.') {
   const hash = hashSkill(skillSource);
-  await mkdir('logs/snapshots', { recursive: true });
-  await writeFile(`logs/snapshots/${hash}.md`, skillSource);
-  await append(CHANGES, { at: new Date().toISOString(), skillHash: hash, note });
+  await mkdir(`${home}/logs/snapshots`, { recursive: true });
+  await writeFile(`${home}/logs/snapshots/${hash}.md`, skillSource);
+  await append(home, CHANGES, { at: new Date().toISOString(), skillHash: hash, note });
   return hash;
 }
 
-export const readRuns = () => readJsonl<RunSummary>(EVALS);
+export const readRuns = (home = '.') => readJsonl<RunSummary>(`${home}/${EVALS}`);
 
 export function compare(prev: RunSummary, cur: RunSummary): string {
   const out = [`${prev.skillHash} (${prev.at}) -> ${cur.skillHash} (${cur.at})`];
