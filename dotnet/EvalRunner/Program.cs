@@ -9,8 +9,8 @@ while (Console.In.ReadLine() is { } line)
 {
     if (line.Length == 0) continue;
     var request = JsonSerializer.Deserialize<Request>(line, json)!;
-    Result result;
-    try { result = await SampleRunner.Run(request); }
+    object result;
+    try { result = request.Subject is null ? await SampleRunner.Run(request) : await SampleRunner.RunTests(request); }
     catch (Exception e) { result = SampleRunner.Failure(request.Id, $"{e.GetType().Name}: {e.Message}"); }
     protocol.WriteLine(JsonSerializer.Serialize(result, json));
     protocol.Flush();

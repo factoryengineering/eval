@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace EvalRunner;
 
-public record Request(string Id, string Code, string? StringArg = null, int? IntArg = null);
+public record Request(string Id, string Code, string? StringArg = null, int? IntArg = null, string? Subject = null, List<Mutant>? Mutants = null);
 public record Invocation(string Method, string? Error);
 public record SyntaxFacts(int QueryExpressions, List<string> MethodCalls, List<string> QueryableOperators, List<string> Identifiers, int AwaitedQueryLocals, int InlineAwaitedQueries);
 public record Result(string Id, bool Compiled, List<string> Diagnostics, List<string> Forbidden, List<Invocation> Invoked, List<string> Sql, List<string> QueryStrings, SyntaxFacts? Syntax);
