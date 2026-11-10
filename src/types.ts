@@ -33,12 +33,27 @@ export interface ExecSpec {
   separateQuery?: boolean;
 }
 
+export interface MutantSpec {
+  name: string;
+  find: string;
+  replace: string;
+}
+
+export interface TestSpec {
+  subject: string;
+  source?: string;
+  mutants: MutantSpec[];
+  minTests?: number;
+  rules?: string[];
+}
+
 export interface EvalCase {
   id: string;
   prompt: string;
   targets: string[];
   guard?: boolean;
   exec?: ExecSpec;
+  tests?: TestSpec;
   must: string[];
   mustNot?: string[];
 }

@@ -117,6 +117,24 @@ public class TestRunnerTests
     }
 
     [Fact]
+    public async Task GivenTestClassWithAsyncLifetime_WhenRunning_ThenInitializeRunsBeforeAndDisposeRunsAfterEachTest()
+    {
+        var result = await WhenRunningTests("""
+            public class T : IAsyncLifetime
+            {
+                static int disposed;
+                int value;
+                public Task InitializeAsync() { value = 5; return Task.CompletedTask; }
+                public Task DisposeAsync() { disposed++; return Task.CompletedTask; }
+                [Fact] public void First() => Assert.Equal(5, value);
+                [Fact] public void Second() => Assert.True(disposed >= 1);
+            }
+            """);
+
+        Assert.All(result.Tests, outcome => Assert.True(outcome.Passed, outcome.Error));
+    }
+
+    [Fact]
     public async Task GivenTestsUsingForbiddenApi_WhenRunning_ThenTheyAreNotExecuted()
     {
         var result = await WhenRunningTests("""

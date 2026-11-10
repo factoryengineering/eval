@@ -131,7 +131,8 @@ public static partial class SampleRunner
                 }
             }
             foreach (var fixture in fixtures.Values)
-                if (fixture is IAsyncDisposable disposable) await disposable.DisposeAsync();
+                if (fixture is IAsyncLifetime lifetime) await lifetime.DisposeAsync();
+                else if (fixture is IAsyncDisposable disposable) await disposable.DisposeAsync();
                 else if (fixture is IDisposable plain) plain.Dispose();
         }
         return outcomes;
@@ -148,12 +149,13 @@ public static partial class SampleRunner
                     .Select(p => fixtures.TryGetValue(p.ParameterType, out var f) ? f : throw new InvalidOperationException($"cannot supply {p.ParameterType.Name}")).ToArray());
                 try
                 {
-                    if (instance is IAsyncLifetime lifetime) await lifetime.InitializeAsync();
+                    if (instance is IAsyncLifetime starting) await starting.InitializeAsync();
                     if (method.Invoke(instance, args) is Task task) await task;
                 }
                 finally
                 {
-                    if (instance is IAsyncDisposable asyncDisposable) await asyncDisposable.DisposeAsync();
+                    if (instance is IAsyncLifetime lifetime) await lifetime.DisposeAsync();
+                    else if (instance is IAsyncDisposable asyncDisposable) await asyncDisposable.DisposeAsync();
                     else if (instance is IDisposable disposable) disposable.Dispose();
                 }
             }).WaitAsync(TestTimeout);

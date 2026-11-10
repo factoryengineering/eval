@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { loadCases } from './cases.js';
 import { ExecRunner, makeGrader } from './exec.js';
 import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
 import { runEval } from './runner.js';
@@ -7,7 +8,7 @@ import { annotate } from './skill.js';
 import { compare, logChange, readRuns, saveRun, table } from './store.js';
 import { clauseVerdicts, descriptionOf, rates, runTrigger } from './trigger.js';
 import type { TriggerSpec } from './trigger.js';
-import type { Config, EvalCase } from './types.js';
+import type { Config } from './types.js';
 
 const [cmd, ...args] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -18,7 +19,7 @@ const flag = (name: string) => {
 const config = JSON.parse(await readFile(flag('config') ?? 'eval.config.json', 'utf8')) as Config;
 const home = config.home ?? '.';
 const judgeId = () => flag('judge') ?? config.judge ?? 'sonnet-5.5';
-const skill = await readFile(config.skill, 'utf8');
+const skill = await readFile(config.skill, 'utf8').catch(() => '');
 const tagged = () => annotate(skill, JSON.parse(readFileSync(config.ids, 'utf8')) as Record<string, string>);
 
 switch (cmd) {
@@ -29,7 +30,7 @@ switch (cmd) {
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
     if (flag('lines')) config.lines = flag('lines')!.split(',');
     if (flag('trials')) config.trials = Number(flag('trials'));
-    const cases = JSON.parse(await readFile(config.cases, 'utf8')) as EvalCase[];
+    const cases = await loadCases(config.cases);
     const runner = new ExecRunner();
     const judge = await NameJudge.open(config.judgeVerdicts ?? 'evals/name-verdicts.json', judgeSpec);
     const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
