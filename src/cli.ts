@@ -98,7 +98,7 @@ switch (cmd) {
     break;
   }
   case 'change': {
-    const note = args.join(' ');
+    const note = args.filter((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--')).join(' ');
     if (!note) throw new Error('usage: change <note describing the skill edit>');
     console.log(`logged change for skill ${await logChange(note, skill, home)}`);
     break;
