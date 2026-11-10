@@ -57,3 +57,27 @@ Reading it:
 - `no-connection-in-tests` signals on one model (gpt-6-luna, 10 of 14; it was 0.67 on one case at 3 trials). By the rule above this is a signal, but on 1 of 5 models. Not acted on yet; needs an owner decision (see below).
 - `test failed` on gpt-6-luna (3 of 14) is correctness, not style (see Iteration 1: posts seeded without a parent blog).
 - `forbidden api` appeared (swe-2-flash, 1 of 7 per case) but was not in the monitored check list; it is now (applies from the next run).
+
+## Iteration 3 - initial skill, per-line ablation (skill hash 5de5f6ee8464)
+
+Change: wrote `.devin/skills/unit-testing/SKILL.md` with four lines, one per significant baseline signal, after their cases and verified references existed. Owner decisions applied: one significant model justifies a line; "test failed" is in scope. Lines: `given-when-then`, `gherkin-helpers`, `setup-lifetime` (from `no-connection-in-tests`), `seed-parents` (from luna's `test failed`; cause: `Posts.AddRange(new Post{...})` with no parent Blog, a foreign key `DbUpdateException`).
+
+Each line has 2 targeted cases that grade only that check (`tests.graded`), so luna's seeding failures cannot pollute a naming delta. Full-rule cases (`guard-*`) run only with the skill and keep monitoring every check including mutants. 5 trials per case, so 10 per cell; run `2026-11-10T04-33-07-723Z`. Test: one-sided Fisher exact, significant when p < 0.05 and delta >= 0.3 (`node dist/src/cli.js analyze`).
+
+| Line | haiku-5.5 | sonnet-5.5 | gpt-6-luna | swe-2 | swe-2-flash | significant on |
+| --- | --- | --- | --- | --- | --- | --- |
+| `given-when-then` | 0 -> 9 | 0 -> 10 | 0 -> 10 | 0 -> 10 | 3 -> 9 | 5 of 5 |
+| `gherkin-helpers` | 4 -> 9 | 0 -> 10 | 10 -> 10 | 6 -> 10 | 5 -> 7 (p .33) | 3 of 5 |
+| `setup-lifetime` | 10 -> 9 | 10 -> 10 | 2 -> 10 (p .0004) | 8 -> 10 (p .24) | 5 -> 9 (p .07) | 1 of 5 |
+| `seed-parents` | 9 -> 10 | 10 -> 10 | 5 -> 10 (p .016) | 10 -> 10 | 6 -> 6 | 1 of 5 |
+
+Passing trials out of 10, without -> with.
+
+Every line is load-bearing on at least one model at p < 0.05, so 4 of 4 lines (100%) under the owner's rule. Honest limits:
+- **Multiple comparisons.** 20 comparisons; Bonferroni alpha is 0.0025. Only luna `setup-lifetime` survives it in this run. luna `seed-parents` (p = .016) did not, so it was **replicated**: run `2026-11-10T04-37-52-338Z`, luna only, 20 trials per case (40 per cell): 16/40 without -> 38/40 with, p < 0.0001. The replication was prompted by the first result, so it is confirmatory in intent but not blind. It is reported separately, not pooled.
+- **`setup-lifetime` and `seed-parents` each rest on one model**, matching the baseline signals that created them (luna only). They do nothing for the other four models, which already pass.
+- **swe-2-flash is weak with the skill too.** It still fails `gherkin-helpers` in 4 of 15 guard trials (adds `Async` or names a helper `Seed...`) and fails to compile in 3 of 15 (anonymous-tuple conversions, `new()` on a tuple array). Those compile errors are the model's own, not caused by the skill, but the helper-naming non-compliance is a real miss of the line.
+- **`with` completions are shared** across lines for the same prompt (memoised by prompt), so with-rates are correlated across lines in one run. Without-variants are independent per line.
+- **Mutation guard stayed quiet:** no surviving mutant in any guard trial with the skill. The oracle's discrimination is still demonstrated on references only (Iteration 2).
+- **No judged criterion exists yet.** Terra is configured as judge but no check needs it; the name judge from ef-linq is not used here.
+- Token counts are estimates (chars / 4), as in ef-linq.
