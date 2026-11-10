@@ -87,7 +87,7 @@ export function monitor(trials: Trial[], checks: string[], spec: MonitorSpec = D
 }
 
 export const checksOf = (cases: EvalCase[]): string[] => {
-  const checks = new Set<string>(['compile', 'test failed']);
+  const checks = new Set<string>(['compile', 'forbidden api', 'tests found', 'test failed']);
   for (const c of cases) {
     for (const rule of c.tests?.rules ?? []) checks.add(`rule ${rule}`);
     if (c.tests?.mutants.length) checks.add('mutant survived');

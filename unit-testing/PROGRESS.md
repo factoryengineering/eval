@@ -32,3 +32,28 @@ Findings:
 - `no-connection-in-tests` fired only for gpt-6-luna (0.67 on one case). Weak candidate; needs a case that makes inline setup more tempting.
 - **No mutant survived in any trial.** When the prompt states the behaviour, models that compile and pass also write boundary and ordering tests. The mutation oracle works (references prove it) but does not discriminate at baseline with these prompts. It stays as a guard: a rule must not lower the kill rate.
 - "test failed" is mostly real model error: seeding `Post` rows with no parent `Blog` (foreign key violation in `DbUpdateException`) and wrong expectations. Not an oracle fault.
+
+## Iteration 2 - trial count and regression monitors (7 trials per case, 14 pooled per model)
+
+Decision (by the repository owner): checks that models already pass are **regression monitors, not skill lines**. We measure their failure rate and add a skill line only if failure becomes significant. This keeps every line in the skill load-bearing and avoids rules that cannot show a delta.
+
+Significance test: one-sided binomial against an assumed noise ceiling of 0.05 failures, alpha 0.05. Sample size: smallest n that detects a true failure rate of 0.3 (the ablation `minDelta`) with power 0.8. That is n = 14 (n = 13 gives 0.7975, just short). With two cases, 7 trials per case gives 14 per model. At n = 14 a model signals at 3 or more failing trials; 2 never signals. Power to detect a true 0.2 failure rate is only about 0.55, so a 0.2 rise is **not** reliably visible at this size; that is a stated limit, not a hidden one. (`src/monitor.ts`, `test/monitor.test.ts`.)
+
+Result (`runs/baseline-2026-11-10T03-57-10-563Z.json`, no skill, failing trials out of 14 per model):
+
+| check | haiku-5.5 | sonnet-5.5 | gpt-6-luna | swe-2 | swe-2-flash |
+| --- | --- | --- | --- | --- | --- |
+| rule given-when-then | 14 SIGNAL | 14 SIGNAL | 11 SIGNAL | 13 SIGNAL | 10 SIGNAL |
+| rule gherkin-helpers | 12 SIGNAL | 11 SIGNAL | 0 | 13 SIGNAL | 10 SIGNAL |
+| rule no-connection-in-tests | 0 | 0 | 10 SIGNAL | 0 | 0 |
+| rule no-discard-usings | 0 | 0 | 0 | 1 | 0 |
+| mutant survived | 0 | 0 | 0 | 0 | 0 |
+| test failed | 0 | 0 | 3 SIGNAL | 0 | 1 |
+| compile | 0 | 0 | 0 | 1 | 1 |
+
+Reading it:
+- `given-when-then` and `gherkin-helpers` are signalled on 5 of 5 and 4 of 5 models: skill line candidates.
+- `no-discard-usings` and `mutant survived` stay quiet on every model: regression monitors only.
+- `no-connection-in-tests` signals on one model (gpt-6-luna, 10 of 14; it was 0.67 on one case at 3 trials). By the rule above this is a signal, but on 1 of 5 models. Not acted on yet; needs an owner decision (see below).
+- `test failed` on gpt-6-luna (3 of 14) is correctness, not style (see Iteration 1: posts seeded without a parent blog).
+- `forbidden api` appeared (swe-2-flash, 1 of 7 per case) but was not in the monitored check list; it is now (applies from the next run).
