@@ -2,6 +2,7 @@ export interface ModelSpec {
   id: string;
   provider: 'anthropic' | 'devin-cli' | 'mock';
   model: string;
+  judgeOnly?: boolean;
 }
 
 export interface Config {

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { report, runBaseline, summarize } from './baseline.js';
 import { loadCases } from './cases.js';
 import { ExecRunner, makeGrader } from './exec.js';
 import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
@@ -18,13 +19,15 @@ const flag = (name: string) => {
 
 const config = JSON.parse(await readFile(flag('config') ?? 'eval.config.json', 'utf8')) as Config;
 const home = config.home ?? '.';
+const allModels = config.models;
+config.models = allModels.filter((m) => !m.judgeOnly);
 const judgeId = () => flag('judge') ?? config.judge ?? 'sonnet-5.5';
 const skill = await readFile(config.skill, 'utf8').catch(() => '');
 const tagged = () => annotate(skill, JSON.parse(readFileSync(config.ids, 'utf8')) as Record<string, string>);
 
 switch (cmd) {
   case 'run': {
-    const judgeSpec = config.models.find((m) => m.id === judgeId());
+    const judgeSpec = allModels.find((m) => m.id === judgeId());
     if (!judgeSpec) throw new Error('unknown judge model');
     const only = flag('models')?.split(',');
     if (only) config.models = config.models.filter((m) => only.includes(m.id));
@@ -40,8 +43,27 @@ switch (cmd) {
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);
     break;
   }
+  case 'baseline': {
+    const only = flag('models')?.split(',');
+    if (only) config.models = config.models.filter((m) => only.includes(m.id));
+    if (flag('trials')) config.trials = Number(flag('trials'));
+    const cases = await loadCases(config.cases);
+    const runner = new ExecRunner();
+    const trials = await runBaseline(config, cases, makeGrader(runner), undefined, (t) =>
+      console.error(`${t.model} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : `FAIL ${t.failures.map((f) => f.slice(0, 60)).join(' | ')}`}`))
+      .finally(() => runner.close());
+    const at = new Date().toISOString();
+    const runId = at.replace(/[:.]/g, '-');
+    const cells = summarize(trials);
+    await mkdir(`${home}/runs`, { recursive: true });
+    await mkdir(`${home}/logs`, { recursive: true });
+    await writeFile(`${home}/runs/baseline-${runId}.json`, JSON.stringify({ runId, at, trialsPerCell: config.trials, cells, trials }, null, 2));
+    await appendFile(`${home}/logs/baseline.jsonl`, JSON.stringify({ runId, at, trials: config.trials, cells }) + '\n');
+    console.log(`\nbaseline ${runId}\n${report(cells)}`);
+    break;
+  }
   case 'calibrate-names': {
-    const spec = config.models.find((m) => m.id === judgeId());
+    const spec = allModels.find((m) => m.id === judgeId());
     if (!spec) throw new Error('unknown judge model');
     const labels = JSON.parse(await readFile('evals/name-labels.json', 'utf8')) as Record<string, boolean>;
     const verdicts = await judgeIdentifiers(Object.keys(labels), {}, spec);
@@ -87,5 +109,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.log('usage: cli <run [--models a,b] [--lines x,y] [--trials n] | trigger [--models a,b] [--trials n] | change <note> | compare>');
+    console.log('usage: cli <baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--models a,b] [--trials n] | change <note> | compare>');
 }

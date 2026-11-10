@@ -25,7 +25,7 @@ async function anthropic(model: string, system: string, prompt: string): Promise
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-    body: JSON.stringify({ model, max_tokens: 2048, system, messages: [{ role: 'user', content: prompt }] }),
+    body: JSON.stringify({ model, max_tokens: 2048, ...(system ? { system } : {}), messages: [{ role: 'user', content: prompt }] }),
   });
   if (!res.ok) throw new Error(`Anthropic ${res.status}: ${await res.text()}`);
   const body = (await res.json()) as {
@@ -38,7 +38,7 @@ async function anthropic(model: string, system: string, prompt: string): Promise
 
 // The Devin CLI prints plain text only, so token counts are estimates (~4 chars/token).
 async function devinCli(model: string, system: string, prompt: string): Promise<Completion> {
-  const full = `${system}\n\n---\n\n${prompt}\n\nDo not use any tools or read any files. Answer from this message alone.`;
+  const full = `${system ? `${system}\n\n---\n\n` : ''}${prompt}\n\nDo not use any tools or read any files. Answer from this message alone.`;
   const dir = await mkdtemp(join(tmpdir(), 'ef-eval-'));
   const file = join(dir, 'prompt.txt');
   await writeFile(file, full);
