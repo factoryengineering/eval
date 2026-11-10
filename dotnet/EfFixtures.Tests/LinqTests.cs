@@ -2,8 +2,28 @@ using EfFixtures;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-public class LinqTests
+public class LinqTests : IAsyncLifetime
 {
+    private SqliteConnection connection = null!;
+    private DbContextOptions<BlogContext> options = null!;
+    private BlogContext database = null!;
+
+    public async Task InitializeAsync()
+    {
+        connection = new SqliteConnection("DataSource=:memory:");
+        await connection.OpenAsync();
+        options = new DbContextOptionsBuilder<BlogContext>().UseSqlite(connection).Options;
+        using var schema = new BlogContext(options);
+        await schema.Database.EnsureCreatedAsync();
+        database = new BlogContext(options);
+    }
+
+    public async Task DisposeAsync()
+    {
+        await database.DisposeAsync();
+        await connection.DisposeAsync();
+    }
+
     private static Blog GivenBlogWithPosts(string name, params (string Title, int Views)[] posts) =>
         new() { Name = name, Posts = [.. posts.Select(post => new Post { Title = post.Title, Views = post.Views })] };
 
@@ -16,27 +36,18 @@ public class LinqTests
     private static List<Blog> GivenApplesAndBananas() =>
         [GivenBlogWithPosts("b", ("apple", 1), ("banana", 2))];
 
-    private static async Task<(SqliteConnection Connection, BlogContext Database)> GivenSeededContext(
-        IEnumerable<Blog> blogs, CancellationToken cancellationToken)
+    private async Task GivenBlogsSaved(IEnumerable<Blog> blogs)
     {
-        var connection = new SqliteConnection("DataSource=:memory:");
-        await connection.OpenAsync(cancellationToken);
-        var options = new DbContextOptionsBuilder<BlogContext>().UseSqlite(connection).Options;
-        var database = new BlogContext(options);
-        await database.Database.EnsureCreatedAsync(cancellationToken);
-        database.Blogs.AddRange(blogs);
-        await database.SaveChangesAsync(cancellationToken);
-        return (connection, database);
+        using var seeding = new BlogContext(options);
+        seeding.Blogs.AddRange(blogs);
+        await seeding.SaveChangesAsync();
     }
 
     [Fact]
     public async Task GivenBlogWithTwoPosts_WhenTotalingViews_ThenTotalIsComputedInTheDatabase()
     {
         var cancellationToken = CancellationToken.None;
-        var (connection, database) = await GivenSeededContext(
-            [GivenBlogWithPosts("b", ("p", 3), ("q", 4))], cancellationToken);
-        using var _ = connection;
-        using var __ = database;
+        await GivenBlogsSaved([GivenBlogWithPosts("b", ("p", 3), ("q", 4))]);
 
         var totalsQuery =
             from post in database.Posts
@@ -53,9 +64,7 @@ public class LinqTests
     public async Task GivenTwoBlogs_WhenTotalingViews_ThenEachBlogHasItsOwnTotal()
     {
         var cancellationToken = CancellationToken.None;
-        var (connection, database) = await GivenSeededContext(GivenTwoBlogs(), cancellationToken);
-        using var _ = connection;
-        using var __ = database;
+        await GivenBlogsSaved(GivenTwoBlogs());
 
         var totalsQuery =
             from post in database.Posts
@@ -71,9 +80,7 @@ public class LinqTests
     public async Task GivenApplesAndBananas_WhenFilteringByPrefix_ThenOnlyMatchingTitlesAreReturned()
     {
         var cancellationToken = CancellationToken.None;
-        var (connection, database) = await GivenSeededContext(GivenApplesAndBananas(), cancellationToken);
-        using var _ = connection;
-        using var __ = database;
+        await GivenBlogsSaved(GivenApplesAndBananas());
 
         var titlesQuery =
             from post in database.Posts
@@ -84,5 +91,38 @@ public class LinqTests
 
         var matchingTitles = await titlesQuery.ToListAsync(cancellationToken);
         Assert.Equal(["apple"], matchingTitles);
+    }
+
+    [Fact]
+    public async Task GivenSeededPosts_WhenProjectingValues_ThenNothingIsTracked()
+    {
+        var cancellationToken = CancellationToken.None;
+        await GivenBlogsSaved(GivenApplesAndBananas());
+
+        var titlesQuery =
+            from post in database.Posts
+            orderby post.Title
+            select post.Title;
+
+        var titles = await titlesQuery.ToListAsync(cancellationToken);
+
+        Assert.Equal(["apple", "banana"], titles);
+        Assert.Empty(database.ChangeTracker.Entries());
+    }
+
+    [Fact]
+    public async Task GivenSeededPosts_WhenLoadingEntities_ThenTheyAreTracked()
+    {
+        var cancellationToken = CancellationToken.None;
+        await GivenBlogsSaved(GivenApplesAndBananas());
+
+        var postsQuery =
+            from post in database.Posts
+            select post;
+
+        var loadedPosts = await postsQuery.ToListAsync(cancellationToken);
+
+        Assert.Equal(2, loadedPosts.Count);
+        Assert.Equal(2, database.ChangeTracker.Entries<Post>().Count());
     }
 }
