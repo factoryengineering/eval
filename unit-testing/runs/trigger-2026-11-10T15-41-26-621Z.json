@@ -1,0 +1,7451 @@
+{
+  "runId": "2026-11-10T15-41-26-621Z",
+  "at": "2026-11-10T15:41:26.621Z",
+  "variants": [
+    {
+      "id": "no-exclusions",
+      "description": "Opinions for writing xUnit tests against an Entity Framework Core DbContext backed by SQLite."
+    }
+  ],
+  "cells": [
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.925,
+      "n": 120
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 0.9,
+      "n": 60
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 0.95,
+      "n": 60
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 0.9333333333333333,
+      "n": 30
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 0.9666666666666667,
+      "n": 30
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 1,
+      "n": 120
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 1,
+      "n": 60
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 1,
+      "n": 60
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.9,
+      "n": 120
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 0.8,
+      "n": 60
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 1,
+      "n": 60
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.9916666666666667,
+      "n": 120
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 0.9833333333333333,
+      "n": 60
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 1,
+      "n": 60
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "scope": "all",
+      "rate": 0.9833333333333333,
+      "n": 120
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "scope": "positives",
+      "rate": 0.9666666666666667,
+      "n": 60
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "scope": "negatives",
+      "rate": 1,
+      "n": 60
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "scope": "scope",
+      "rate": 1,
+      "n": 30
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "scope": "exclusions",
+      "rate": 1,
+      "n": 30
+    }
+  ],
+  "verdicts": [],
+  "trials": [
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 0,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "```json\n[\"unit-testing\", \"xunit-tests\"]\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "```json\n[\"xunit-tests\"]\n```\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\"]\n\nWait, that's not right. Writing a Playwright test doesn't match any of the listed skills: none covers Playwright or browser testing. The closest is xunit-tests, but that's for .NET xUnit tests, not Playwright E2E. Correcting my answer:\n\n[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": false,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "The request is an xUnit test that throws a DbUpdateException on save with EF Core. Several skills could apply:\n\n- **unit-testing** covers xUnit tests against an EF Core DbContext backed by SQLite, which matches this case.\n- **xunit-tests** is more general. It is a weaker match, because the problem is in the EF save and not in how the test is written.\n- **ef-modeling** covers entity configuration. A DbUpdateException on a simple insert usually comes from model configuration, such as a required column or a missing key.\n- **ef-migrations** is possible if the SQLite schema is out of date, but nothing in the message points to that.\n\nThe names above (unit-testing, xunit-tests, ef-modeling, ef-migrations) are not in the skill list I was given in the available_skills block. That list has only docs, remarkable, and Microsoft skills. The skills in the first list are, however, the ones the user's message offered. I'll follow the first list because it is the one the user presented.\n\n[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "haiku-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\", \"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "microsoft-docs"
+      ],
+      "pass": true,
+      "output": "The request is a conceptual question about xUnit's `[Theory]` and `[InlineData]` attributes. Two skills could plausibly match:\n\n- **xunit-tests** writes xUnit tests, but the user wants an explanation, not new tests.\n- **microsoft-docs** explains how a Microsoft technology works and covers .NET concepts, so it fits a question about understanding a concept.\n\nI chose **microsoft-docs** because the request is conceptual.\n\n[\"microsoft-docs\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "The request is a conceptual question about xUnit's `[Theory]` and `[InlineData]` attributes. It isn't a request to write tests. The `xunit-tests` skill is for writing tests, and `microsoft-docs` is for querying documentation. I'm not invoking `microsoft-docs` because I can answer from general knowledge and the instruction says not to use tools or read files. So I'm not invoking any skill.\n\n[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "microsoft-docs"
+      ],
+      "pass": true,
+      "output": "The request is a conceptual question about xUnit's `[Theory]` and `[InlineData]` attributes. The `xunit-tests` skill is about writing tests, so it doesn't clearly match. `microsoft-docs` fits because the user wants to understand how a .NET technology works.\n\n[\"microsoft-docs\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "sonnet-5.5",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"ef-modeling\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "microsoft-code-reference",
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"microsoft-code-reference\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 4,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 2,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": false,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 7,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "ef-migrations",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\",\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 7,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 8,
+      "expect": true,
+      "selected": [],
+      "pass": false,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests",
+        "microsoft-code-reference"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"microsoft-code-reference\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "microsoft-docs"
+      ],
+      "pass": true,
+      "output": "[\"microsoft-docs\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "gpt-6-luna",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "ef-modeling"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\",\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "react-components"
+      ],
+      "pass": true,
+      "output": "[\"react-components\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\",\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "ef-migrations",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"ef-modeling\", \"ef-migrations\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "ef-migrations"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\", \"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-implicit",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-migrations",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-migrations\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-modeling"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-modeling\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "ef-modeling",
+        "ef-migrations"
+      ],
+      "pass": false,
+      "output": "[\"ef-modeling\", \"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling",
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\", \"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling",
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\", \"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "fix-failing-test",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-modeling",
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-modeling\", \"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-oblique",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "xunit-tests",
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\", \"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "rename-tests",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 0,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 1,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\",\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 3,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "ef-linq",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"ef-linq\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 2,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 4,
+      "expect": true,
+      "selected": [
+        "ef-linq",
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"ef-linq\", \"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 7,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 6,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 9,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "write-aggregate",
+      "trial": 8,
+      "expect": true,
+      "selected": [
+        "unit-testing",
+        "xunit-tests",
+        "ef-linq"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\", \"xunit-tests\", \"ef-linq\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "react-hook",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "flaky-fixture",
+      "trial": 5,
+      "expect": true,
+      "selected": [
+        "unit-testing"
+      ],
+      "pass": true,
+      "output": "[\"unit-testing\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "migration",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "ef-migrations"
+      ],
+      "pass": true,
+      "output": "[\"ef-migrations\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "moq-service",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 0,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 1,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 3,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 4,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 2,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 6,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "explain-theory",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 7,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 0,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 1,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 5,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 3,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 9,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 4,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 2,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "csv-parser",
+      "trial": 8,
+      "expect": false,
+      "selected": [
+        "xunit-tests"
+      ],
+      "pass": true,
+      "output": "[\"xunit-tests\"]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 6,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 5,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 7,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 9,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    },
+    {
+      "model": "swe-2-flash",
+      "variant": "no-exclusions",
+      "caseId": "e2e-test",
+      "trial": 8,
+      "expect": false,
+      "selected": [],
+      "pass": true,
+      "output": "[]\n"
+    }
+  ]
+}

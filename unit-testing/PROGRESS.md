@@ -107,3 +107,24 @@ Findings:
 Change (made after seeing tune results, as the process allows; held-out untouched): description is now the scope clause only. The shipped description equals the measured `no-exclusions` variant, and `test/skills.test.ts` requires the shipped description to be a measured variant. Rules text is unchanged.
 
 Consequence: Iteration 3's ablation measured the previous description in its system prompt, so the shipped skill is no longer byte-identical to the text under test. The ablation and guards are re-run on the frozen skill in a later iteration.
+
+## Iteration 5 - trigger eval, held-out split (final description, skill hash da0be2a4d0a1)
+
+The held-out half (12 cases never run before) was run **once**, on the frozen description only, 10 trials per case per model (`runs/trigger-2026-11-10T15-41-26-621Z.json`). The harness refuses a second held-out run for the same description (`holdoutSpent`). No change was made after seeing these numbers.
+
+| model | positives (n=60) | negatives (n=60) | all (n=120) |
+| --- | --- | --- | --- |
+| haiku-5.5 | 0.90 | 0.95 | 0.93 |
+| sonnet-5.5 | 1.00 | 1.00 | 1.00 |
+| gpt-6-luna | 0.80 | 1.00 | 0.90 |
+| swe-2 | 0.98 | 1.00 | 0.99 |
+| swe-2-flash | 0.97 | 1.00 | 0.98 |
+
+Held-out is within 0.03 of the tune result for the same description on every model except haiku (tune positives 0.90, negatives 1.00; held-out 0.90 and 0.95), so tuning did not inflate the numbers much.
+
+Misses worth naming:
+- **gpt-6-luna** under-triggers on `rename-tests` (6 of 10 miss) and other oblique requests; it prefers to select nothing or the generic `xunit-tests`. The description cannot fix a conservative model without becoming longer.
+- **haiku-5.5** has 3 false positives in 60 negatives (`e2e-test`, `explain-theory`, `moq-service`, one each) and misses `flaky-fixture` 3 of 10 by choosing the generic `xunit-tests`. `moq-service` (xUnit with no DbContext) is exactly what the dropped exclusions clause addressed; 1 of 10 is not significant, but it is the direction a restored clause would help.
+- **swe-2 / swe-2-flash** miss `fix-failing-test` by picking `ef-modeling`/`ef-migrations`.
+
+Limits: the held-out set shares authorship with the tune set (same author, same distractors, same style); the harness's model also lists its own real skills (e.g. `microsoft-code-reference` appeared in selections); and the near-miss negatives did not discriminate in tune, so held-out negatives mostly confirm rather than stress the description.
