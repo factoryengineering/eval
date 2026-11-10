@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { checksOf, monitor, monitorReport, report, runBaseline, summarize } from './baseline.js';
+import { analysisReport, analyzeLines } from './analyze.js';
 import { loadCases } from './cases.js';
 import { ExecRunner, makeGrader } from './exec.js';
 import { NameJudge, agreement, judgeIdentifiers } from './judge.js';
@@ -63,6 +64,14 @@ switch (cmd) {
     console.log(`\nbaseline ${runId}\n${report(cells)}\n\n${monitorReport(rows)}`);
     break;
   }
+  case 'analyze': {
+    const { readdirSync } = await import('node:fs');
+    const file = args.find((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--'))
+      ?? `${home}/runs/${readdirSync(`${home}/runs`).filter((f) => !f.startsWith('baseline') && !f.startsWith('trigger')).sort().at(-1)}`;
+    const run = JSON.parse(await readFile(file, 'utf8')) as { trials: import('./types.js').Trial[] };
+    console.log(`${file}\n${analysisReport(analyzeLines(run.trials), 0.05, config.minDelta)}`);
+    break;
+  }
   case 'calibrate-names': {
     const spec = allModels.find((m) => m.id === judgeId());
     if (!spec) throw new Error('unknown judge model');
@@ -110,5 +119,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.log('usage: cli <baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--models a,b] [--trials n] | change <note> | compare>');
+    console.log('usage: cli <analyze [runfile] | baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--models a,b] [--trials n] | change <note> | compare>');
 }
