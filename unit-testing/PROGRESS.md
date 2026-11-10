@@ -81,3 +81,29 @@ Every line is load-bearing on at least one model at p < 0.05, so 4 of 4 lines (1
 - **Mutation guard stayed quiet:** no surviving mutant in any guard trial with the skill. The oracle's discrimination is still demonstrated on references only (Iteration 2).
 - **No judged criterion exists yet.** Terra is configured as judge but no check needs it; the name judge from ef-linq is not used here.
 - Token counts are estimates (chars / 4), as in ef-linq.
+
+## Iteration 4 - trigger eval, tune split (description clauses)
+
+Spec `evals/trigger.json`: 12 positives (write, implicit, review, fix, refactor, rename) and 12 near-miss negatives (pure-function tests, Moq tests with no DbContext, production EF query, migration, Fluent API, Jest, Playwright, SQL tuning, commit message, explain xUnit, review a LINQ query). Distractors include the real sibling `ef-linq` and a generic `xunit-tests`. The tune/holdout split (12/12, each 6+6) was assigned by alternation within each polarity and **committed before any trigger run** (commit 0c5e8d1). Only the tune half was run here: 5 models, 5 trials, 5 description variants, 1500 calls (`runs/trigger-2026-11-10T15-29-38-265Z.json`).
+
+Result on tune, pass rate by description (positives are where the description matters):
+
+| model | name only | baseline | full | no-scope | no-exclusions |
+| --- | --- | --- | --- | --- | --- |
+| haiku-5.5 | 0.03 | 0.87 | 1.00 | 0.93 | 0.90 |
+| sonnet-5.5 | 0.43 | 1.00 | 1.00 | 1.00 | 1.00 |
+| gpt-6-luna | 0.53 | 0.80 | 0.77 | 0.57 | 0.90 |
+| swe-2 | 0.73 | 1.00 | 1.00 | 1.00 | 1.00 |
+| swe-2-flash | 0.63 | 1.00 | 1.00 | 0.80 | 1.00 |
+
+(positives only; negatives were 1.00 for every variant except swe-2 name-only 0.87 and single misses for luna name-only and flash no-exclusions.)
+
+Findings:
+- A description is clearly load-bearing against a name-only entry.
+- **`scope` earns its place through positives** (luna 0.57 -> 0.77 and flash 0.80 -> 1.00 when added to the exclusions-only text). The harness's per-clause verdict only looks at negatives, so it reports scope as "not load-bearing"; that verdict is a limitation of the verdict, not evidence against the clause.
+- **`exclusions` did nothing measurable**: negatives pass at 1.00 on every model without it (n = 15 per cell targeted at it) and luna's recall is 0.77 with it, 0.90 without it (not significant, about 23/30 vs 27/30).
+- **My near-miss negatives did not discriminate**: even the name-only listing rejects them. So the data cannot show that the exclusions clause would matter against harder negatives. Recorded as a limit.
+
+Change (made after seeing tune results, as the process allows; held-out untouched): description is now the scope clause only. The shipped description equals the measured `no-exclusions` variant, and `test/skills.test.ts` requires the shipped description to be a measured variant. Rules text is unchanged.
+
+Consequence: Iteration 3's ablation measured the previous description in its system prompt, so the shipped skill is no longer byte-identical to the text under test. The ablation and guards are re-run on the frozen skill in a later iteration.

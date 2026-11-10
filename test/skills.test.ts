@@ -23,11 +23,12 @@ for (const file of ['eval.config.json', 'unit-testing/eval.config.json']) {
   });
 }
 
-test('unit-testing trigger spec: valid split and the description equals the clauses joined', async () => {
-  const { splitProblems, descriptionOf } = await import('../src/trigger.js');
+test('unit-testing trigger spec: valid split and the description is one of the variants under test', async () => {
+  const { splitProblems, descriptionOf, variantsOf } = await import('../src/trigger.js');
   const config = JSON.parse(readFileSync('unit-testing/eval.config.json', 'utf8')) as Config & { trigger: string };
   const spec = JSON.parse(readFileSync(config.trigger, 'utf8')) as import('../src/trigger.js').TriggerSpec;
   assert.deepEqual(splitProblems(spec), []);
-  assert.equal(spec.clauses.map((c) => c.text).join(' '), descriptionOf(readFileSync(config.skill, 'utf8')));
+  const description = descriptionOf(readFileSync(config.skill, 'utf8'));
+  assert.ok(variantsOf(spec).some((v) => v.description === description), 'shipped description is not a measured variant');
   for (const c of spec.cases.filter((x) => !x.expect)) assert.ok(c.targets.length > 0, `${c.id} should target a clause`);
 });

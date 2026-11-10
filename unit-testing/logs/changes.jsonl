@@ -1,1 +1,2 @@
 {"at":"2026-11-10T04:26:09.229Z","skillHash":"5de5f6ee8464","note":"Initial skill: four lines from baseline signals (given-when-then, gherkin-helpers, setup-lifetime, seed-parents)"}
+{"at":"2026-11-10T15:31:01.666Z","skillHash":"da0be2a4d0a1","note":"Dropped the exclusions clause from the description: tune trigger run showed no effect on negatives (1.00 without it on 5 of 5 models) and a non-significant recall cost on gpt-6-luna. Rules unchanged."}

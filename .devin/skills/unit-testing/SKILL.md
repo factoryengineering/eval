@@ -1,6 +1,6 @@
 ---
 name: unit-testing
-description: Opinions for writing xUnit tests against an Entity Framework Core DbContext backed by SQLite. Not for production code, migrations, or tests that do not touch a DbContext.
+description: Opinions for writing xUnit tests against an Entity Framework Core DbContext backed by SQLite.
 ---
 Rules for xUnit tests against an EF Core DbContext:
 - Name each test `Given<State>_When<Action>_Then<Outcome>`, for example `GivenEmptyCart_WhenCheckingOut_ThenTotalIsZero`.
