@@ -128,13 +128,14 @@
     "find": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        var hash = Representation.Hash(body.Id, body.BlogId, body.Title);",
     "replace": "ifMatch ??= \"*\";\n        var hash = Representation.Hash(body.Id, body.BlogId, body.Title);",
     "expectedFailures": [
+      "child-replace-different-parent-without-if-match-is-precondition-required",
       "replace-without-if-match-is-precondition-required",
       "replace-without-if-match-on-unknown-id-is-precondition-required"
     ],
     "extra": [
       {
         "file": "Controllers.cs",
-        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string? ifMatch",
         "replace": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
       }
     ],
@@ -217,7 +218,7 @@
     "extra": [
       {
         "file": "Controllers.cs",
-        "find": "Delete(Guid id, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "find": "Delete(Guid id, [FromHeader(Name = \"If-Match\"), Required] string? ifMatch",
         "replace": "Delete(Guid id, [FromHeader(Name = \"If-Match\")] string? ifMatch"
       }
     ],
@@ -864,6 +865,7 @@
     "find": "posts.Replace(id, body, ifMatch, cancellationToken)",
     "replace": "posts.Replace(id, body, \"*\", cancellationToken)",
     "expectedFailures": [
+      "child-replace-different-parent-without-if-match-is-precondition-required",
       "race-put-different-body-same-etag-one-precondition-failed",
       "replace-stale-if-match-different-body-is-precondition-failed",
       "replace-without-if-match-is-precondition-required",
@@ -875,7 +877,7 @@
     "extra": [
       {
         "file": "Controllers.cs",
-        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string? ifMatch",
         "replace": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
       }
     ],
@@ -901,13 +903,6 @@
     "expectedFailures": [],
     "staticExpectedFailures": [
       "problem-details-used"
-    ],
-    "extra": [
-      {
-        "file": "AppSetup.cs",
-        "find": "new ProblemDetails { Status = 428, Title = \"The If-Match header is required.\" }",
-        "replace": "new { status = 428, title = \"The If-Match header is required.\" }"
-      }
     ]
   },
   {
@@ -1179,6 +1174,27 @@
     "domain": "support",
     "specExpectedFailures": [
       "spec-response-bodies-match-schemas"
+    ]
+  },
+  {
+    "name": "missing-if-match-checked-before-validation",
+    "file": "Service.cs",
+    "find": "if (body.Id != id) throw ProblemException.BadRequest(\"The body id must equal the route id.\");\n        if (string.IsNullOrWhiteSpace(body.Title)) throw ProblemException.BadRequest(\"The title is required.\");\n        if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");",
+    "replace": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        if (body.Id != id) throw ProblemException.BadRequest(\"The body id must equal the route id.\");\n        if (string.IsNullOrWhiteSpace(body.Title)) throw ProblemException.BadRequest(\"The title is required.\");",
+    "expectedFailures": [
+      "replace-body-id-differs-from-route-without-if-match-is-bad-request",
+      "replace-unknown-id-with-invalid-body-without-if-match-is-bad-request"
+    ]
+  },
+  {
+    "name": "logistics-missing-if-match-checked-before-validation",
+    "domain": "logistics",
+    "file": "Service.cs",
+    "find": "if (body.Id != id) throw ProblemException.BadRequest(\"The body id must equal the route id.\");\n        Validate(body);\n        if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");",
+    "replace": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        if (body.Id != id) throw ProblemException.BadRequest(\"The body id must equal the route id.\");\n        Validate(body);",
+    "expectedFailures": [
+      "replace-body-id-differs-from-route-without-if-match-is-bad-request",
+      "replace-unknown-id-with-invalid-body-without-if-match-is-bad-request"
     ]
   }
 ]

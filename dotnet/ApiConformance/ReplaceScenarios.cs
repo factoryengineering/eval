@@ -12,6 +12,9 @@ public static partial class ProtocolScenarios
             new("replace-without-if-match-on-unknown-id-is-precondition-required", ReplaceGroup, ReplaceWithoutIfMatchOnUnknownIdIsPreconditionRequired),
             new("replace-invalid-body-is-bad-request", ReplaceGroup, ReplaceInvalidBodyIsBadRequest),
             new("replace-body-id-differs-from-route-is-bad-request", ReplaceGroup, ReplaceBodyIdDiffersFromRouteIsBadRequest),
+            new("replace-malformed-json-without-if-match-is-bad-request", ReplaceGroup, ReplaceMalformedJsonWithoutIfMatchIsBadRequest),
+            new("replace-body-id-differs-from-route-without-if-match-is-bad-request", ReplaceGroup, ReplaceBodyIdDiffersWithoutIfMatchIsBadRequest),
+            new("replace-unknown-id-with-invalid-body-without-if-match-is-bad-request", ReplaceGroup, ReplaceUnknownIdInvalidBodyWithoutIfMatchIsBadRequest),
             new("replace-with-current-if-match-updates", ReplaceGroup, ReplaceWithCurrentIfMatchUpdates),
             new("replace-retry-with-stale-if-match-same-body-succeeds", ReplaceGroup, ReplaceRetryWithStaleIfMatchSucceeds),
             new("replace-identical-body-with-stale-if-match-succeeds", ReplaceGroup, ReplaceIdenticalBodyWithStaleIfMatchSucceeds),
@@ -20,7 +23,11 @@ public static partial class ProtocolScenarios
             new("replace-unknown-id-is-not-found", ReplaceGroup, ReplaceUnknownIdIsNotFound),
             new("replace-tombstoned-is-gone", ReplaceGroup, ReplaceTombstonedIsGone)
         };
-        if (domain.Parent is not null) scenarios.Add(new("child-replace-different-parent-conflicts", ReplaceGroup, ChildReplaceDifferentParentConflicts));
+        if (domain.Parent is not null)
+        {
+            scenarios.Add(new("child-replace-different-parent-conflicts", ReplaceGroup, ChildReplaceDifferentParentConflicts));
+            scenarios.Add(new("child-replace-different-parent-without-if-match-is-precondition-required", ReplaceGroup, ChildReplaceDifferentParentWithoutIfMatchIsPreconditionRequired));
+        }
         return scenarios;
     }
 
@@ -62,6 +69,34 @@ public static partial class ProtocolScenarios
         var put = await context.Put(resource.Id, context.Body(Guid.NewGuid(), resource.ParentId, context.Values(1)), resource.ETag);
 
         context.RequireStatus(put, 400, "PUT with a body id differing from the route");
+    }
+
+    private static async Task ReplaceMalformedJsonWithoutIfMatchIsBadRequest(ScenarioContext context)
+    {
+        var resource = await context.CreateResource();
+
+        var put = await context.Put(resource.Id, "{ not json", null);
+
+        context.RequireStatus(put, 400, "PUT with a malformed JSON body and without If-Match");
+    }
+
+    private static async Task ReplaceBodyIdDiffersWithoutIfMatchIsBadRequest(ScenarioContext context)
+    {
+        var resource = await context.CreateResource();
+
+        var put = await context.Put(resource.Id, context.Body(Guid.NewGuid(), resource.ParentId, context.Values(1)), null);
+
+        context.RequireStatus(put, 400, "PUT with a body id differing from the route and without If-Match");
+    }
+
+    private static async Task ReplaceUnknownIdInvalidBodyWithoutIfMatchIsBadRequest(ScenarioContext context)
+    {
+        var id = Guid.NewGuid();
+        var parentId = context.Domain.Parent is null ? (Guid?)null : Guid.NewGuid();
+
+        var put = await context.Put(id, context.Body(Guid.NewGuid(), parentId, context.Values(1)), null);
+
+        context.RequireStatus(put, 400, "PUT of an unknown id with a mismatching body id and without If-Match");
     }
 
     private static async Task ReplaceWithCurrentIfMatchUpdates(ScenarioContext context)
@@ -158,5 +193,15 @@ public static partial class ProtocolScenarios
         var put = await context.Put(resource.Id, context.Body(resource.Id, otherParentId, context.Values(1)), resource.ETag);
 
         context.RequireStatus(put, 409, "PUT with a different parent id than stored");
+    }
+
+    private static async Task ChildReplaceDifferentParentWithoutIfMatchIsPreconditionRequired(ScenarioContext context)
+    {
+        var resource = await context.CreateResource();
+        var otherParentId = await context.CreateParent();
+
+        var put = await context.Put(resource.Id, context.Body(resource.Id, otherParentId, context.Values(1)), null);
+
+        context.RequireStatus(put, 428, "PUT with a different parent id and without If-Match");
     }
 }

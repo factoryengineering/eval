@@ -218,3 +218,25 @@ Overlap (10 scenario names, stated reason): the status-code mapping scenarios li
 - `npm test`: 63 passed, 0 skipped, about 44 s (before this iteration: 49 passed, about 9 s). New: `test/api.test.ts` (10: failure mapping, graded forms, advisory and bootstrap notes, checksOf, cascade report, mock answers, generated cases, check-to-home mapping) and 4 api tests in `test/references.test.ts` (reference counts, good/bad against the real CLI, about 30 s). The CLI-backed test skips with a message only when the CLI is not built (`npm run build:api`).
 - `dotnet test dotnet/ApiConformance.Tests`: 365 passed, 3 skipped (soak), 59 s. `dotnet test dotnet/EfFixtures.Tests`: 39 passed.
 - Open: the baseline prompts hand a stated id type and server-owned columns to the model as environment; whether `ids are GUIDs` is enough for models to guess client-supplied ids is exactly what the baseline measures.
+
+## Iteration A9b - 400 before 428
+
+Decision (owner): REST precedence holds, as protocol.md states: 400 validation, then 428 missing If-Match, then 404/410, then ETag logic. protocol.md is unchanged.
+
+### Reproduction (red, before any fix)
+- Added to the replace group (7 new scenario names in the 3 domains, 8 in child domains): `replace-malformed-json-without-if-match-is-bad-request`, `replace-body-id-differs-from-route-without-if-match-is-bad-request`, `replace-unknown-id-with-invalid-body-without-if-match-is-bad-request`, and for children `child-replace-different-parent-without-if-match-is-precondition-required` (409 for the immutable parent comes after the ETag logic, so 428 first). Already covered and passing: PUT without If-Match on existing (428), unknown id with valid body (428 before 404), omitted field without If-Match (400), DELETE without If-Match on existing and on unknown id (428).
+- Result on the three good references (all 5 descriptors): only the handler-level 400 combinations failed, with 428: body id differs from route without If-Match, and the same on an unknown id. Malformed JSON, omitted field and the child 428 already passed (model-state errors from the body make the A8 factory fall through to the default 400). DELETE has no 400 path, so it was never wrong.
+- Cause: A8 `[Required]` header plus the global `InvalidModelStateResponseFactory` answered 428 at binding, before the service's 400 checks.
+
+### Fix (blog, support, logistics)
+- Controllers keep `[FromHeader(Name = "If-Match"), Required] string? ifMatch` (the generated document still lists If-Match as a required header; lint `write-ops-require-if-match` passes). AppSetup drops the factory and registers a small `IfMatchPrecedenceFilter` (`IActionFilter`, `Order = int.MinValue`, instance registered because `Filters.Add<T>()` ignores `IOrderedFilter`) that removes the `If-Match` model-state entry, so body validation still yields 400 via `[ApiController]` and the service raises 428 after its own 400 checks. First attempt `[ValidateNever]` on the parameter did not suppress the binding error (discarded).
+- Mutants that edited the old text were updated: the `Required] string ifMatch` finds in `put-without-if-match-allowed`, `delete-without-if-match-allowed`, `if-match-optional` now read `string? ifMatch`; the `problem-details-absent` extra edit (factory text) was removed.
+
+### Mutants
+- New: `missing-if-match-checked-before-validation` (blog, post replace: 428 check moved first) and the port `logistics-missing-if-match-checked-before-validation`. Both fail exactly `replace-body-id-differs-from-route-without-if-match-is-bad-request` and `replace-unknown-id-with-invalid-body-without-if-match-is-bad-request`.
+- `put-without-if-match-allowed` and `if-match-optional` (blog) now also fail `child-replace-different-parent-without-if-match-is-precondition-required` (409 instead of 428); their expected sets were extended. No other expectation changed.
+
+### Tests and regeneration
+- `npm run build:api`; `generate.py` regenerated idempotent-writes and api-design `references.json` (embedded sources). `cases.json` identical in both homes (prompts unchanged). TS expectation tables unchanged.
+- `npm test`: 63 passed. `dotnet test dotnet/ApiConformance.Tests`: 373 passed, 3 skipped (soak; before: 365). `dotnet test dotnet/EfFixtures.Tests`: 39 passed.
+- Not added to the api-design graded list: the new child 428 scenario stays graded through the replace group only.

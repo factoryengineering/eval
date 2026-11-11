@@ -17,6 +17,16 @@ public class ProblemExceptionFilter : IExceptionFilter
     }
 }
 
+// [Required] documents If-Match as a required header; the service answers 428 itself after the 400 checks, so drop the binding error here.
+public class IfMatchPrecedenceFilter : IActionFilter, IOrderedFilter
+{
+    public int Order => int.MinValue;
+
+    public void OnActionExecuting(ActionExecutingContext context) => context.ModelState.Remove("If-Match");
+
+    public void OnActionExecuted(ActionExecutedContext context) { }
+}
+
 public static class AppSetup
 {
     public static void ConfigureServices(IServiceCollection services, string sqliteConnectionString)
@@ -24,13 +34,6 @@ public static class AppSetup
         services.AddDbContext<LogisticsContext>(options => options.UseSqlite(sqliteConnectionString));
         services.AddScoped<DepotService>();
         services.AddScoped<ConsignmentService>();
-        services.Configure<MvcOptions>(options => options.Filters.Add<ProblemExceptionFilter>());
-        services.Configure<ApiBehaviorOptions>(options =>
-        {
-            var invalid = options.InvalidModelStateResponseFactory;
-            options.InvalidModelStateResponseFactory = context => context.ModelState.Where(entry => entry.Value!.Errors.Count > 0).All(entry => entry.Key == "If-Match")
-                ? new ObjectResult(new ProblemDetails { Status = 428, Title = "The If-Match header is required." }) { StatusCode = 428, ContentTypes = { "application/problem+json" } }
-                : invalid(context);
-        });
+        services.Configure<MvcOptions>(options => { options.Filters.Add<ProblemExceptionFilter>(); options.Filters.Add(new IfMatchPrecedenceFilter()); });
     }
 }

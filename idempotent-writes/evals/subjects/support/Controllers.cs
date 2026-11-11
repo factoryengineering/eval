@@ -46,7 +46,7 @@ public class TicketsController : ControllerBase
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Replace(Guid id, TicketBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Replace(Guid id, TicketBody body, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         var eTag = await tickets.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
@@ -57,7 +57,7 @@ public class TicketsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         await tickets.Delete(id, ifMatch, cancellationToken);
         return NoContent();

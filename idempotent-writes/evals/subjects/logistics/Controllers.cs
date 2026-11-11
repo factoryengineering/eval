@@ -46,7 +46,7 @@ public class WarehousesController : ControllerBase
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Replace(Guid id, DepotBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Replace(Guid id, DepotBody body, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         var eTag = await depots.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
@@ -57,7 +57,7 @@ public class WarehousesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         await depots.Delete(id, ifMatch, cancellationToken);
         return NoContent();
@@ -106,7 +106,7 @@ public class ShipmentsController : ControllerBase
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Replace(Guid id, ConsignmentBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Replace(Guid id, ConsignmentBody body, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         var eTag = await consignments.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
@@ -117,7 +117,7 @@ public class ShipmentsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
-    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string? ifMatch, CancellationToken cancellationToken)
     {
         await consignments.Delete(id, ifMatch, cancellationToken);
         return NoContent();
