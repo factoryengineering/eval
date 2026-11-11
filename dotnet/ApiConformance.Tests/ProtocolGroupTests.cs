@@ -2,8 +2,8 @@ using ApiConformance;
 
 public class ProtocolGroupTests
 {
-    private static async Task<IReadOnlyList<ScenarioResult>> WhenRunningAllGroups(string[] sources, DomainDescriptor domain) =>
-        await ProtocolScenarios.Run(ProtocolScenarios.All(domain), Subject.Hosts(sources), domain);
+    private static Task<IReadOnlyList<ScenarioResult>> WhenRunningAllGroups(string key, string[] sources, DomainDescriptor domain) =>
+        Subject.Scenarios(key, sources, domain);
 
     private static string Describe(IEnumerable<ScenarioResult> results) =>
         string.Join(Environment.NewLine, results.Where(r => !r.Passed).Select(r => $"{r.Name}: {r.Failure}"));
@@ -35,7 +35,7 @@ public class ProtocolGroupTests
     {
         var domain = Subject.Domain(domainFile);
 
-        var results = await WhenRunningAllGroups(Subject.Sources(Subject.SubjectOf(domainFile)).Values.ToArray(), domain);
+        var results = await WhenRunningAllGroups($"good:{domainFile}", Subject.Sources(Subject.SubjectOf(domainFile)).Values.ToArray(), domain);
 
         Assert.NotEmpty(results);
         Assert.True(results.All(r => r.Passed), Describe(results));
@@ -50,7 +50,7 @@ public class ProtocolGroupTests
         var mutant = Subject.Mutants().Single(m => m.Name == name);
         var sources = Subject.Apply(Subject.Sources(mutant.Domain), mutant);
 
-        var results = await WhenRunningAllGroups(sources, Subject.Domain($"{mutant.Domain}.json"));
+        var results = await WhenRunningAllGroups($"mutant:{name}", sources, Subject.Domain($"{mutant.Domain}.json"));
 
         var failed = results.Where(r => !r.Passed).Select(r => r.Name).Order().ToArray();
         Assert.True(failed.SequenceEqual(mutant.ExpectedFailures.Order()), $"Expected [{string.Join(", ", mutant.ExpectedFailures)}] but failed [{string.Join(", ", failed)}]." + Environment.NewLine + Describe(results));

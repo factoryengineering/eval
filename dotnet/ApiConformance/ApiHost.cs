@@ -66,6 +66,7 @@ public sealed class ApiHost : IAsyncDisposable
                     {
                         services.AddControllers().AddApplicationPart(generated);
                         configure.Invoke(null, [services, connectionString]);
+                        services.AddOpenApi();
                         foreach (var type in generated.GetTypes().Where(t => typeof(DbContext).IsAssignableFrom(t) && !t.IsAbstract))
                             ConfigureInterceptors.MakeGenericMethod(type).Invoke(null, [services, interleaver]);
                     })
@@ -85,7 +86,10 @@ public sealed class ApiHost : IAsyncDisposable
                         });
                         app.Use(interleaver.Middleware);
                         app.UseRouting();
-                        app.UseEndpoints(endpoints => endpoints.MapControllers());
+                        app.UseEndpoints(endpoints => {
+                            endpoints.MapControllers();
+                            endpoints.MapOpenApi();
+                        });
                     }))
                 .Build();
             var contextTypes = FindDbContextTypes(generated, host.Services.GetRequiredService<IServiceProviderIsService>());
@@ -113,6 +117,13 @@ public sealed class ApiHost : IAsyncDisposable
         generated.GetTypes()
             .Where(t => typeof(DbContext).IsAssignableFrom(t) && !t.IsAbstract && isService.IsService(t))
             .ToList();
+
+    public async Task<OpenApiDoc> GetOpenApiDocument()
+    {
+        using var response = await Client.GetAsync("/openapi/v1.json");
+        response.EnsureSuccessStatusCode();
+        return OpenApiDoc.Parse(await response.Content.ReadAsStringAsync());
+    }
 
     public async Task BumpServerOwned(ServerOwnedField field)
     {

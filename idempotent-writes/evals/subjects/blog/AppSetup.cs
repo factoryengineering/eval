@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
@@ -24,5 +25,12 @@ public static class AppSetup
         services.AddScoped<BlogService>();
         services.AddScoped<PostService>();
         services.Configure<MvcOptions>(options => options.Filters.Add<ProblemExceptionFilter>());
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            var invalid = options.InvalidModelStateResponseFactory;
+            options.InvalidModelStateResponseFactory = context => context.ModelState.Where(entry => entry.Value!.Errors.Count > 0).All(entry => entry.Key == "If-Match")
+                ? new ObjectResult(new ProblemDetails { Status = 428, Title = "The If-Match header is required." }) { StatusCode = 428, ContentTypes = { "application/problem+json" } }
+                : invalid(context);
+        });
     }
 }

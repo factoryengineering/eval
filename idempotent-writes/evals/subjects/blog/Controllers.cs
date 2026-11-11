@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -12,6 +14,11 @@ public class BlogsController : ControllerBase
     public BlogsController(BlogService blogs) => this.blogs = blogs;
 
     [HttpPost]
+    [ProducesResponseType<BlogResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<BlogResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Create(BlogBody body, CancellationToken cancellationToken)
     {
         var stored = await blogs.Create(body, cancellationToken);
@@ -20,6 +27,10 @@ public class BlogsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType<BlogResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var stored = await blogs.Get(id, cancellationToken);
@@ -29,21 +40,28 @@ public class BlogsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Replace(Guid id, BlogBody body, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Replace(Guid id, BlogBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        var eTag = await blogs.Replace(id, body, Header("If-Match"), cancellationToken);
+        var eTag = await blogs.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        await blogs.Delete(id, Header("If-Match"), cancellationToken);
+        await blogs.Delete(id, ifMatch, cancellationToken);
         return NoContent();
     }
-
-    private string? Header(string name) => Request.Headers.TryGetValue(name, out var values) ? values.ToString() : null;
 }
 
 [ApiController]
@@ -54,6 +72,12 @@ public class PostsController : ControllerBase
     public PostsController(PostService posts) => this.posts = posts;
 
     [HttpPost("api/blogs/{blogId:guid}/posts")]
+    [ProducesResponseType<PostResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Create(Guid blogId, PostBody body, CancellationToken cancellationToken)
     {
         var stored = await posts.Create(blogId, body, cancellationToken);
@@ -62,6 +86,10 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet("api/posts/{id:guid}")]
+    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var stored = await posts.Get(id, cancellationToken);
@@ -71,19 +99,27 @@ public class PostsController : ControllerBase
     }
 
     [HttpPut("api/posts/{id:guid}")]
-    public async Task<IActionResult> Replace(Guid id, PostBody body, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Replace(Guid id, PostBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        var eTag = await posts.Replace(id, body, Header("If-Match"), cancellationToken);
+        var eTag = await posts.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
         return NoContent();
     }
 
     [HttpDelete("api/posts/{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        await posts.Delete(id, Header("If-Match"), cancellationToken);
+        await posts.Delete(id, ifMatch, cancellationToken);
         return NoContent();
     }
-
-    private string? Header(string name) => Request.Headers.TryGetValue(name, out var values) ? values.ToString() : null;
 }

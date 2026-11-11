@@ -195,8 +195,9 @@ internal static class SourceChecks
     private static StaticCheckResult IfMatchRequired(SourceFacts facts)
     {
         var problems = facts.Actions.Where(a => a.Verb is "Put" or "Delete").Where(a =>
-            !a.Method.Parameters.Any(p => p.GetAttributes().Any(x => x.AttributeClass?.Name == "FromHeaderAttribute" && x.NamedArguments.Any(n => n.Key == "Name" && string.Equals(n.Value.Value as string, "If-Match", StringComparison.OrdinalIgnoreCase)))) &&
-            !SourceFacts.MentionsHeader(a.Syntax, "If-Match"))
+            !a.Method.Parameters.Any(p => p.GetAttributes().Any(x => x.AttributeClass?.Name == "FromHeaderAttribute" && x.NamedArguments.Any(n => n.Key == "Name" && string.Equals(n.Value.Value as string, "If-Match", StringComparison.OrdinalIgnoreCase)))
+                && a.Syntax.DescendantNodes().OfType<IdentifierNameSyntax>().Any(i => SymbolEqualityComparer.Default.Equals(a.Model.GetSymbolInfo(i).Symbol, p))) &&
+            !SourceFacts.MentionsHeader((SyntaxNode?)a.Syntax.Body ?? a.Syntax.ExpressionBody!, "If-Match"))
             .Select(a => $"{a.Name} ({a.Verb}) never reads If-Match").ToList();
         return StaticChecks.Result("if-match-required", problems, "PUT and DELETE actions read the If-Match header");
     }
@@ -220,7 +221,7 @@ internal static class SourceChecks
     {
         string[] names = ["ProblemDetails", "ValidationProblemDetails", "Problem", "ValidationProblem", "AddProblemDetails", "IProblemDetailsService"];
         var found = facts.Compilation.SyntaxTrees
-            .SelectMany(tree => tree.GetRoot().DescendantNodes().OfType<IdentifierNameSyntax>().Where(i => names.Contains(i.Identifier.Text)).Select(i => facts.Models[tree].GetSymbolInfo(i).Symbol))
+            .SelectMany(tree => tree.GetRoot().DescendantNodes().OfType<IdentifierNameSyntax>().Where(i => names.Contains(i.Identifier.Text) && !i.Ancestors().OfType<AttributeListSyntax>().Any()).Select(i => facts.Models[tree].GetSymbolInfo(i).Symbol))
             .Where(symbol => symbol is not null).Select(symbol => symbol!.Name).Distinct().ToList();
         return StaticChecks.Result("problem-details-used", found.Count == 0 ? ["no ProblemDetails or Problem(...) usage"] : [], $"uses {string.Join(", ", found)}");
     }

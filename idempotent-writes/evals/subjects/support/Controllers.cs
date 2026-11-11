@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -12,6 +14,11 @@ public class TicketsController : ControllerBase
     public TicketsController(TicketService tickets) => this.tickets = tickets;
 
     [HttpPost]
+    [ProducesResponseType<TicketResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<TicketResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Create(TicketBody body, CancellationToken cancellationToken)
     {
         var stored = await tickets.Create(body, cancellationToken);
@@ -20,6 +27,10 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType<TicketResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var stored = await tickets.Get(id, cancellationToken);
@@ -29,19 +40,26 @@ public class TicketsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Replace(Guid id, TicketBody body, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Replace(Guid id, TicketBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        var eTag = await tickets.Replace(id, body, Header("If-Match"), cancellationToken);
+        var eTag = await tickets.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        await tickets.Delete(id, Header("If-Match"), cancellationToken);
+        await tickets.Delete(id, ifMatch, cancellationToken);
         return NoContent();
     }
-
-    private string? Header(string name) => Request.Headers.TryGetValue(name, out var values) ? values.ToString() : null;
 }

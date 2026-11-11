@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -12,6 +14,11 @@ public class WarehousesController : ControllerBase
     public WarehousesController(DepotService depots) => this.depots = depots;
 
     [HttpPost]
+    [ProducesResponseType<DepotResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<DepotResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Create(DepotBody body, CancellationToken cancellationToken)
     {
         var stored = await depots.Create(body, cancellationToken);
@@ -20,6 +27,10 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [ProducesResponseType<DepotResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var stored = await depots.Get(id, cancellationToken);
@@ -29,21 +40,28 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Replace(Guid id, DepotBody body, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Replace(Guid id, DepotBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        var eTag = await depots.Replace(id, body, Header("If-Match"), cancellationToken);
+        var eTag = await depots.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
         return NoContent();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        await depots.Delete(id, Header("If-Match"), cancellationToken);
+        await depots.Delete(id, ifMatch, cancellationToken);
         return NoContent();
     }
-
-    private string? Header(string name) => Request.Headers.TryGetValue(name, out var values) ? values.ToString() : null;
 }
 
 [ApiController]
@@ -54,6 +72,12 @@ public class ShipmentsController : ControllerBase
     public ShipmentsController(ConsignmentService consignments) => this.consignments = consignments;
 
     [HttpPost("api/warehouses/{warehouseId:guid}/shipments")]
+    [ProducesResponseType<ConsignmentResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ConsignmentResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Create(Guid warehouseId, ConsignmentBody body, CancellationToken cancellationToken)
     {
         var stored = await consignments.Create(warehouseId, body, cancellationToken);
@@ -62,6 +86,10 @@ public class ShipmentsController : ControllerBase
     }
 
     [HttpGet("api/shipments/{id:guid}")]
+    [ProducesResponseType<ConsignmentResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status304NotModified)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var stored = await consignments.Get(id, cancellationToken);
@@ -71,19 +99,27 @@ public class ShipmentsController : ControllerBase
     }
 
     [HttpPut("api/shipments/{id:guid}")]
-    public async Task<IActionResult> Replace(Guid id, ConsignmentBody body, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Replace(Guid id, ConsignmentBody body, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        var eTag = await consignments.Replace(id, body, Header("If-Match"), cancellationToken);
+        var eTag = await consignments.Replace(id, body, ifMatch, cancellationToken);
         Response.Headers.ETag = $"\"{eTag}\"";
         return NoContent();
     }
 
     [HttpDelete("api/shipments/{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, "application/problem+json")]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, "application/problem+json")]
+    public async Task<IActionResult> Delete(Guid id, [FromHeader(Name = "If-Match"), Required] string ifMatch, CancellationToken cancellationToken)
     {
-        await consignments.Delete(id, Header("If-Match"), cancellationToken);
+        await consignments.Delete(id, ifMatch, cancellationToken);
         return NoContent();
     }
-
-    private string? Header(string name) => Request.Headers.TryGetValue(name, out var values) ? values.ToString() : null;
 }

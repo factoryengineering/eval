@@ -130,6 +130,16 @@
     "expectedFailures": [
       "replace-without-if-match-is-precondition-required",
       "replace-without-if-match-on-unknown-id-is-precondition-required"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "replace": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
+      }
+    ],
+    "lintExpectedFailures": [
+      "write-ops-require-if-match"
     ]
   },
   {
@@ -142,6 +152,9 @@
       "duplicate-delivery-delete-succeeds-twice",
       "lost-response-delete-retry-succeeds",
       "race-delete-same-if-match-both-succeed"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
     ]
   },
   {
@@ -155,6 +168,9 @@
       "duplicate-delivery-delete-succeeds-twice",
       "lost-response-delete-retry-succeeds",
       "race-delete-same-if-match-both-succeed"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
     ]
   },
   {
@@ -197,6 +213,16 @@
     "replace": "ifMatch ??= \"*\";\n        for (var attempt = 0; ; attempt++)\n        {\n            var postQuery",
     "expectedFailures": [
       "delete-without-if-match-is-precondition-required"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "Delete(Guid id, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "replace": "Delete(Guid id, [FromHeader(Name = \"If-Match\")] string? ifMatch"
+      }
+    ],
+    "lintExpectedFailures": [
+      "write-ops-require-if-match"
     ]
   },
   {
@@ -242,6 +268,9 @@
     "replace": "public record PostResponse(Guid Id, Guid BlogId, string Title, int Views = 0);",
     "expectedFailures": [
       "server-owned-field-is-absent-from-representation"
+    ],
+    "lintExpectedFailures": [
+      "no-server-owned-fields-in-schemas"
     ]
   },
   {
@@ -331,6 +360,9 @@
       "duplicate-delivery-delete-succeeds-twice",
       "lost-response-delete-retry-succeeds",
       "race-delete-same-if-match-both-succeed"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
     ]
   },
   {
@@ -723,6 +755,9 @@
     ],
     "staticExpectedFailures": [
       "no-entity-in-responses"
+    ],
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
     ]
   },
   {
@@ -741,6 +776,9 @@
     "staticExpectedFailures": [
       "internal-key-int-hidden",
       "no-int-id-in-dtos"
+    ],
+    "lintExpectedFailures": [
+      "ids-format-uuid"
     ]
   },
   {
@@ -804,8 +842,8 @@
   {
     "name": "etag-header-missing",
     "file": "Controllers.cs",
-    "find": "        var eTag = await posts.Replace(id, body, Header(\"If-Match\"), cancellationToken);\n        Response.Headers.ETag = $\"\\\"{eTag}\\\"\";",
-    "replace": "        await posts.Replace(id, body, Header(\"If-Match\"), cancellationToken);",
+    "find": "        var eTag = await posts.Replace(id, body, ifMatch, cancellationToken);\n        Response.Headers.ETag = $\"\\\"{eTag}\\\"\";",
+    "replace": "        await posts.Replace(id, body, ifMatch, cancellationToken);",
     "expectedFailures": [
       "canonical-changing-any-writable-field-changes-etag",
       "canonical-etag-is-stable-across-gets-and-no-op-put",
@@ -823,7 +861,7 @@
   {
     "name": "if-match-optional",
     "file": "Controllers.cs",
-    "find": "posts.Replace(id, body, Header(\"If-Match\"), cancellationToken)",
+    "find": "posts.Replace(id, body, ifMatch, cancellationToken)",
     "replace": "posts.Replace(id, body, \"*\", cancellationToken)",
     "expectedFailures": [
       "race-put-different-body-same-etag-one-precondition-failed",
@@ -833,13 +871,23 @@
     ],
     "staticExpectedFailures": [
       "if-match-required"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\"), Required] string ifMatch",
+        "replace": "Replace(Guid id, PostBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
+      }
+    ],
+    "lintExpectedFailures": [
+      "write-ops-require-if-match"
     ]
   },
   {
     "name": "no-cancellation-token",
     "file": "Controllers.cs",
-    "find": "await posts.Delete(id, Header(\"If-Match\"), cancellationToken);",
-    "replace": "await posts.Delete(id, Header(\"If-Match\"), CancellationToken.None);",
+    "find": "await posts.Delete(id, ifMatch, cancellationToken);",
+    "replace": "await posts.Delete(id, ifMatch, CancellationToken.None);",
     "expectedFailures": [],
     "staticExpectedFailures": [
       "cancellation-token-passed"
@@ -853,6 +901,13 @@
     "expectedFailures": [],
     "staticExpectedFailures": [
       "problem-details-used"
+    ],
+    "extra": [
+      {
+        "file": "AppSetup.cs",
+        "find": "new ProblemDetails { Status = 428, Title = \"The If-Match header is required.\" }",
+        "replace": "new { status = 428, title = \"The If-Match header is required.\" }"
+      }
     ]
   },
   {
@@ -897,6 +952,233 @@
     "domain": "support",
     "staticExpectedFailures": [
       "server-owned-not-concurrency-token"
+    ]
+  },
+  {
+    "name": "openapi-delete-no-428",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n",
+    "replace": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "write-ops-declare-428"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "openapi-put-no-404",
+    "file": "Controllers.cs",
+    "find": "    [HttpPut(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, \"application/problem+json\")]\n",
+    "replace": "    [HttpPut(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest, \"application/problem+json\")]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "put-declares-412-and-404"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "openapi-put-no-410",
+    "file": "Controllers.cs",
+    "find": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "replace": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "put-and-delete-declare-no-conflicting-gaps"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "openapi-delete-declares-404",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n",
+    "replace": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, \"application/problem+json\")]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "delete-no-404"
+    ]
+  },
+  {
+    "name": "openapi-create-no-200",
+    "file": "Controllers.cs",
+    "find": "    [HttpPost]\n    [ProducesResponseType<BlogResponse>(StatusCodes.Status201Created)]\n    [ProducesResponseType<BlogResponse>(StatusCodes.Status200OK)]\n",
+    "replace": "    [HttpPost]\n    [ProducesResponseType<BlogResponse>(StatusCodes.Status201Created)]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "create-declares-201-200-409"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "openapi-get-no-304",
+    "file": "Controllers.cs",
+    "find": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]\n    [ProducesResponseType(StatusCodes.Status304NotModified)]\n",
+    "replace": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "read-declares-304-404-410"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "openapi-error-not-problem-json",
+    "file": "Controllers.cs",
+    "find": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "replace": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "error-responses-problem-json"
+    ],
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
+    ]
+  },
+  {
+    "name": "openapi-int-id-query-param",
+    "file": "Controllers.cs",
+    "find": "public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)\n    {\n        var stored = await posts.Get(",
+    "replace": "public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken, [FromQuery] int legacyId = 0)\n    {\n        var stored = await posts.Get(",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "no-int-id-params"
+    ],
+    "staticExpectedFailures": [
+      "internal-key-int-hidden",
+      "routes-use-guid"
+    ]
+  },
+  {
+    "name": "openapi-server-owned-in-request-schema",
+    "file": "Service.cs",
+    "find": "public record PostBody(Guid Id, Guid BlogId, string Title);",
+    "replace": "public record PostBody(Guid Id, Guid BlogId, string Title, int Views = 0);",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "no-server-owned-fields-in-schemas"
+    ]
+  },
+  {
+    "name": "openapi-request-body-optional",
+    "file": "Controllers.cs",
+    "find": "Create(Guid blogId, PostBody body, CancellationToken",
+    "replace": "Create(Guid blogId, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] PostBody? body, CancellationToken",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "request-bodies-required"
+    ]
+  },
+  {
+    "name": "openapi-route-hidden",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"api/posts/{id:guid}\")]\n",
+    "replace": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ApiExplorerSettings(IgnoreApi = true)]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "routes-cover-descriptor"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "spec-delete-204-undeclared",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n",
+    "replace": "    [HttpDelete(\"api/posts/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status200OK)]\n",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "put-and-delete-declare-no-conflicting-gaps"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "spec-put-409-undeclared",
+    "file": "Controllers.cs",
+    "find": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "replace": "    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status410Gone, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n    public async Task<IActionResult> Replace(Guid id, PostBody",
+    "expectedFailures": [],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "spec-response-schema-requires-absent-field",
+    "file": "Controllers.cs",
+    "find": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]\n",
+    "replace": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostDocumented>(StatusCodes.Status200OK)]\n",
+    "expectedFailures": [],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "[ApiController]\npublic class PostsController",
+        "replace": "public record PostDocumented(Guid Id, Guid BlogId, string Title, string Summary);\n\n[ApiController]\npublic class PostsController"
+      }
+    ],
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
+    ]
+  },
+  {
+    "name": "spec-response-schema-wrong-type",
+    "file": "Controllers.cs",
+    "find": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostResponse>(StatusCodes.Status200OK)]\n",
+    "replace": "    [HttpGet(\"api/posts/{id:guid}\")]\n    [ProducesResponseType<PostDocumented>(StatusCodes.Status200OK)]\n",
+    "expectedFailures": [],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "[ApiController]\npublic class PostsController",
+        "replace": "public record PostDocumented(Guid Id, Guid BlogId, bool Title);\n\n[ApiController]\npublic class PostsController"
+      }
+    ],
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
+    ]
+  },
+  {
+    "name": "spec-response-has-undeclared-property",
+    "file": "Controllers.cs",
+    "find": "        if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n        return Ok(stored.Representation);\n    }\n\n    [HttpPut(\"api/posts/{id:guid}\")]",
+    "replace": "        if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n        return Ok(new { stored.Representation.Id, stored.Representation.BlogId, stored.Representation.Title, Summary = \"x\" });\n    }\n\n    [HttpPut(\"api/posts/{id:guid}\")]",
+    "expectedFailures": [],
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
+    ]
+  },
+  {
+    "name": "support-spec-delete-204-undeclared",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n",
+    "replace": "    [HttpDelete(\"{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status200OK)]\n",
+    "expectedFailures": [],
+    "domain": "support",
+    "lintExpectedFailures": [
+      "put-and-delete-declare-no-conflicting-gaps"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "support-spec-response-has-undeclared-property",
+    "file": "Controllers.cs",
+    "find": "        return Ok(stored.Representation);\n    }\n\n    [HttpPut(\"{id:guid}\")]",
+    "replace": "        return Ok(new { stored.Representation.Id, stored.Representation.Subject, stored.Representation.Priority, stored.Representation.Escalated, stored.Representation.Category, Note = \"x\" });\n    }\n\n    [HttpPut(\"{id:guid}\")]",
+    "expectedFailures": [],
+    "domain": "support",
+    "specExpectedFailures": [
+      "spec-response-bodies-match-schemas"
     ]
   }
 ]

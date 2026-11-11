@@ -3,7 +3,7 @@ using ApiConformance;
 
 public sealed record Edit(string File, string Find, string Replace);
 
-public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog", Edit[]? Extra = null, string[]? StaticExpectedFailures = null);
+public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog", Edit[]? Extra = null, string[]? StaticExpectedFailures = null, string[]? LintExpectedFailures = null, string[]? SpecExpectedFailures = null);
 
 public static class Subject
 {
@@ -41,6 +41,11 @@ public static class Subject
         }
         return sources.Keys.Select(name => files[name]).ToArray();
     }
+
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Lazy<Task<IReadOnlyList<ScenarioResult>>>> ScenarioRuns = new();
+
+    public static Task<IReadOnlyList<ScenarioResult>> Scenarios(string key, string[] sources, DomainDescriptor domain) =>
+        ScenarioRuns.GetOrAdd(key, _ => new(() => ProtocolScenarios.Run(ProtocolScenarios.All(domain), Hosts(sources), domain))).Value;
 
     public static Func<ApiHost> Hosts(IEnumerable<string> sources)
     {
