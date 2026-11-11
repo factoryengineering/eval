@@ -24,12 +24,17 @@ public static class GeneratedApp
 
     public static CompileResult Compile(params string[] sources) => Compile((IEnumerable<string>)sources);
 
-    public static CompileResult Compile(IEnumerable<string> sources)
+    public static CSharpCompilation CreateCompilation(IEnumerable<string> sources)
     {
         var trees = sources.Select((source, index) =>
             CSharpSyntaxTree.ParseText(source, path: $"Generated{index}.cs")).ToList();
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable);
-        var compilation = CSharpCompilation.Create($"Generated_{Guid.NewGuid():N}", trees, References.Value, options);
+        return CSharpCompilation.Create($"Generated_{Guid.NewGuid():N}", trees, References.Value, options);
+    }
+
+    public static CompileResult Compile(IEnumerable<string> sources)
+    {
+        var compilation = CreateCompilation(sources);
         using var stream = new MemoryStream();
         var emitted = compilation.Emit(stream);
         var diagnostics = emitted.Diagnostics

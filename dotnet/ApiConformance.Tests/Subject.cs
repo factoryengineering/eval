@@ -3,7 +3,7 @@ using ApiConformance;
 
 public sealed record Edit(string File, string Find, string Replace);
 
-public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog", Edit[]? Extra = null);
+public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog", Edit[]? Extra = null, string[]? StaticExpectedFailures = null);
 
 public static class Subject
 {

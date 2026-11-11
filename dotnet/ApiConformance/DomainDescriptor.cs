@@ -5,7 +5,7 @@ namespace ApiConformance;
 
 public sealed record FieldDescriptor(string Name, string JsonType, string ClrType, IReadOnlyList<JsonElement> Samples);
 
-public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField, IReadOnlyList<FieldDescriptor>? WritableFields = null);
+public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField, IReadOnlyList<FieldDescriptor>? WritableFields = null, string? EntityTypeName = null);
 
 public sealed record ServerOwnedField(string Field, string EntityTypeName, string? SqlColumn = null, string Kind = "counter", string Owner = "resource")
 {
@@ -19,7 +19,8 @@ public sealed record DomainDescriptor(
     ParentDescriptor? Parent,
     IReadOnlyList<FieldDescriptor> WritableFields,
     IReadOnlyList<string> ServerOwnedFields,
-    IReadOnlyList<ServerOwnedField>? ServerOwned = null)
+    IReadOnlyList<ServerOwnedField>? ServerOwned = null,
+    string? EntityTypeName = null)
 {
     public const int MinimumSamples = 3;
 

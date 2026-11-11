@@ -4,6 +4,7 @@
   "parent": {
     "collectionRoute": "/api/warehouses",
     "childCollectionRoute": "/api/warehouses/{warehouseId}/shipments",
+    "entityTypeName": "Depot",
     "parentBodyField": "warehouseId",
     "writableFields": [
       { "name": "code", "jsonType": "string", "clrType": "System.String", "samples": ["WH-NORTH", "WH-SOUTH", "WH-EAST"] },
@@ -15,6 +16,7 @@
     { "name": "weightKg", "jsonType": "number", "clrType": "System.Decimal", "samples": [12.50, 3.2, 100] },
     { "name": "fragile", "jsonType": "boolean", "clrType": "System.Boolean", "samples": [true, false] }
   ],
+  "entityTypeName": "Consignment",
   "serverOwnedFields": ["downloadCount", "lastAuditAt"],
   "serverOwned": [
     { "field": "downloadCount", "entityTypeName": "Consignment" },

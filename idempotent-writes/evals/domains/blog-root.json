@@ -4,5 +4,6 @@
   "writableFields": [
     { "name": "name", "jsonType": "string", "clrType": "System.String", "samples": ["Gardening", "Cooking", "Travel"] }
   ],
+  "entityTypeName": "Blog",
   "serverOwnedFields": []
 }

@@ -4,6 +4,7 @@
   "parent": {
     "collectionRoute": "/api/blogs",
     "childCollectionRoute": "/api/blogs/{parentId}/posts",
+    "entityTypeName": "Blog",
     "parentBodyField": "blogId",
     "writableFields": [
       { "name": "name", "jsonType": "string", "clrType": "System.String", "samples": ["Gardening", "Cooking", "Travel"] }
@@ -12,6 +13,7 @@
   "writableFields": [
     { "name": "title", "jsonType": "string", "clrType": "System.String", "samples": ["Planting tulips", "Pruning roses", "Composting basics"] }
   ],
+  "entityTypeName": "Post",
   "serverOwnedFields": ["views"],
   "serverOwned": [
     { "field": "views", "entityTypeName": "Post" }

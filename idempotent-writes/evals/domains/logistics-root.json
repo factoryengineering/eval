@@ -5,6 +5,7 @@
     { "name": "code", "jsonType": "string", "clrType": "System.String", "samples": ["WH-NORTH", "WH-SOUTH", "WH-EAST"] },
     { "name": "capacityCubicMeters", "jsonType": "number", "clrType": "System.Int32", "samples": [1200, 800, 4500] }
   ],
+  "entityTypeName": "Depot",
   "serverOwnedFields": ["lastAuditAt"],
   "serverOwned": [
     { "field": "lastAuditAt", "entityTypeName": "Depot", "kind": "timestamp" }

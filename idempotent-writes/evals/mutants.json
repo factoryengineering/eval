@@ -362,6 +362,9 @@
       "race-child-create-same-id-different-parent-one-conflicts",
       "race-create-same-id-different-body-one-conflicts",
       "race-create-same-id-same-body-both-succeed"
+    ],
+    "staticExpectedFailures": [
+      "public-id-unique-index"
     ]
   },
   {
@@ -386,6 +389,9 @@
     "expectedFailures": [
       "race-put-different-body-same-etag-one-precondition-failed",
       "race-put-then-delete-same-etag-is-serializable"
+    ],
+    "staticExpectedFailures": [
+      "etag-concurrency-token"
     ]
   },
   {
@@ -429,7 +435,10 @@
       "race-put-different-body-same-etag-one-precondition-failed",
       "race-put-then-delete-same-etag-is-serializable"
     ],
-    "domain": "logistics"
+    "domain": "logistics",
+    "staticExpectedFailures": [
+      "etag-concurrency-token"
+    ]
   },
   {
     "name": "logistics-put-no-retry-on-concurrency-exception",
@@ -677,6 +686,217 @@
       "race-put-then-delete-same-etag-is-serializable",
       "read-returns-representation-and-etag",
       "replace-with-current-if-match-updates"
+    ]
+  },
+  {
+    "name": "int-id-in-route",
+    "file": "Controllers.cs",
+    "find": "    [HttpPost(\"api/blogs/{blogId:guid}/posts\")]",
+    "replace": "    [HttpGet(\"api/legacy/posts/{postId:int}\")]\n    public async Task<IActionResult> GetByInternalKey(int postId, CancellationToken cancellationToken)\n    {\n        await Task.Delay(0, cancellationToken);\n        Response.Headers.ETag = \"\\\"legacy\\\"\";\n        return NotFound();\n    }\n\n    [HttpPost(\"api/blogs/{blogId:guid}/posts\")]",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "internal-key-int-hidden",
+      "routes-use-guid"
+    ]
+  },
+  {
+    "name": "entity-returned",
+    "file": "Controllers.cs",
+    "find": "        var stored = await posts.Get(id, cancellationToken);\n        Response.Headers.ETag = $\"\\\"{stored.ETag}\\\"\";\n        if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n        return Ok(stored.Representation);",
+    "replace": "        var stored = await posts.Get(id, cancellationToken);\n        Response.Headers.ETag = $\"\\\"{stored.ETag}\\\"\";\n        if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n        return Ok(new Post { PublicId = stored.Representation.Id, Title = stored.Representation.Title, ETag = stored.ETag });",
+    "expectedFailures": [
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
+      "read-non-matching-if-none-match-returns-representation",
+      "read-returns-representation-and-etag",
+      "replace-stale-if-match-different-body-is-precondition-failed",
+      "replace-with-current-if-match-updates",
+      "replace-with-wildcard-if-match-updates",
+      "replace-without-if-match-is-precondition-required",
+      "server-owned-change-does-not-invalidate-if-match",
+      "server-owned-field-is-absent-from-representation"
+    ],
+    "staticExpectedFailures": [
+      "no-entity-in-responses"
+    ]
+  },
+  {
+    "name": "int-id-in-dto",
+    "file": "Service.cs",
+    "find": "public record PostResponse(Guid Id, Guid BlogId, string Title);",
+    "replace": "public record PostResponse(Guid Id, Guid BlogId, string Title, int InternalId = 0);",
+    "expectedFailures": [],
+    "extra": [
+      {
+        "file": "Service.cs",
+        "find": "private static PostResponse ToResponse(Post post, Guid blogId) => new(post.PublicId, blogId, post.Title);",
+        "replace": "private static PostResponse ToResponse(Post post, Guid blogId) => new(post.PublicId, blogId, post.Title, post.Id);"
+      }
+    ],
+    "staticExpectedFailures": [
+      "internal-key-int-hidden",
+      "no-int-id-in-dtos"
+    ]
+  },
+  {
+    "name": "rowversion-etag",
+    "file": "Entities.cs",
+    "find": "    public int Views { get; set; }",
+    "replace": "    public int Views { get; set; }\n    public int Version { get; set; }",
+    "expectedFailures": [],
+    "extra": [
+      {
+        "file": "Entities.cs",
+        "find": "post.Property(entity => entity.ETag).IsConcurrencyToken();",
+        "replace": "post.Property(entity => entity.ETag).IsConcurrencyToken();\n            post.Property(entity => entity.Version).IsConcurrencyToken();"
+      }
+    ],
+    "staticExpectedFailures": [
+      "no-rowversion-etag"
+    ]
+  },
+  {
+    "name": "no-tombstone-filter",
+    "file": "Entities.cs",
+    "find": "            post.HasQueryFilter(entity => entity.DeletedAt == null);\n",
+    "replace": "",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "tombstone-property"
+    ]
+  },
+  {
+    "name": "md5-etag",
+    "file": "Service.cs",
+    "find": "return Convert.ToBase64String(SHA256.HashData(",
+    "replace": "return Convert.ToBase64String(MD5.HashData(",
+    "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-different-ids-have-different-etags",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-etag-shape-is-quoted-base64url-sha256",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
+      "create-replay-after-put-returns-current-representation",
+      "etag-is-canonical-hash",
+      "lost-response-create-retry-succeeds",
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
+      "read-returns-representation-and-etag",
+      "replace-with-current-if-match-updates"
+    ],
+    "staticExpectedFailures": [
+      "sha256-used-for-etag"
+    ]
+  },
+  {
+    "name": "etag-header-missing",
+    "file": "Controllers.cs",
+    "find": "        var eTag = await posts.Replace(id, body, Header(\"If-Match\"), cancellationToken);\n        Response.Headers.ETag = $\"\\\"{eTag}\\\"\";",
+    "replace": "        await posts.Replace(id, body, Header(\"If-Match\"), cancellationToken);",
+    "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-etag-is-stable-across-gets-and-no-op-put",
+      "canonical-etag-shape-is-quoted-base64url-sha256",
+      "lost-response-put-retry-succeeds",
+      "race-put-same-body-same-etag-both-succeed",
+      "replace-identical-body-with-stale-if-match-succeeds",
+      "replace-stale-if-match-different-body-is-precondition-failed",
+      "replace-with-current-if-match-updates"
+    ],
+    "staticExpectedFailures": [
+      "etag-header-set"
+    ]
+  },
+  {
+    "name": "if-match-optional",
+    "file": "Controllers.cs",
+    "find": "posts.Replace(id, body, Header(\"If-Match\"), cancellationToken)",
+    "replace": "posts.Replace(id, body, \"*\", cancellationToken)",
+    "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "replace-stale-if-match-different-body-is-precondition-failed",
+      "replace-without-if-match-is-precondition-required",
+      "replace-without-if-match-on-unknown-id-is-precondition-required"
+    ],
+    "staticExpectedFailures": [
+      "if-match-required"
+    ]
+  },
+  {
+    "name": "no-cancellation-token",
+    "file": "Controllers.cs",
+    "find": "await posts.Delete(id, Header(\"If-Match\"), cancellationToken);",
+    "replace": "await posts.Delete(id, Header(\"If-Match\"), CancellationToken.None);",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "cancellation-token-passed"
+    ]
+  },
+  {
+    "name": "problem-details-absent",
+    "file": "AppSetup.cs",
+    "find": "var details = new ProblemDetails { Status = problem.Status, Title = problem.Message };",
+    "replace": "var details = new { status = problem.Status, title = problem.Message };",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "problem-details-used"
+    ]
+  },
+  {
+    "name": "guid-primary-key",
+    "file": "Entities.cs",
+    "find": "    public int Id { get; set; }",
+    "replace": "    public Guid Id { get; set; }",
+    "expectedFailures": [],
+    "domain": "support",
+    "staticExpectedFailures": [
+      "internal-key-int-hidden"
+    ]
+  },
+  {
+    "name": "etag-column-nullable",
+    "file": "Entities.cs",
+    "find": "public string ETag { get; set; } = \"\";",
+    "replace": "public string? ETag { get; set; } = \"\";",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "etag-column-not-null"
+    ]
+  },
+  {
+    "name": "creation-hash-mutable",
+    "file": "Entities.cs",
+    "find": "            post.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);\n",
+    "replace": "",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "creation-hash-immutable"
+    ]
+  },
+  {
+    "name": "support-server-owned-concurrency-token",
+    "file": "Entities.cs",
+    "find": "ticket.Property(entity => entity.ETag).IsConcurrencyToken();",
+    "replace": "ticket.Property(entity => entity.ETag).IsConcurrencyToken();\n            ticket.Property(entity => entity.LastViewedAt).IsConcurrencyToken();",
+    "expectedFailures": [
+      "server-owned-change-does-not-invalidate-if-match"
+    ],
+    "domain": "support",
+    "staticExpectedFailures": [
+      "server-owned-not-concurrency-token"
     ]
   }
 ]
