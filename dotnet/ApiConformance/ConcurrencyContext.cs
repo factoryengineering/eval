@@ -27,6 +27,7 @@ public sealed partial class ScenarioContext
     {
         var traces = await Host.Interleaver.Run<HttpTrace>([.. calls.Select<Call, Func<string, Task<HttpTrace>>>(call => id =>
             HttpTrace.Send(Host.Client, call.Method, call.Uri, call.Json, new Dictionary<string, string>(call.Headers ?? new Dictionary<string, string>()) { [Interleaver.ParticipantHeader] = id }))], RaceTimeout);
+        Traces.AddRange(traces);
         for (var index = 0; index < traces.Length; index++) Record($"Participant {index}", traces[index]);
         transcript.AppendLine(Host.Interleaver.Describe());
         RequireNoServerError(traces);

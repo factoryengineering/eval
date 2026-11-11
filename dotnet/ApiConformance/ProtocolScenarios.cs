@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace ApiConformance;
 
-public sealed record ScenarioResult(string Name, bool Passed, string? Failure, string Group);
+public sealed record ScenarioResult(string Name, bool Passed, string? Failure, string Group, IReadOnlyList<HttpTrace>? Traces = null);
 
 public sealed record Resource(Guid Id, Guid? ParentId, IReadOnlyList<JsonElement> Values, string ETag, HttpTrace Created);
 
@@ -18,11 +18,13 @@ public sealed partial class ScenarioContext(ApiHost host, DomainDescriptor domai
 
     public DomainDescriptor Domain { get; } = domain;
     public string Transcript => transcript.ToString();
+    public List<HttpTrace> Traces { get; } = [];
 
     public async Task<HttpTrace> Send(HttpMethod method, string uri, string? json = null, IDictionary<string, string>? headers = null)
     {
         var trace = await HttpTrace.Send(Host.Client, method, uri, json, headers);
         transcript.AppendLine(trace.ToString());
+        Traces.Add(trace);
         return trace;
     }
 
@@ -183,12 +185,12 @@ public static partial class ProtocolScenarios
         try
         {
             await scenario.Run(context);
-            return new ScenarioResult(scenario.Name, true, null, scenario.Group);
+            return new ScenarioResult(scenario.Name, true, null, scenario.Group, context.Traces);
         }
         catch (Exception failure)
         {
             var message = failure is ScenarioFailure ? failure.Message : failure.ToString();
-            return new ScenarioResult(scenario.Name, false, message + Environment.NewLine + context.Transcript, scenario.Group);
+            return new ScenarioResult(scenario.Name, false, message + Environment.NewLine + context.Transcript, scenario.Group, context.Traces);
         }
     }
 
