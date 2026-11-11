@@ -44,6 +44,7 @@ public class LogisticsContext : DbContext
         {
             depot.HasAlternateKey(entity => entity.PublicId);
             depot.Property(entity => entity.ETag).IsConcurrencyToken();
+            depot.Property(entity => entity.DeletedAt).IsConcurrencyToken();
             depot.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             depot.HasQueryFilter(entity => entity.DeletedAt == null);
         });
@@ -51,6 +52,7 @@ public class LogisticsContext : DbContext
         {
             consignment.HasAlternateKey(entity => entity.PublicId);
             consignment.Property(entity => entity.ETag).IsConcurrencyToken();
+            consignment.Property(entity => entity.DeletedAt).IsConcurrencyToken();
             consignment.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             consignment.HasOne(entity => entity.Depot).WithMany(entity => entity.Consignments).HasForeignKey(entity => entity.DepotId);
             consignment.HasQueryFilter(entity => entity.DeletedAt == null);

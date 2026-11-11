@@ -40,6 +40,7 @@ public class BlogContext : DbContext
         {
             blog.HasAlternateKey(entity => entity.PublicId);
             blog.Property(entity => entity.ETag).IsConcurrencyToken();
+            blog.Property(entity => entity.DeletedAt).IsConcurrencyToken();
             blog.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             blog.HasQueryFilter(entity => entity.DeletedAt == null);
         });
@@ -47,6 +48,7 @@ public class BlogContext : DbContext
         {
             post.HasAlternateKey(entity => entity.PublicId);
             post.Property(entity => entity.ETag).IsConcurrencyToken();
+            post.Property(entity => entity.DeletedAt).IsConcurrencyToken();
             post.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             post.HasOne(entity => entity.Blog).WithMany(entity => entity.Posts).HasForeignKey(entity => entity.BlogId);
             post.HasQueryFilter(entity => entity.DeletedAt == null);

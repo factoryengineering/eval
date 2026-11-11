@@ -29,6 +29,7 @@ public class SupportContext : DbContext
         {
             ticket.HasAlternateKey(entity => entity.PublicId);
             ticket.Property(entity => entity.ETag).IsConcurrencyToken();
+            ticket.Property(entity => entity.DeletedAt).IsConcurrencyToken();
             ticket.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);
             ticket.HasQueryFilter(entity => entity.DeletedAt == null);
         });

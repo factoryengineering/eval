@@ -7,7 +7,10 @@
     "expectedFailures": [
       "create-replay-after-put-returns-current-representation",
       "create-replay-of-tombstoned-is-gone",
-      "create-replay-returns-same-success"
+      "create-replay-returns-same-success",
+      "duplicate-delivery-create-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "race-create-same-id-same-body-both-succeed"
     ]
   },
   {
@@ -36,6 +39,20 @@
       "delete-stale-if-match-is-precondition-failed",
       "delete-with-current-if-match-tombstones",
       "delete-without-if-match-is-precondition-required",
+      "duplicate-delivery-create-succeeds-twice",
+      "duplicate-delivery-put-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "lost-response-delete-retry-succeeds",
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-delete-same-if-match-both-succeed",
+      "race-delete-then-put-same-etag-is-serializable",
+      "race-parent-delete-same-if-match-tombstones-children-once",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
       "read-matching-if-none-match-is-not-modified",
       "read-non-matching-if-none-match-returns-representation",
       "read-returns-representation-and-etag",
@@ -57,7 +74,8 @@
     "find": "existing.Post.CreationHash != hash",
     "replace": "existing.Post.CreationHash != Representation.Hash(body.Id, existing.OwnerPublicId, body.Title)",
     "expectedFailures": [
-      "child-create-same-id-different-parent-conflicts"
+      "child-create-same-id-different-parent-conflicts",
+      "race-child-create-same-id-different-parent-one-conflicts"
     ]
   },
   {
@@ -67,6 +85,10 @@
     "replace": "Title = body.Title, ETag = \"1\", CreationHash = hash };\n        database.Posts.Add",
     "expectedFailures": [
       "etag-is-canonical-hash",
+      "lost-response-create-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
       "read-returns-representation-and-etag",
       "replace-identical-body-with-stale-if-match-succeeds"
     ]
@@ -96,7 +118,10 @@
     "find": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null) return;",
     "replace": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null)\n            {\n                var tombstoned = await database.Posts.IgnoreQueryFilters().AnyAsync(stored => stored.PublicId == id, cancellationToken);\n                if (tombstoned) throw ProblemException.NotFound(\"The post was already deleted.\");\n                return;\n            }",
     "expectedFailures": [
-      "delete-retry-is-no-content"
+      "delete-retry-is-no-content",
+      "duplicate-delivery-delete-succeeds-twice",
+      "lost-response-delete-retry-succeeds",
+      "race-delete-same-if-match-both-succeed"
     ]
   },
   {
@@ -106,7 +131,10 @@
     "replace": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null) throw ProblemException.NotFound(\"The post does not exist.\");",
     "expectedFailures": [
       "delete-retry-is-no-content",
-      "delete-unknown-id-is-no-content"
+      "delete-unknown-id-is-no-content",
+      "duplicate-delivery-delete-succeeds-twice",
+      "lost-response-delete-retry-succeeds",
+      "race-delete-same-if-match-both-succeed"
     ]
   },
   {
@@ -115,6 +143,9 @@
     "find": "if (post.ETag == hash) return hash;\n",
     "replace": "",
     "expectedFailures": [
+      "duplicate-delivery-put-succeeds-twice",
+      "lost-response-put-retry-succeeds",
+      "race-put-same-body-same-etag-both-succeed",
       "replace-identical-body-with-stale-if-match-succeeds",
       "replace-retry-with-stale-if-match-same-body-succeeds"
     ]
@@ -125,6 +156,7 @@
     "find": "throw ProblemException.PreconditionFailed(\"The post was changed by someone else.\", post.ETag);\n            post.Title = body.Title;",
     "replace": "throw new ProblemException(412, \"The post was changed by someone else.\");\n            post.Title = body.Title;",
     "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
       "replace-stale-if-match-different-body-is-precondition-failed"
     ]
   },
@@ -134,6 +166,7 @@
     "find": "if (post.ETag == hash) return hash;\n            if (ifMatch.Trim() != \"*\" && Representation.Unquote(ifMatch) != post.ETag)",
     "replace": "if (post.ETag == hash) return hash;\n            if (false)",
     "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
       "replace-stale-if-match-different-body-is-precondition-failed"
     ]
   },
@@ -162,6 +195,13 @@
     "replace": "var (post, ownerId) = await Find(id, cancellationToken);\n        var withViews = Representation.Hash((\"id\", post.PublicId.ToString(\"D\")), (\"blogId\", ownerId.ToString(\"D\")), (\"title\", post.Title), (\"views\", post.Views.ToString()));\n        return new Stored<PostResponse>(ToResponse(post, ownerId), withViews, false);",
     "expectedFailures": [
       "create-succeeds",
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
       "read-matching-if-none-match-is-not-modified",
       "read-returns-representation-and-etag",
       "replace-with-current-if-match-updates",
@@ -194,6 +234,9 @@
     "expectedFailures": [
       "create-replay-of-tombstoned-is-gone",
       "delete-with-current-if-match-tombstones",
+      "lost-response-delete-retry-succeeds",
+      "race-delete-same-if-match-both-succeed",
+      "race-delete-then-put-same-etag-is-serializable",
       "read-tombstoned-is-gone",
       "replace-tombstoned-is-gone"
     ]
@@ -204,7 +247,8 @@
     "find": "foreach (var post in posts) post.DeletedAt = deletedAt;\n",
     "replace": "",
     "expectedFailures": [
-      "child-delete-parent-tombstones-children"
+      "child-delete-parent-tombstones-children",
+      "race-parent-delete-same-if-match-tombstones-children-once"
     ]
   },
   {
@@ -225,7 +269,10 @@
     "expectedFailures": [
       "create-replay-after-put-returns-current-representation",
       "create-replay-of-tombstoned-is-gone",
-      "create-replay-returns-same-success"
+      "create-replay-returns-same-success",
+      "duplicate-delivery-create-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "race-create-same-id-same-body-both-succeed"
     ]
   },
   {
@@ -235,6 +282,9 @@
     "find": "if (consignment.ETag == hash) return hash;\n",
     "replace": "",
     "expectedFailures": [
+      "duplicate-delivery-put-succeeds-twice",
+      "lost-response-put-retry-succeeds",
+      "race-put-same-body-same-etag-both-succeed",
       "replace-identical-body-with-stale-if-match-succeeds",
       "replace-retry-with-stale-if-match-same-body-succeeds"
     ]
@@ -246,7 +296,127 @@
     "find": "var consignment = await consignmentQuery.SingleOrDefaultAsync(cancellationToken);\n            if (consignment is null) return;",
     "replace": "var consignment = await consignmentQuery.SingleOrDefaultAsync(cancellationToken);\n            if (consignment is null)\n            {\n                var tombstoned = await database.Consignments.IgnoreQueryFilters().AnyAsync(stored => stored.PublicId == id, cancellationToken);\n                if (tombstoned) throw ProblemException.NotFound(\"The shipment was already deleted.\");\n                return;\n            }",
     "expectedFailures": [
-      "delete-retry-is-no-content"
+      "delete-retry-is-no-content",
+      "duplicate-delivery-delete-succeeds-twice",
+      "lost-response-delete-retry-succeeds",
+      "race-delete-same-if-match-both-succeed"
     ]
+  },
+  {
+    "name": "check-then-insert",
+    "file": "Service.cs",
+    "find": "        database.Posts.Add(post);\n        try\n        {\n            await database.SaveChangesAsync(cancellationToken);\n            return new Stored<PostResponse>(ToResponse(post, blogId), post.ETag, true);\n        }\n        catch (DbUpdateException)\n        {\n            database.Entry(post).State = EntityState.Detached;\n            var existingQuery = from stored in database.Posts.IgnoreQueryFilters()\n                                join owner in database.Blogs.IgnoreQueryFilters() on stored.BlogId equals owner.Id\n                                where stored.PublicId == body.Id\n                                select new { Post = stored, OwnerPublicId = owner.PublicId };\n            var existing = await existingQuery.SingleOrDefaultAsync(cancellationToken);\n            if (existing is null) throw;\n            if (existing.Post.CreationHash != hash) throw ProblemException.Conflict(\"A post with this id exists with different content.\");\n            if (existing.Post.DeletedAt != null) throw ProblemException.Gone(\"The post was deleted.\");\n            return new Stored<PostResponse>(ToResponse(existing.Post, existing.OwnerPublicId), existing.Post.ETag, false);\n        }\n",
+    "replace": "        var present = await database.Posts.IgnoreQueryFilters().Where(stored => stored.PublicId == body.Id).SingleOrDefaultAsync(cancellationToken);\n        if (present is not null)\n        {\n            if (present.CreationHash != hash) throw ProblemException.Conflict(\"A post with this id exists with different content.\");\n            if (present.DeletedAt != null) throw ProblemException.Gone(\"The post was deleted.\");\n            return new Stored<PostResponse>(ToResponse(present, blogId), present.ETag, false);\n        }\n        database.Posts.Add(post);\n        await database.SaveChangesAsync(cancellationToken);\n        return new Stored<PostResponse>(ToResponse(post, blogId), post.ETag, true);\n",
+    "expectedFailures": [
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed"
+    ]
+  },
+  {
+    "name": "no-unique-index",
+    "file": "Entities.cs",
+    "find": "post.HasAlternateKey(entity => entity.PublicId);",
+    "replace": "post.HasIndex(entity => entity.PublicId);",
+    "expectedFailures": [
+      "child-create-same-id-different-parent-conflicts",
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-same-id-different-body-conflicts",
+      "duplicate-delivery-create-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed"
+    ]
+  },
+  {
+    "name": "swallow-unique-violation-returns-201",
+    "file": "Service.cs",
+    "find": "        catch (DbUpdateException)\n        {\n            database.Entry(post).State = EntityState.Detached;",
+    "replace": "        catch (DbUpdateException)\n        {\n            database.Entry(post).State = EntityState.Detached;\n            return new Stored<PostResponse>(ToResponse(post, blogId), hash, true);",
+    "expectedFailures": [
+      "child-create-same-id-different-parent-conflicts",
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-same-id-different-body-conflicts",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts"
+    ]
+  },
+  {
+    "name": "no-concurrency-token",
+    "file": "Entities.cs",
+    "find": "post.Property(entity => entity.ETag).IsConcurrencyToken();",
+    "replace": "",
+    "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-then-delete-same-etag-is-serializable"
+    ]
+  },
+  {
+    "name": "put-no-retry-on-concurrency-exception",
+    "file": "Service.cs",
+    "find": "catch (DbUpdateConcurrencyException) when (attempt == 0)\n            {\n                database.Entry(post).State = EntityState.Detached;",
+    "replace": "catch (DbUpdateConcurrencyException) when (attempt < 0)\n            {\n                database.Entry(post).State = EntityState.Detached;",
+    "expectedFailures": [
+      "race-delete-then-put-same-etag-is-serializable",
+      "race-put-same-body-same-etag-both-succeed"
+    ]
+  },
+  {
+    "name": "delete-concurrency-500",
+    "file": "Service.cs",
+    "find": "            catch (DbUpdateConcurrencyException) when (attempt == 0)\n            {\n                database.ChangeTracker.Clear();\n            }\n            catch (DbUpdateConcurrencyException)\n            {\n                var currentETag = await CurrentETag(id, cancellationToken);\n                throw ProblemException.PreconditionFailed(\"The post was changed by someone else.\", currentETag);\n            }",
+    "replace": "            catch (DbUpdateConcurrencyException) when (attempt < 0)\n            {\n                database.ChangeTracker.Clear();\n            }",
+    "expectedFailures": [
+      "race-delete-same-if-match-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable"
+    ]
+  },
+  {
+    "name": "logistics-check-then-insert",
+    "file": "Service.cs",
+    "find": "        database.Consignments.Add(consignment);\n        try\n        {\n            await database.SaveChangesAsync(cancellationToken);\n            return new Stored<ConsignmentResponse>(ToResponse(consignment, warehouseId), consignment.ETag, true);\n        }\n        catch (DbUpdateException)\n        {\n            database.Entry(consignment).State = EntityState.Detached;\n            var existingQuery = from stored in database.Consignments.IgnoreQueryFilters()\n                                join owner in database.Depots.IgnoreQueryFilters() on stored.DepotId equals owner.Id\n                                where stored.PublicId == body.Id\n                                select new { Consignment = stored, OwnerPublicId = owner.PublicId };\n            var existing = await existingQuery.SingleOrDefaultAsync(cancellationToken);\n            if (existing is null) throw;\n            if (existing.Consignment.CreationHash != hash) throw ProblemException.Conflict(\"A shipment with this id exists with different content.\");\n            if (existing.Consignment.DeletedAt != null) throw ProblemException.Gone(\"The shipment was deleted.\");\n            return new Stored<ConsignmentResponse>(ToResponse(existing.Consignment, existing.OwnerPublicId), existing.Consignment.ETag, false);\n        }\n",
+    "replace": "        var present = await database.Consignments.IgnoreQueryFilters().Where(stored => stored.PublicId == body.Id).SingleOrDefaultAsync(cancellationToken);\n        if (present is not null)\n        {\n            if (present.CreationHash != hash) throw ProblemException.Conflict(\"A shipment with this id exists with different content.\");\n            if (present.DeletedAt != null) throw ProblemException.Gone(\"The shipment was deleted.\");\n            return new Stored<ConsignmentResponse>(ToResponse(present, warehouseId), present.ETag, false);\n        }\n        database.Consignments.Add(consignment);\n        await database.SaveChangesAsync(cancellationToken);\n        return new Stored<ConsignmentResponse>(ToResponse(consignment, warehouseId), consignment.ETag, true);\n",
+    "expectedFailures": [
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed"
+    ],
+    "domain": "logistics"
+  },
+  {
+    "name": "logistics-no-concurrency-token",
+    "file": "Entities.cs",
+    "find": "consignment.Property(entity => entity.ETag).IsConcurrencyToken();",
+    "replace": "",
+    "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-then-delete-same-etag-is-serializable"
+    ],
+    "domain": "logistics"
+  },
+  {
+    "name": "logistics-put-no-retry-on-concurrency-exception",
+    "file": "Service.cs",
+    "find": "catch (DbUpdateConcurrencyException) when (attempt == 0)\n            {\n                database.Entry(consignment).State = EntityState.Detached;",
+    "replace": "catch (DbUpdateConcurrencyException) when (attempt < 0)\n            {\n                database.Entry(consignment).State = EntityState.Detached;",
+    "expectedFailures": [
+      "race-delete-then-put-same-etag-is-serializable",
+      "race-put-same-body-same-etag-both-succeed"
+    ],
+    "domain": "logistics"
+  },
+  {
+    "name": "logistics-delete-concurrency-500",
+    "file": "Service.cs",
+    "find": "            catch (DbUpdateConcurrencyException) when (attempt == 0)\n            {\n                database.ChangeTracker.Clear();\n            }\n            catch (DbUpdateConcurrencyException)\n            {\n                var currentETag = await CurrentETag(id, cancellationToken);\n                throw ProblemException.PreconditionFailed(\"The shipment was changed by someone else.\", currentETag);\n            }",
+    "replace": "            catch (DbUpdateConcurrencyException) when (attempt < 0)\n            {\n                database.ChangeTracker.Clear();\n            }",
+    "expectedFailures": [
+      "race-delete-same-if-match-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable"
+    ],
+    "domain": "logistics"
   }
 ]

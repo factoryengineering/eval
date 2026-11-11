@@ -12,7 +12,7 @@ public sealed record Scenario(string Name, string Group, Func<ScenarioContext, T
 
 public sealed class ScenarioFailure(string message) : Exception(message);
 
-public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
+public sealed partial class ScenarioContext(ApiHost host, DomainDescriptor domain)
 {
     private readonly StringBuilder transcript = new();
 
@@ -94,12 +94,13 @@ public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
     {
         if (Domain.Parent is not { } parent) return null;
         var id = Guid.NewGuid();
-        var fields = parent.WritableFields ?? [];
-        var body = JsonSerializer.Serialize(fields.ToDictionary(f => f.Name, f => (object)f.Samples[0]).Append(new("id", id.ToString("D"))).ToDictionary());
-        var trace = await Send(HttpMethod.Post, parent.CollectionRoute, body);
+        var trace = await Send(HttpMethod.Post, parent.CollectionRoute, ParentBody(id));
         Require(trace.StatusCode == 201, "Creating the parent resource should return 201.");
         return id;
     }
+
+    public string ParentBody(Guid id) =>
+        JsonSerializer.Serialize((Domain.Parent!.WritableFields ?? []).ToDictionary(f => f.Name, f => (object)f.Samples[0]).Append(new("id", id.ToString("D"))).ToDictionary());
 
     public void Require(bool condition, string message)
     {
@@ -167,7 +168,7 @@ public static partial class ProtocolScenarios
     }
 
     public static IReadOnlyList<Scenario> All(DomainDescriptor domain) =>
-        [.. Create(domain), .. Read(domain), .. Replace(domain), .. Delete(domain), .. ServerOwned(domain)];
+        [.. Create(domain), .. Read(domain), .. Replace(domain), .. Delete(domain), .. ServerOwned(domain), .. Race(domain), .. LostResponse(domain)];
 
     public static async Task<IReadOnlyList<ScenarioResult>> Run(IEnumerable<Scenario> scenarios, Func<ApiHost> startHost, DomainDescriptor domain)
     {
