@@ -5,6 +5,10 @@
     "find": "if (existing.Post.CreationHash != hash) throw ProblemException.Conflict(\"A post with this id exists with different content.\");",
     "replace": "throw ProblemException.Conflict(\"A post with this id already exists.\");",
     "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
       "create-replay-after-put-returns-current-representation",
       "create-replay-of-tombstoned-is-gone",
       "create-replay-returns-same-success",
@@ -28,6 +32,14 @@
     "find": "new Post { PublicId = body.Id,",
     "replace": "new Post { PublicId = Guid.NewGuid(),",
     "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-etag-is-stable-across-gets-and-no-op-put",
+      "canonical-etag-shape-is-quoted-base64url-sha256",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
       "child-create-same-id-different-parent-conflicts",
       "child-delete-parent-tombstones-children",
       "child-replace-different-parent-conflicts",
@@ -84,6 +96,14 @@
     "find": "Title = body.Title, ETag = hash, CreationHash = hash };\n        database.Posts.Add",
     "replace": "Title = body.Title, ETag = \"1\", CreationHash = hash };\n        database.Posts.Add",
     "expectedFailures": [
+      "canonical-different-ids-have-different-etags",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-etag-is-stable-across-gets-and-no-op-put",
+      "canonical-etag-shape-is-quoted-base64url-sha256",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
       "etag-is-canonical-hash",
       "lost-response-create-retry-succeeds",
       "race-child-create-same-id-different-parent-one-conflicts",
@@ -194,6 +214,13 @@
     "find": "var (post, ownerId) = await Find(id, cancellationToken);\n        return new Stored<PostResponse>(ToResponse(post, ownerId), post.ETag, false);",
     "replace": "var (post, ownerId) = await Find(id, cancellationToken);\n        var withViews = Representation.Hash((\"id\", post.PublicId.ToString(\"D\")), (\"blogId\", ownerId.ToString(\"D\")), (\"title\", post.Title), (\"views\", post.Views.ToString()));\n        return new Stored<PostResponse>(ToResponse(post, ownerId), withViews, false);",
     "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-etag-is-stable-across-gets-and-no-op-put",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
       "create-succeeds",
       "lost-response-put-retry-succeeds",
       "race-child-create-same-id-different-parent-one-conflicts",
@@ -267,6 +294,10 @@
     "find": "if (existing.Consignment.CreationHash != hash) throw ProblemException.Conflict(\"A shipment with this id exists with different content.\");",
     "replace": "throw ProblemException.Conflict(\"A shipment with this id already exists.\");",
     "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
       "create-replay-after-put-returns-current-representation",
       "create-replay-of-tombstoned-is-gone",
       "create-replay-returns-same-success",
@@ -319,6 +350,9 @@
     "find": "post.HasAlternateKey(entity => entity.PublicId);",
     "replace": "post.HasIndex(entity => entity.PublicId);",
     "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-whitespace-does-not-change-etag",
       "child-create-same-id-different-parent-conflicts",
       "create-replay-after-put-returns-current-representation",
       "create-replay-of-tombstoned-is-gone",
@@ -418,5 +452,231 @@
       "race-put-then-delete-same-etag-is-serializable"
     ],
     "domain": "logistics"
+  },
+  {
+    "name": "etag-property-order-sensitive",
+    "file": "Controllers.cs",
+    "find": "Create(Guid blogId, PostBody body, CancellationToken cancellationToken)",
+    "replace": "Create(Guid blogId, [FromBody] System.Text.Json.JsonElement raw, CancellationToken cancellationToken)",
+    "expectedFailures": [
+      "canonical-property-order-does-not-change-etag"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "var stored = await posts.Create(blogId, body, cancellationToken);",
+        "replace": "PostBody? body;\n        try { body = System.Text.Json.JsonSerializer.Deserialize<PostBody>(raw, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }\n        catch (System.Text.Json.JsonException) { return BadRequest(); }\n        if (body is null) return BadRequest();\n        Representation.Capture(raw);\n        var stored = await posts.Create(blogId, body, cancellationToken);"
+      },
+      {
+        "file": "Service.cs",
+        "find": "public static string Unquote(",
+        "replace": "public static readonly System.Threading.AsyncLocal<string[]?> Order = new();\n\n    public static void Capture(System.Text.Json.JsonElement raw)\n    {\n        Order.Value = raw.EnumerateObject().Select(p => p.Name).ToArray();\n    }\n\n    public static string Unquote("
+      },
+      {
+        "file": "Service.cs",
+        "find": "var json = new StringBuilder(\"{\");",
+        "replace": "if (Order.Value is { } order) fields = fields.OrderBy(f => Array.FindIndex(order, n => string.Equals(n, f.Name, StringComparison.OrdinalIgnoreCase))).ToArray();\n        var json = new StringBuilder(\"{\");"
+      }
+    ]
+  },
+  {
+    "name": "support-etag-property-order-sensitive",
+    "file": "Controllers.cs",
+    "find": "Create(TicketBody body, CancellationToken cancellationToken)",
+    "replace": "Create([FromBody] System.Text.Json.JsonElement raw, CancellationToken cancellationToken)",
+    "expectedFailures": [
+      "canonical-property-order-does-not-change-etag"
+    ],
+    "domain": "support",
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "var stored = await tickets.Create(body, cancellationToken);",
+        "replace": "TicketBody? body;\n        try { body = System.Text.Json.JsonSerializer.Deserialize<TicketBody>(raw, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }\n        catch (System.Text.Json.JsonException) { return BadRequest(); }\n        if (body is null) return BadRequest();\n        Representation.Capture(raw);\n        var stored = await tickets.Create(body, cancellationToken);"
+      },
+      {
+        "file": "Service.cs",
+        "find": "public static string Unquote(",
+        "replace": "public static readonly System.Threading.AsyncLocal<string[]?> Order = new();\n\n    public static void Capture(System.Text.Json.JsonElement raw)\n    {\n        Order.Value = raw.EnumerateObject().Select(p => p.Name).ToArray();\n    }\n\n    public static string Unquote("
+      },
+      {
+        "file": "Service.cs",
+        "find": "var json = new StringBuilder(\"{\");",
+        "replace": "if (Order.Value is { } order) fields = fields.OrderBy(f => Array.FindIndex(order, n => string.Equals(n, f.Name, StringComparison.OrdinalIgnoreCase))).ToArray();\n        var json = new StringBuilder(\"{\");"
+      }
+    ]
+  },
+  {
+    "name": "etag-no-nfc",
+    "file": "Service.cs",
+    "find": "foreach (var character in text.Normalize(NormalizationForm.FormC))",
+    "replace": "foreach (var character in text)",
+    "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds"
+    ]
+  },
+  {
+    "name": "etag-guid-case-sensitive",
+    "file": "Controllers.cs",
+    "find": "Create(Guid blogId, PostBody body, CancellationToken cancellationToken)",
+    "replace": "Create(Guid blogId, [FromBody] System.Text.Json.JsonElement raw, CancellationToken cancellationToken)",
+    "expectedFailures": [
+      "canonical-uppercase-guids-same-etag-and-identity"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "var stored = await posts.Create(blogId, body, cancellationToken);",
+        "replace": "PostBody? body;\n        try { body = System.Text.Json.JsonSerializer.Deserialize<PostBody>(raw, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }\n        catch (System.Text.Json.JsonException) { return BadRequest(); }\n        if (body is null) return BadRequest();\n        Representation.Capture(raw);\n        var stored = await posts.Create(blogId, body, cancellationToken);"
+      },
+      {
+        "file": "Service.cs",
+        "find": "public static string Unquote(",
+        "replace": "public static readonly System.Threading.AsyncLocal<string?> IdText = new();\n\n    public static void Capture(System.Text.Json.JsonElement raw)\n    {\n        IdText.Value = raw.TryGetProperty(\"id\", out var id) && id.ValueKind == System.Text.Json.JsonValueKind.String ? id.GetString() : null;\n    }\n\n    public static string Unquote("
+      },
+      {
+        "file": "Service.cs",
+        "find": "(\"id\", id.ToString(\"D\"))",
+        "replace": "(\"id\", IdText.Value ?? id.ToString(\"D\"))"
+      }
+    ]
+  },
+  {
+    "name": "etag-raw-body-hash",
+    "file": "Controllers.cs",
+    "find": "Create(Guid blogId, PostBody body, CancellationToken cancellationToken)",
+    "replace": "Create(Guid blogId, [FromBody] System.Text.Json.JsonElement raw, CancellationToken cancellationToken)",
+    "expectedFailures": [
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag"
+    ],
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "var stored = await posts.Create(blogId, body, cancellationToken);",
+        "replace": "PostBody? body;\n        try { body = System.Text.Json.JsonSerializer.Deserialize<PostBody>(raw, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }\n        catch (System.Text.Json.JsonException) { return BadRequest(); }\n        if (body is null) return BadRequest();\n        Representation.Capture(raw);\n        var stored = await posts.Create(blogId, body, cancellationToken);"
+      },
+      {
+        "file": "Service.cs",
+        "find": "public static string Unquote(",
+        "replace": "public static readonly System.Threading.AsyncLocal<string?> Raw = new();\n\n    public static void Capture(System.Text.Json.JsonElement raw)\n    {\n        Raw.Value = raw.GetRawText();\n    }\n\n    public static string Unquote("
+      },
+      {
+        "file": "Service.cs",
+        "find": "return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(json.ToString())))",
+        "replace": "return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Raw.Value ?? json.ToString())))"
+      }
+    ]
+  },
+  {
+    "name": "support-etag-raw-body-hash",
+    "file": "Controllers.cs",
+    "find": "Create(TicketBody body, CancellationToken cancellationToken)",
+    "replace": "Create([FromBody] System.Text.Json.JsonElement raw, CancellationToken cancellationToken)",
+    "expectedFailures": [
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag"
+    ],
+    "domain": "support",
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "var stored = await tickets.Create(body, cancellationToken);",
+        "replace": "TicketBody? body;\n        try { body = System.Text.Json.JsonSerializer.Deserialize<TicketBody>(raw, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)); }\n        catch (System.Text.Json.JsonException) { return BadRequest(); }\n        if (body is null) return BadRequest();\n        Representation.Capture(raw);\n        var stored = await tickets.Create(body, cancellationToken);"
+      },
+      {
+        "file": "Service.cs",
+        "find": "public static string Unquote(",
+        "replace": "public static readonly System.Threading.AsyncLocal<string?> Raw = new();\n\n    public static void Capture(System.Text.Json.JsonElement raw)\n    {\n        Raw.Value = raw.GetRawText();\n    }\n\n    public static string Unquote("
+      },
+      {
+        "file": "Service.cs",
+        "find": "return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(json.ToString())))",
+        "replace": "return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(Raw.Value ?? json.ToString())))"
+      }
+    ]
+  },
+  {
+    "name": "etag-trailing-zero-numbers",
+    "file": "Service.cs",
+    "find": "amount.ToString(\"0.##\", CultureInfo.InvariantCulture)",
+    "replace": "amount.ToString(CultureInfo.InvariantCulture)",
+    "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-different-ids-have-different-etags",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-number-spellings-same-etag",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
+      "lost-response-create-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "read-returns-representation-and-etag"
+    ],
+    "domain": "logistics"
+  },
+  {
+    "name": "etag-md5-or-wrong-encoding",
+    "file": "Service.cs",
+    "find": ".TrimEnd('=').Replace('+', '-').Replace('/', '_')",
+    "replace": "",
+    "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-different-ids-have-different-etags",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-etag-shape-is-quoted-base64url-sha256",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
+      "create-replay-after-put-returns-current-representation",
+      "etag-is-canonical-hash",
+      "lost-response-create-retry-succeeds",
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
+      "read-returns-representation-and-etag",
+      "replace-with-current-if-match-updates"
+    ]
+  },
+  {
+    "name": "etag-includes-whitespace",
+    "file": "Service.cs",
+    "find": "if (index > 0) json.Append(',');",
+    "replace": "if (index > 0) json.Append(\", \");",
+    "expectedFailures": [
+      "canonical-changing-any-writable-field-changes-etag",
+      "canonical-different-ids-have-different-etags",
+      "canonical-escaped-characters-hash-and-round-trip",
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
+      "create-replay-after-put-returns-current-representation",
+      "etag-is-canonical-hash",
+      "lost-response-create-retry-succeeds",
+      "lost-response-put-retry-succeeds",
+      "race-child-create-same-id-different-parent-one-conflicts",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed",
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-same-body-same-etag-both-succeed",
+      "race-put-then-delete-same-etag-is-serializable",
+      "read-returns-representation-and-etag",
+      "replace-with-current-if-match-updates"
+    ]
   }
 ]

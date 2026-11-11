@@ -168,7 +168,7 @@ public static partial class ProtocolScenarios
     }
 
     public static IReadOnlyList<Scenario> All(DomainDescriptor domain) =>
-        [.. Create(domain), .. Read(domain), .. Replace(domain), .. Delete(domain), .. ServerOwned(domain), .. Race(domain), .. LostResponse(domain)];
+        [.. Create(domain), .. Read(domain), .. Replace(domain), .. Delete(domain), .. ServerOwned(domain), .. Race(domain), .. LostResponse(domain), .. Canonical(domain)];
 
     public static async Task<IReadOnlyList<ScenarioResult>> Run(IEnumerable<Scenario> scenarios, Func<ApiHost> startHost, DomainDescriptor domain)
     {

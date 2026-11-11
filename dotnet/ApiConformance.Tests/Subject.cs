@@ -1,7 +1,9 @@
 using System.Text.Json;
 using ApiConformance;
 
-public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog");
+public sealed record Edit(string File, string Find, string Replace);
+
+public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog", Edit[]? Extra = null);
 
 public static class Subject
 {
@@ -31,9 +33,13 @@ public static class Subject
 
     public static string[] Apply(IReadOnlyDictionary<string, string> sources, Mutant mutant)
     {
-        var original = sources[mutant.File];
-        if (!original.Contains(mutant.Find)) throw new InvalidOperationException($"Mutant '{mutant.Name}': find text not present in {mutant.File}.");
-        return sources.Select(source => source.Key == mutant.File ? original.Replace(mutant.Find, mutant.Replace) : source.Value).ToArray();
+        var files = sources.ToDictionary(source => source.Key, source => source.Value);
+        foreach (var edit in new[] { new Edit(mutant.File, mutant.Find, mutant.Replace) }.Concat(mutant.Extra ?? []))
+        {
+            if (!files[edit.File].Contains(edit.Find)) throw new InvalidOperationException($"Mutant '{mutant.Name}': find text not present in {edit.File}.");
+            files[edit.File] = files[edit.File].Replace(edit.Find, edit.Replace);
+        }
+        return sources.Keys.Select(name => files[name]).ToArray();
     }
 
     public static Func<ApiHost> Hosts(IEnumerable<string> sources)

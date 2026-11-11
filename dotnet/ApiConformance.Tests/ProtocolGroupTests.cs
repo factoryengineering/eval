@@ -10,7 +10,7 @@ public class ProtocolGroupTests
 
     public static IEnumerable<object[]> Groups() =>
         from domain in new[] { "blog.json", "blog-root.json" }
-        from groupName in new[] { ProtocolScenarios.CreateGroup, ProtocolScenarios.ReadGroup, ProtocolScenarios.ReplaceGroup, ProtocolScenarios.DeleteGroup, ProtocolScenarios.ServerOwnedGroup, ProtocolScenarios.RaceGroup, ProtocolScenarios.LostResponseGroup }
+        from groupName in new[] { ProtocolScenarios.CreateGroup, ProtocolScenarios.ReadGroup, ProtocolScenarios.ReplaceGroup, ProtocolScenarios.DeleteGroup, ProtocolScenarios.ServerOwnedGroup, ProtocolScenarios.RaceGroup, ProtocolScenarios.LostResponseGroup, ProtocolScenarios.CanonicalGroup }
         where groupName != ProtocolScenarios.ServerOwnedGroup || domain == "blog.json"
         select new object[] { domain, groupName };
 
