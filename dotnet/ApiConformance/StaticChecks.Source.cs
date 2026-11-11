@@ -63,13 +63,30 @@ internal sealed partial class SourceFacts
     {
         foreach (var type in Unwrap(action.Method.ReturnType)) yield return type;
         foreach (var invocation in action.Syntax.DescendantNodes().OfType<InvocationExpressionSyntax>())
-            if (action.Model.GetSymbolInfo(invocation).Symbol is IMethodSymbol { ContainingType: { } owner } && Inherits(owner, Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.ControllerBase")!))
+            if (action.Model.GetSymbolInfo(invocation).Symbol is IMethodSymbol { ContainingType: { } owner } && !owner.Locations.Any(l => l.IsInSource) && Inherits(owner, Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.ControllerBase")!))
                 foreach (var argument in invocation.ArgumentList.Arguments)
                     if (action.Model.GetTypeInfo(argument.Expression).Type is { } type) foreach (var inner in Unwrap(type)) yield return inner;
         foreach (var creation in action.Syntax.DescendantNodes().OfType<BaseObjectCreationExpressionSyntax>())
             if (action.Model.GetTypeInfo(creation).Type is { Name: "ObjectResult" } && creation.ArgumentList is { } list)
                 foreach (var argument in list.Arguments)
                     if (action.Model.GetTypeInfo(argument.Expression).Type is { } type) foreach (var inner in Unwrap(type)) yield return inner;
+    }
+
+    // The action body plus the bodies of the controller's own or inherited source helper methods it calls (transitively), so a `SetETag(...)` helper counts.
+    public IEnumerable<SyntaxNode> WithHelpers(ActionFact action)
+    {
+        var seen = new HashSet<SyntaxNode> { action.Syntax };
+        var queue = new Queue<(SyntaxNode Node, SemanticModel Model)>([(action.Syntax, action.Model)]);
+        while (queue.Count > 0)
+        {
+            var (node, model) = queue.Dequeue();
+            yield return node;
+            foreach (var invocation in node.DescendantNodes().OfType<InvocationExpressionSyntax>())
+                if (model.GetSymbolInfo(invocation).Symbol is IMethodSymbol { MethodKind: MethodKind.Ordinary } method && Inherits(action.Controller, method.ContainingType) && method.ContainingType.Locations.Any(l => l.IsInSource))
+                    foreach (var reference in method.DeclaringSyntaxReferences)
+                        if (reference.GetSyntax() is MethodDeclarationSyntax declaration && seen.Add(declaration))
+                            queue.Enqueue((declaration, Models[declaration.SyntaxTree]));
+        }
     }
 
     public IEnumerable<INamedTypeSymbol> Dtos() =>
@@ -179,7 +196,7 @@ internal static class SourceChecks
     {
         var problems = facts.Actions
             .Where(a => a.Verb is "Post" or "Put" || a.Verb == "Get" && a.RouteParameters.Any())
-            .Where(a => !WritesETag(a.Syntax))
+            .Where(a => !facts.WithHelpers(a).Any(WritesETag))
             .Select(a => $"{a.Name} ({a.Verb}) does not write the ETag header").ToList();
         return StaticChecks.Result("etag-header-set", problems, "create, read and replace actions write the ETag response header");
     }

@@ -54,4 +54,57 @@ public class StaticCheckTests
         Assert.True(advisory.Advisory && !advisory.Passed, Describe(results));
         Assert.Empty(StaticChecks.Failing(results));
     }
+
+    private static Mutant GivenRefactoring(string name, string find, string replace, params Edit[] extra) => new(name, "Controllers.cs", find, replace, [], Extra: extra);
+
+    [Fact]
+    public async Task GivenControllerThatWritesTheETagInAPrivateHelper_WhenCheckingStatically_ThenEveryCheckStillPasses()
+    {
+        var helper = "private void SetETag(string etag) => Response.Headers.ETag = $\"\\\"{etag}\\\"\";";
+        var mutant = GivenRefactoring("etag-helper", "Response.Headers.ETag = $\"\\\"{stored.ETag}\\\"\";", "SetETag(stored.ETag);",
+            new Edit("Controllers.cs", "Response.Headers.ETag = $\"\\\"{eTag}\\\"\";", "SetETag(eTag);"),
+            new Edit("Controllers.cs", "public BlogsController(BlogService blogs) => this.blogs = blogs;", "public BlogsController(BlogService blogs) => this.blogs = blogs;\n    " + helper),
+            new Edit("Controllers.cs", "public PostsController(PostService posts) => this.posts = posts;", "public PostsController(PostService posts) => this.posts = posts;\n    " + helper));
+
+        var results = await WhenCheckingStatically(Subject.Sources("blog"), mutant, Subject.Domain("blog.json"));
+
+        Assert.True(results.All(r => r.Passed), Describe(results));
+    }
+
+    [Fact]
+    public async Task GivenControllersThatWriteTheETagInAHelperOfAnAbstractBaseClass_WhenCheckingStatically_ThenEveryCheckStillPasses()
+    {
+        var baseClass = "public abstract class ApiBase : ControllerBase\n{\n    protected void SetETag(string etag) => Response.Headers.ETag = $\"\\\"{etag}\\\"\";\n}\n\n[ApiController]\n[Route(\"api/blogs\")]\npublic class BlogsController : ControllerBase";
+        var mutant = GivenRefactoring("etag-base-helper", "Response.Headers.ETag = $\"\\\"{stored.ETag}\\\"\";", "SetETag(stored.ETag);",
+            new Edit("Controllers.cs", "Response.Headers.ETag = $\"\\\"{eTag}\\\"\";", "SetETag(eTag);"),
+            new Edit("Controllers.cs", "[ApiController]\n[Route(\"api/blogs\")]\npublic class BlogsController : ControllerBase", baseClass.Replace("public class BlogsController : ControllerBase", "public class BlogsController : ApiBase")),
+            new Edit("Controllers.cs", "public class PostsController : ControllerBase", "public class PostsController : ApiBase"));
+
+        var results = await WhenCheckingStatically(Subject.Sources("blog"), mutant, Subject.Domain("blog.json"));
+
+        Assert.True(results.All(r => r.Passed), Describe(results));
+    }
+
+    [Fact]
+    public async Task GivenControllerHelperThatTakesAnEntity_WhenCheckingStatically_ThenItIsNotCountedAsAResponse()
+    {
+        var mutant = GivenRefactoring("entity-helper", "var stored = await blogs.Create(body, cancellationToken);",
+            "var stored = await blogs.Create(body, cancellationToken);\n        _ = Describe(new Blog());",
+            new Edit("Controllers.cs", "public BlogsController(BlogService blogs) => this.blogs = blogs;", "public BlogsController(BlogService blogs) => this.blogs = blogs;\n    private static string Describe(Blog blog) => \"\";"));
+
+        var results = await WhenCheckingStatically(Subject.Sources("blog"), mutant, Subject.Domain("blog.json"));
+
+        Assert.True(results.Single(r => r.Id == "no-entity-in-responses").Passed, Describe(results));
+    }
+
+    [Fact]
+    public async Task GivenControllerThatReturnsAnEntityThroughOk_WhenCheckingStatically_ThenItIsStillFlagged()
+    {
+        var mutant = GivenRefactoring("entity-returned", "var stored = await blogs.Create(body, cancellationToken);",
+            "var stored = await blogs.Create(body, cancellationToken);\n        if (stored.ETag == \"\") return Ok(new Blog());");
+
+        var results = await WhenCheckingStatically(Subject.Sources("blog"), mutant, Subject.Domain("blog.json"));
+
+        Assert.False(results.Single(r => r.Id == "no-entity-in-responses").Passed, Describe(results));
+    }
 }

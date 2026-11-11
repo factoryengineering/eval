@@ -28,6 +28,12 @@ public sealed partial class Interleaver
     private List<Participant> participants = [];
     private string? writer;
     private bool aborted;
+    private readonly System.Diagnostics.Stopwatch sinceProgress = System.Diagnostics.Stopwatch.StartNew();
+
+    // A participant that stays Running without reaching a database command while another one waits is blocked outside the
+    // database (an application-level lock such as a SemaphoreSlim). That is a legitimate way to serialize writers, so the
+    // waiting participant is released after this grace period instead of reporting a deadlock.
+    public static readonly TimeSpan BlockedGrace = TimeSpan.FromMilliseconds(500);
 
     public IReadOnlyList<string> Events
     {
@@ -72,6 +78,15 @@ public sealed partial class Interleaver
         Arm(ids);
         var clock = System.Diagnostics.Stopwatch.StartNew();
         var started = new List<Task<T>>();
+        using var finished = new CancellationTokenSource();
+        var watchdog = Task.Run(async () =>
+        {
+            while (!finished.IsCancellationRequested)
+            {
+                await Task.Delay(50).ConfigureAwait(false);
+                Nudge();
+            }
+        });
         try
         {
             for (var index = 0; index < sends.Count; index++)
@@ -91,7 +106,20 @@ public sealed partial class Interleaver
         }
         finally
         {
+            finished.Cancel();
+            await watchdog;
             Disarm();
+        }
+    }
+
+    private void Nudge()
+    {
+        lock (sync)
+        {
+            if (aborted || sinceProgress.Elapsed < BlockedGrace) return;
+            if (!participants.Any(p => p.Phase == Phase.Waiting) || !participants.Any(p => p.Phase == Phase.Running)) return;
+            events.Add($"{string.Join(",", participants.Where(p => p.Phase == Phase.Running).Select(p => p.Id))} is blocked outside the database (application-level lock); releasing the waiting participants");
+            Advance(force: true);
         }
     }
 
@@ -178,9 +206,10 @@ public sealed partial class Interleaver
         }
     }
 
-    private void Advance()
+    private void Advance(bool force = false)
     {
-        if (aborted || participants.Any(p => p.Phase == Phase.Running)) return;
+        sinceProgress.Restart();
+        if (aborted || (!force && participants.Any(p => p.Phase == Phase.Running))) return;
         var released = new List<Participant>();
         foreach (var participant in participants.Where(p => p.Phase == Phase.Waiting))
         {

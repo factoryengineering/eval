@@ -13,3 +13,8 @@ Oracles are shared with `idempotent-writes/` (`dotnet/ApiConformance*`, descript
 - References: 9 good, 31 bad (blog 27, support 3, logistics 1), each with a named expected failing set in `test/references.test.ts`.
 - Mock baseline: `runs/baseline-2026-11-11T05-03-32-197Z.json`; the naive blog answer fails the status scenarios, 7 static checks, 7 lint rules and `spec-declares-observed-statuses`; level 3 answers (reference subjects) pass.
 - No skill lines (`evals/skill-lines.json` is `{}`); trigger skeleton only. Next: the no-skill baseline against real models; skill lines only from baseline signals (AGENTS.md rules).
+
+
+## Iteration 1 - baseline without a skill
+
+The smoke rounds, spec changes (prompt and oracle) and the completion cache are recorded in `idempotent-writes/PROGRESS.md` section "Iteration 1 - baseline without a skill", 1.1 and 1.2; both homes share the prompts, the oracles and the model completions. api-design smoke runs (regrades of the same completions, no model calls) are in `api-design/runs/discarded/` and marked in `logs/baseline.jsonl`.

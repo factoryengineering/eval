@@ -4,7 +4,7 @@ import { complete as realComplete } from './providers.js';
 import { apiBuckets } from './api.js';
 import type { Completion, Config, EvalCase, GradeNotes, ModelSpec, Trial } from './types.js';
 
-type Complete = (spec: ModelSpec, system: string, prompt: string) => Promise<Completion>;
+type Complete = (spec: ModelSpec, system: string, prompt: string, trial: number) => Promise<Completion>;
 
 export const bucketOf = (failure: string): string => {
   if (failure.startsWith('rule ')) return failure.split(':')[0]!;
@@ -84,7 +84,7 @@ export async function runBaseline(
   const worker = async () => {
     for (let i = next++; i < jobs.length; i = next++) {
       const { spec, c, n } = jobs[i]!;
-      const r = await complete(spec, '', c.prompt);
+      const r = await complete(spec, '', c.prompt, n);
       const notes: GradeNotes = { notes: [] };
       const failures = await gradeFn(c, r.text, notes);
       trials[i] = {

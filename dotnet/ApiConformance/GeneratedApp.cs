@@ -22,12 +22,21 @@ public static class GeneratedApp
             .Select(path => (MetadataReference)MetadataReference.CreateFromFile(path))
             .ToList());
 
+    // The usings the Microsoft.NET.Sdk.Web project template enables implicitly (ImplicitUsings), added as a global-usings source.
+    public static readonly string[] ImplicitUsings =
+    [
+        "System", "System.Collections.Generic", "System.IO", "System.Linq", "System.Net.Http", "System.Net.Http.Json", "System.Threading", "System.Threading.Tasks",
+        "Microsoft.AspNetCore.Builder", "Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Http", "Microsoft.AspNetCore.Routing",
+        "Microsoft.Extensions.Configuration", "Microsoft.Extensions.DependencyInjection", "Microsoft.Extensions.Hosting", "Microsoft.Extensions.Logging",
+    ];
+
     public static CompileResult Compile(params string[] sources) => Compile((IEnumerable<string>)sources);
 
     public static CSharpCompilation CreateCompilation(IEnumerable<string> sources)
     {
         var trees = sources.Select((source, index) =>
             CSharpSyntaxTree.ParseText(source, path: $"Generated{index}.cs")).ToList();
+        trees.Add(CSharpSyntaxTree.ParseText(string.Join('\n', ImplicitUsings.Select(u => $"global using {u};")), path: "GlobalUsings.g.cs"));
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, nullableContextOptions: NullableContextOptions.Enable);
         return CSharpCompilation.Create($"Generated_{Guid.NewGuid():N}", trees, References.Value, options);
     }

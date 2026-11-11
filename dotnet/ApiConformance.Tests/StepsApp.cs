@@ -20,6 +20,7 @@ public static class StepsApp
         public static class AppSetup
         {
             public static readonly ConcurrentQueue<string> Log = new();
+            public static readonly System.Threading.SemaphoreSlim Gate = new(1, 1);
             public static void ConfigureServices(IServiceCollection services, string sqliteConnectionString) =>
                 services.AddDbContext<StepContext>(o => o.UseSqlite(sqliteConnectionString));
         }
@@ -52,6 +53,20 @@ public static class StepsApp
                 await database.Database.ExecuteSqlRawAsync("UPDATE \"Widgets\" SET \"Name\" = {0}", tag + "1");
                 await database.Database.ExecuteSqlRawAsync("UPDATE \"Widgets\" SET \"Name\" = {0}", tag + "2");
                 await transaction.CommitAsync();
+                return Ok();
+            }
+
+            [HttpGet("locked/{tag}")]
+            public async Task<IActionResult> Locked(string tag)
+            {
+                await AppSetup.Gate.WaitAsync();
+                try
+                {
+                    await database.Widgets.CountAsync(w => w.Name == tag);
+                    database.Widgets.Add(new Widget { Name = tag });
+                    await database.SaveChangesAsync();
+                }
+                finally { AppSetup.Gate.Release(); }
                 return Ok();
             }
 

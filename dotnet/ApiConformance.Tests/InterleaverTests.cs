@@ -59,6 +59,17 @@ public class InterleaverTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task GivenApplicationLevelLockAroundDatabaseWork_WhenInterleaved_ThenBothRequestsCompleteSerially()
+    {
+        var traces = await host.Interleaver.Run<HttpTrace>([
+            id => HttpTrace.Send(host.Client, HttpMethod.Get, "/api/steps/locked/a", null, new Dictionary<string, string> { [Interleaver.ParticipantHeader] = id }),
+            id => HttpTrace.Send(host.Client, HttpMethod.Get, "/api/steps/locked/b", null, new Dictionary<string, string> { [Interleaver.ParticipantHeader] = id })], TimeSpan.FromSeconds(20));
+
+        Assert.All(traces, trace => Assert.Equal(200, trace.StatusCode));
+        Assert.Contains(host.Interleaver.Events, e => e.Contains("blocked outside the database"));
+    }
+
+    [Fact]
     public async Task GivenNoArmedParticipants_WhenRequestsRun_ThenNothingIsGated()
     {
         var trace = await HttpTrace.Send(host.Client, HttpMethod.Get, "/api/steps/solo");

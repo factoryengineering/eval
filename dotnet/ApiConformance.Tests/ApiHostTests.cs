@@ -55,6 +55,16 @@ public class ApiHostTests : IAsyncLifetime
     }
 
     [Fact]
+    public void GivenSourceWithoutUsings_WhenCompiling_ThenSdkImplicitUsingsResolveButOthersDoNot()
+    {
+        var implicitOnly = GeneratedApp.Compile("public class A { public Guid Id = Guid.NewGuid(); public List<int> Xs = new List<int>().Where(x => x > 0).ToList(); public Task T() => Task.CompletedTask; }");
+        Assert.True(implicitOnly.Success, string.Join("; ", implicitOnly.Errors));
+        var missingMvc = GeneratedApp.Compile("public class B : ControllerBase { }");
+        Assert.False(missingMvc.Success);
+        Assert.Contains(missingMvc.Errors, e => e.Id == "CS0246");
+    }
+
+    [Fact]
     public void GivenSourceWithCompileError_WhenCompiling_ThenDiagnosticsAreReported()
     {
         var result = GeneratedApp.Compile(WidgetApp.Broken);

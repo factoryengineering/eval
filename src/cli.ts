@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { ApiRunner } from './api.js';
+import { cachedComplete } from './cache.js';
+import { complete as realComplete } from './providers.js';
 import { checksOf, monitor, monitorReport, report, runBaseline, summarize } from './baseline.js';
 import { analysisReport, analyzeLines } from './analyze.js';
 import { loadCases } from './cases.js';
@@ -58,7 +60,8 @@ switch (cmd) {
     const cases = await loadCases(config.cases);
     const runner = new ExecRunner();
     const api = apiRunner();
-    const trials = await runBaseline(config, cases, makeGrader(runner, undefined, api), undefined, (t) =>
+    const cache = flag('cache') ? await cachedComplete(flag('cache')!, (spec, system, prompt) => realComplete(spec, system, prompt)) : undefined;
+    const trials = await runBaseline(config, cases, makeGrader(runner, undefined, api), cache, (t) =>
       console.error(`${t.model} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : `FAIL ${t.failures.slice(0, 3).map((f) => f.slice(0, 60)).join(' | ')}${t.failures.length > 3 ? ` (+${t.failures.length - 3} more)` : ''}`}`), Number(flag('concurrency') ?? 4))
       .finally(() => { runner.close(); api.close(); });
     const at = new Date().toISOString();
@@ -69,6 +72,7 @@ switch (cmd) {
     await writeFile(`${home}/runs/baseline-${runId}.json`, JSON.stringify({ runId, at, trialsPerCell: config.trials, cells, trials }, null, 2));
     const rows = monitor(trials, checksOf(cases));
     await appendFile(`${home}/logs/baseline.jsonl`, JSON.stringify({ runId, at, trials: config.trials, cells, monitor: rows }) + '\n');
+    if (cache) console.error(`completion cache ${flag('cache')}: ${cache.hits()} reused, ${cache.misses()} generated`);
     console.log(`\nbaseline ${runId}\n${report(cells)}\n\n${monitorReport(rows)}`);
     break;
   }
@@ -137,5 +141,5 @@ switch (cmd) {
     break;
   }
   default:
-    console.log('usage: cli <analyze [runfile] | baseline [--models a,b] [--trials n] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--split tune|holdout] [--variants a,b] [--models a,b] [--trials n] | change <note> | compare>');
+    console.log('usage: cli <analyze [runfile] | baseline [--models a,b] [--trials n] [--cache file] | run [--models a,b] [--lines x,y] [--trials n] | trigger [--split tune|holdout] [--variants a,b] [--models a,b] [--trials n] | change <note> | compare>');
 }
