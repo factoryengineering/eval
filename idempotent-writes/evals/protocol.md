@@ -10,6 +10,11 @@ Source of truth for the oracles of the `idempotent-writes` and `api-design` eval
 - **Canonical hash**: `base64url-unpadded(SHA-256(UTF-8(canonical JSON of the representation)))`. Compact JSON, fixed field order, GUIDs lowercase `D` format, strings NFC, escape only `"`, `\` and control characters. The ETag header is the hash in quotes.
 - **Creation hash**: the canonical hash of the create request's representation; stored immutably on the row.
 
+## Canonical form details
+- Field order: `id`, then the parent id (children), then client-writable fields in declared order.
+- Numbers: decimal, no exponent, no trailing zeros (`12.50` and `12.5` hash the same).
+- A server-owned field may live on a parent or the resource; changing it never changes any ETag or the representation, and a counter updated on read must not use the ETag concurrency token.
+
 ## Identity and data
 - Routes, bodies and headers use only the public GUID. Internal int keys never leave the service.
 - Public id: unique index (alternate key). Bookkeeping columns (`ETag` as EF concurrency token, immutable `CreationHash`, nullable `DeletedAt` tombstone) are never part of a representation.
