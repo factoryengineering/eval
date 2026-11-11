@@ -12,5 +12,8 @@
   "writableFields": [
     { "name": "title", "jsonType": "string", "clrType": "System.String", "samples": ["Planting tulips", "Pruning roses", "Composting basics"] }
   ],
-  "serverOwnedFields": ["views"]
+  "serverOwnedFields": ["views"],
+  "serverOwned": [
+    { "field": "views", "entityTypeName": "Post" }
+  ]
 }

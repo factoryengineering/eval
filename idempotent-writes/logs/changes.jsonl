@@ -1,2 +1,3 @@
 {"at":"2026-11-11T03:15:19.000Z","skillHash":null,"note":"Iteration A1: add dotnet/ApiConformance (Roslyn compile + TestServer host + HttpTrace + DomainDescriptor) and ApiConformance.Tests; infrastructure only, no skill yet"}
 {"at":"2026-11-11T03:21:41.000Z","skillHash":null,"note":"Iteration A2: create-group protocol scenarios, CanonicalHash, full good blog reference, blog/blog-root descriptors and six create mutants with tests"}
+{"at":"2026-11-11T03:27:05.000Z","skillHash":null,"note":"Iteration A3: read, replace, delete and server-owned scenario groups, ServerOwned descriptor and host bump helper, Views removed from good reference representation, 14 new mutants, ProtocolGroupTests"}

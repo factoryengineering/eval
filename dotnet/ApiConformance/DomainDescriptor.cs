@@ -7,12 +7,15 @@ public sealed record FieldDescriptor(string Name, string JsonType, string ClrTyp
 
 public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField, IReadOnlyList<FieldDescriptor>? WritableFields = null);
 
+public sealed record ServerOwnedField(string Field, string EntityTypeName, string? SqlColumn = null);
+
 public sealed record DomainDescriptor(
     string Name,
     string CollectionRoute,
     ParentDescriptor? Parent,
     IReadOnlyList<FieldDescriptor> WritableFields,
-    IReadOnlyList<string> ServerOwnedFields)
+    IReadOnlyList<string> ServerOwnedFields,
+    IReadOnlyList<ServerOwnedField>? ServerOwned = null)
 {
     public const int MinimumSamples = 3;
 

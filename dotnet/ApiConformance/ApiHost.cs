@@ -79,6 +79,26 @@ public sealed class ApiHost : IAsyncDisposable
             .Where(t => typeof(DbContext).IsAssignableFrom(t) && !t.IsAbstract && isService.IsService(t))
             .ToList();
 
+    public async Task BumpServerOwned(ServerOwnedField field)
+    {
+        using var scope = host.Services.CreateScope();
+        foreach (var type in DbContextTypes)
+        {
+            var context = (DbContext)scope.ServiceProvider.GetRequiredService(type);
+            var entity = context.Model.GetEntityTypes().FirstOrDefault(e => e.ClrType.Name == field.EntityTypeName || e.Name == field.EntityTypeName);
+            if (entity is null) continue;
+            var table = entity.GetTableName() ?? throw new InvalidOperationException($"Entity '{field.EntityTypeName}' is not mapped to a table.");
+            var column = field.SqlColumn ?? entity.GetProperties().FirstOrDefault(p => string.Equals(p.Name, field.Field, StringComparison.OrdinalIgnoreCase))?.GetColumnName()
+                ?? throw new InvalidOperationException($"Entity '{field.EntityTypeName}' has no property '{field.Field}'.");
+            if (!System.Text.RegularExpressions.Regex.IsMatch(table + column, "^[A-Za-z0-9_]+$")) throw new InvalidOperationException("Unexpected characters in table or column name.");
+#pragma warning disable EF1002
+            await context.Database.ExecuteSqlRawAsync($"UPDATE \"{table}\" SET \"{column}\" = \"{column}\" + 1");
+#pragma warning restore EF1002
+            return;
+        }
+        throw new InvalidOperationException($"No DbContext maps entity '{field.EntityTypeName}'.");
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (disposed) return;

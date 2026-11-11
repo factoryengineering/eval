@@ -6,6 +6,8 @@ namespace ApiConformance;
 
 public sealed record ScenarioResult(string Name, bool Passed, string? Failure, string Group);
 
+public sealed record Resource(Guid Id, Guid? ParentId, IReadOnlyList<JsonElement> Values, string ETag, HttpTrace Created);
+
 public sealed record Scenario(string Name, string Group, Func<ScenarioContext, Task> Run);
 
 public sealed class ScenarioFailure(string message) : Exception(message);
@@ -19,9 +21,55 @@ public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
 
     public async Task<HttpTrace> Send(HttpMethod method, string uri, string? json = null, IDictionary<string, string>? headers = null)
     {
-        var trace = await HttpTrace.Send(host.Client, method, uri, json, headers);
+        var trace = await HttpTrace.Send(Host.Client, method, uri, json, headers);
         transcript.AppendLine(trace.ToString());
         return trace;
+    }
+
+    public ApiHost Host { get; } = host;
+
+    public string ItemRoute(Guid id) => $"{Domain.CollectionRoute}/{id}";
+
+    public static IDictionary<string, string> Headers(string? ifMatch = null, string? ifNoneMatch = null)
+    {
+        var headers = new Dictionary<string, string>();
+        if (ifMatch is not null) headers["If-Match"] = ifMatch;
+        if (ifNoneMatch is not null) headers["If-None-Match"] = ifNoneMatch;
+        return headers;
+    }
+
+    public const string StaleETag = "\"stale-etag\"";
+
+    public static string Quoted(string hash) => $"\"{hash}\"";
+
+    public Task<HttpTrace> Get(Guid id, string? ifNoneMatch = null) => Send(HttpMethod.Get, ItemRoute(id), null, Headers(null, ifNoneMatch));
+
+    public Task<HttpTrace> Put(Guid id, string body, string? ifMatch) => Send(HttpMethod.Put, ItemRoute(id), body, Headers(ifMatch));
+
+    public Task<HttpTrace> Delete(string route, string? ifMatch) => Send(HttpMethod.Delete, route, null, Headers(ifMatch));
+
+    public async Task<Resource> CreateResource(Guid? parentId = null, int sample = 0)
+    {
+        parentId ??= await CreateParent();
+        var id = Guid.NewGuid();
+        var values = Values(sample);
+        var created = await Send(HttpMethod.Post, CreateRoute(parentId), Body(id, parentId, values));
+        RequireStatus(created, 201, "Creating the resource");
+        return new Resource(id, parentId, values, RequireQuotedETag(created, "Creating the resource"), created);
+    }
+
+    public async Task<string> ParentETag(Guid parentId)
+    {
+        var read = await Send(HttpMethod.Get, $"{Domain.Parent!.CollectionRoute}/{parentId}");
+        RequireStatus(read, 200, "Reading the parent");
+        return RequireQuotedETag(read, "Reading the parent");
+    }
+
+    public void RequireNoServerOwnedField(HttpTrace trace, string field, string what)
+    {
+        using var document = JsonDocument.Parse(trace.ResponseBody.Length == 0 ? "{}" : trace.ResponseBody);
+        Require(!document.RootElement.EnumerateObject().Any(p => string.Equals(p.Name, field, StringComparison.OrdinalIgnoreCase)),
+            $"{what}: the representation must not contain the server-owned field '{field}'.");
     }
 
     public string CreateRoute(Guid? parentId) =>
@@ -85,7 +133,7 @@ public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
     }
 }
 
-public static class ProtocolScenarios
+public static partial class ProtocolScenarios
 {
     public const string CreateGroup = "create";
 
@@ -110,25 +158,29 @@ public static class ProtocolScenarios
         return scenarios;
     }
 
+    public static IReadOnlyList<Scenario> All(DomainDescriptor domain) =>
+        [.. Create(domain), .. Read(domain), .. Replace(domain), .. Delete(domain), .. ServerOwned(domain)];
+
     public static async Task<IReadOnlyList<ScenarioResult>> Run(IEnumerable<Scenario> scenarios, Func<ApiHost> startHost, DomainDescriptor domain)
     {
-        var results = new List<ScenarioResult>();
-        foreach (var scenario in scenarios)
-        {
-            await using var host = startHost();
-            var context = new ScenarioContext(host, domain);
-            try
-            {
-                await scenario.Run(context);
-                results.Add(new ScenarioResult(scenario.Name, true, null, scenario.Group));
-            }
-            catch (Exception failure)
-            {
-                var message = failure is ScenarioFailure ? failure.Message : failure.ToString();
-                results.Add(new ScenarioResult(scenario.Name, false, message + Environment.NewLine + context.Transcript, scenario.Group));
-            }
-        }
+        var results = await Task.WhenAll(scenarios.Select(scenario => RunOne(scenario, startHost, domain)));
         return results;
+    }
+
+    private static async Task<ScenarioResult> RunOne(Scenario scenario, Func<ApiHost> startHost, DomainDescriptor domain)
+    {
+        await using var host = startHost();
+        var context = new ScenarioContext(host, domain);
+        try
+        {
+            await scenario.Run(context);
+            return new ScenarioResult(scenario.Name, true, null, scenario.Group);
+        }
+        catch (Exception failure)
+        {
+            var message = failure is ScenarioFailure ? failure.Message : failure.ToString();
+            return new ScenarioResult(scenario.Name, false, message + Environment.NewLine + context.Transcript, scenario.Group);
+        }
     }
 
     private static async Task CreateSucceeds(ScenarioContext context)

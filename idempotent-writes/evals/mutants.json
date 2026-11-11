@@ -5,8 +5,9 @@
     "find": "if (existing.Post.CreationHash != hash) throw ProblemException.Conflict(\"A post with this id exists with different content.\");",
     "replace": "throw ProblemException.Conflict(\"A post with this id already exists.\");",
     "expectedFailures": [
-      "create-replay-returns-same-success",
-      "create-replay-after-put-returns-current-representation"
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-replay-returns-same-success"
     ]
   },
   {
@@ -25,10 +26,29 @@
     "replace": "new Post { PublicId = Guid.NewGuid(),",
     "expectedFailures": [
       "child-create-same-id-different-parent-conflicts",
+      "child-delete-parent-tombstones-children",
+      "child-replace-different-parent-conflicts",
       "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
       "create-replay-returns-same-success",
       "create-same-id-different-body-conflicts",
-      "create-succeeds"
+      "create-succeeds",
+      "delete-stale-if-match-is-precondition-failed",
+      "delete-with-current-if-match-tombstones",
+      "delete-without-if-match-is-precondition-required",
+      "read-matching-if-none-match-is-not-modified",
+      "read-non-matching-if-none-match-returns-representation",
+      "read-returns-representation-and-etag",
+      "read-tombstoned-is-gone",
+      "replace-identical-body-with-stale-if-match-succeeds",
+      "replace-retry-with-stale-if-match-same-body-succeeds",
+      "replace-stale-if-match-different-body-is-precondition-failed",
+      "replace-tombstoned-is-gone",
+      "replace-with-current-if-match-updates",
+      "replace-with-wildcard-if-match-updates",
+      "replace-without-if-match-is-precondition-required",
+      "server-owned-change-does-not-change-etag",
+      "server-owned-change-does-not-invalidate-if-match"
     ]
   },
   {
@@ -46,7 +66,9 @@
     "find": "Title = body.Title, ETag = hash, CreationHash = hash };\n        database.Posts.Add",
     "replace": "Title = body.Title, ETag = \"1\", CreationHash = hash };\n        database.Posts.Add",
     "expectedFailures": [
-      "etag-is-canonical-hash"
+      "etag-is-canonical-hash",
+      "read-returns-representation-and-etag",
+      "replace-identical-body-with-stale-if-match-succeeds"
     ]
   },
   {
@@ -56,6 +78,142 @@
     "replace": "if (body.BlogId",
     "expectedFailures": [
       "create-missing-id-is-bad-request"
+    ]
+  },
+  {
+    "name": "put-without-if-match-allowed",
+    "file": "Service.cs",
+    "find": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        var hash = Representation.Hash(body.Id, body.BlogId, body.Title);",
+    "replace": "ifMatch ??= \"*\";\n        var hash = Representation.Hash(body.Id, body.BlogId, body.Title);",
+    "expectedFailures": [
+      "replace-without-if-match-is-precondition-required",
+      "replace-without-if-match-on-unknown-id-is-precondition-required"
+    ]
+  },
+  {
+    "name": "delete-404-on-repeat",
+    "file": "Service.cs",
+    "find": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null) return;",
+    "replace": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null)\n            {\n                var tombstoned = await database.Posts.IgnoreQueryFilters().AnyAsync(stored => stored.PublicId == id, cancellationToken);\n                if (tombstoned) throw ProblemException.NotFound(\"The post was already deleted.\");\n                return;\n            }",
+    "expectedFailures": [
+      "delete-retry-is-no-content"
+    ]
+  },
+  {
+    "name": "delete-absent-404",
+    "file": "Service.cs",
+    "find": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null) return;",
+    "replace": "var post = await postQuery.SingleOrDefaultAsync(cancellationToken);\n            if (post is null) throw ProblemException.NotFound(\"The post does not exist.\");",
+    "expectedFailures": [
+      "delete-retry-is-no-content",
+      "delete-unknown-id-is-no-content"
+    ]
+  },
+  {
+    "name": "put-stale-same-body-412",
+    "file": "Service.cs",
+    "find": "if (post.ETag == hash) return hash;\n",
+    "replace": "",
+    "expectedFailures": [
+      "replace-identical-body-with-stale-if-match-succeeds",
+      "replace-retry-with-stale-if-match-same-body-succeeds"
+    ]
+  },
+  {
+    "name": "put-412-without-current-etag",
+    "file": "Service.cs",
+    "find": "throw ProblemException.PreconditionFailed(\"The post was changed by someone else.\", post.ETag);\n            post.Title = body.Title;",
+    "replace": "throw new ProblemException(412, \"The post was changed by someone else.\");\n            post.Title = body.Title;",
+    "expectedFailures": [
+      "replace-stale-if-match-different-body-is-precondition-failed"
+    ]
+  },
+  {
+    "name": "put-ignores-if-match",
+    "file": "Service.cs",
+    "find": "if (post.ETag == hash) return hash;\n            if (ifMatch.Trim() != \"*\" && Representation.Unquote(ifMatch) != post.ETag)",
+    "replace": "if (post.ETag == hash) return hash;\n            if (false)",
+    "expectedFailures": [
+      "replace-stale-if-match-different-body-is-precondition-failed"
+    ]
+  },
+  {
+    "name": "delete-without-if-match-allowed",
+    "file": "Service.cs",
+    "find": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        for (var attempt = 0; ; attempt++)\n        {\n            var postQuery",
+    "replace": "ifMatch ??= \"*\";\n        for (var attempt = 0; ; attempt++)\n        {\n            var postQuery",
+    "expectedFailures": [
+      "delete-without-if-match-is-precondition-required"
+    ]
+  },
+  {
+    "name": "put-allows-parent-change",
+    "file": "Service.cs",
+    "find": "            if (ownerId != body.BlogId) throw ProblemException.Conflict(\"The blog of a post cannot be changed.\");\n",
+    "replace": "",
+    "expectedFailures": [
+      "child-replace-different-parent-conflicts"
+    ]
+  },
+  {
+    "name": "hash-includes-server-owned",
+    "file": "Service.cs",
+    "find": "var (post, ownerId) = await Find(id, cancellationToken);\n        return new Stored<PostResponse>(ToResponse(post, ownerId), post.ETag, false);",
+    "replace": "var (post, ownerId) = await Find(id, cancellationToken);\n        var withViews = Representation.Hash((\"id\", post.PublicId.ToString(\"D\")), (\"blogId\", ownerId.ToString(\"D\")), (\"title\", post.Title), (\"views\", post.Views.ToString()));\n        return new Stored<PostResponse>(ToResponse(post, ownerId), withViews, false);",
+    "expectedFailures": [
+      "create-succeeds",
+      "read-matching-if-none-match-is-not-modified",
+      "read-returns-representation-and-etag",
+      "replace-with-current-if-match-updates",
+      "server-owned-change-does-not-change-etag"
+    ]
+  },
+  {
+    "name": "representation-leaks-server-owned",
+    "file": "Service.cs",
+    "find": "public record PostResponse(Guid Id, Guid BlogId, string Title);",
+    "replace": "public record PostResponse(Guid Id, Guid BlogId, string Title, int Views = 0);",
+    "expectedFailures": [
+      "server-owned-field-is-absent-from-representation"
+    ]
+  },
+  {
+    "name": "get-ignores-if-none-match",
+    "file": "Controllers.cs",
+    "find": "if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n",
+    "replace": "",
+    "expectedFailures": [
+      "read-matching-if-none-match-is-not-modified"
+    ]
+  },
+  {
+    "name": "tombstone-hard-deletes",
+    "file": "Service.cs",
+    "find": "post.DeletedAt = DateTime.UtcNow;",
+    "replace": "database.Posts.Remove(post);",
+    "expectedFailures": [
+      "create-replay-of-tombstoned-is-gone",
+      "delete-with-current-if-match-tombstones",
+      "read-tombstoned-is-gone",
+      "replace-tombstoned-is-gone"
+    ]
+  },
+  {
+    "name": "delete-does-not-cascade",
+    "file": "Service.cs",
+    "find": "foreach (var post in posts) post.DeletedAt = deletedAt;\n",
+    "replace": "",
+    "expectedFailures": [
+      "child-delete-parent-tombstones-children"
+    ]
+  },
+  {
+    "name": "create-under-tombstoned-parent-allowed",
+    "file": "Service.cs",
+    "find": "if (blog.DeletedAt != null) throw ProblemException.Gone(\"The blog was deleted.\");\n        var hash = Representation.Hash(body.Id, blogId, body.Title);",
+    "replace": "var hash = Representation.Hash(body.Id, blogId, body.Title);",
+    "expectedFailures": [
+      "child-create-under-tombstoned-parent-is-gone"
     ]
   }
 ]

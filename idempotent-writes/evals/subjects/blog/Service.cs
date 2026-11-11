@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 public record BlogBody(Guid Id, string Name);
 public record BlogResponse(Guid Id, string Name);
 public record PostBody(Guid Id, Guid BlogId, string Title);
-public record PostResponse(Guid Id, Guid BlogId, string Title, int Views);
+public record PostResponse(Guid Id, Guid BlogId, string Title);
 public record Stored<T>(T Representation, string ETag, bool Created);
 
 public class ProblemException : Exception
@@ -334,5 +334,5 @@ public class PostService
         return eTags.SingleOrDefault() ?? "";
     }
 
-    private static PostResponse ToResponse(Post post, Guid blogId) => new(post.PublicId, blogId, post.Title, post.Views);
+    private static PostResponse ToResponse(Post post, Guid blogId) => new(post.PublicId, blogId, post.Title);
 }

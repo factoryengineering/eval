@@ -1,40 +1,5 @@
 using ApiConformance;
 
-public class CreateGroupTests
-{
-    private static async Task<IReadOnlyList<ScenarioResult>> WhenRunningCreateGroup(string[] sources, DomainDescriptor domain) =>
-        await ProtocolScenarios.Run(ProtocolScenarios.Create(domain), () => Subject.Start(sources), domain);
-
-    private static string Describe(IEnumerable<ScenarioResult> results) =>
-        string.Join(Environment.NewLine, results.Where(r => !r.Passed).Select(r => $"{r.Name}: {r.Failure}"));
-
-    [Theory]
-    [InlineData("blog.json")]
-    [InlineData("blog-root.json")]
-    public async Task GivenGoodReference_WhenRunningCreateGroup_ThenAllScenariosPass(string domainFile)
-    {
-        var results = await WhenRunningCreateGroup(Subject.BlogSources().Values.ToArray(), Subject.Domain(domainFile));
-
-        Assert.NotEmpty(results);
-        Assert.True(results.All(r => r.Passed), Describe(results));
-    }
-
-    public static IEnumerable<object[]> MutantNames() => Subject.Mutants().Select(m => new object[] { m.Name });
-
-    [Theory]
-    [MemberData(nameof(MutantNames))]
-    public async Task GivenMutant_WhenRunningCreateGroup_ThenExactlyTheExpectedScenariosFail(string name)
-    {
-        var mutant = Subject.Mutants().Single(m => m.Name == name);
-        var sources = Subject.Apply(Subject.BlogSources(), mutant);
-
-        var results = await WhenRunningCreateGroup(sources, Subject.Domain("blog.json"));
-
-        var failed = results.Where(r => !r.Passed).Select(r => r.Name).Order().ToArray();
-        Assert.True(failed.SequenceEqual(mutant.ExpectedFailures.Order()), $"Expected [{string.Join(", ", mutant.ExpectedFailures)}] but failed [{string.Join(", ", failed)}]." + Environment.NewLine + Describe(results));
-    }
-}
-
 public class CanonicalHashTests
 {
     private const string Id = "0f8fad5b-d9cb-469f-a165-70867728950e";

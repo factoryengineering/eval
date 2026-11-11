@@ -31,5 +31,9 @@ public static class Subject
         return sources.Select(source => source.Key == mutant.File ? original.Replace(mutant.Find, mutant.Replace) : source.Value).ToArray();
     }
 
-    public static ApiHost Start(IEnumerable<string> sources) => GeneratedApp.Compile(sources).Host();
+    public static Func<ApiHost> Hosts(IEnumerable<string> sources)
+    {
+        var compiled = GeneratedApp.Compile(sources);
+        return compiled.Host;
+    }
 }
