@@ -48,6 +48,11 @@ Source of truth for the oracles of the `idempotent-writes` and `api-design` eval
 - Live and `If-Match` != current ETag: `412`.
 - Else tombstone (compare-and-set on ETag) and tombstone dependants in the same transaction: `204`.
 
+## Concurrency
+- A concurrent request never gets a `5xx`. Create uses a unique index and classifies the violation (no prior query). A tombstone (`DeletedAt`) counts as a state change for compare-and-set.
+- Concurrent PUT and DELETE from the same ETag serialize: either PUT `204` then DELETE `412`, or DELETE `204` then PUT `410`.
+- Not specified (open): a child create racing a delete of its parent.
+
 ## Errors
 `application/problem+json`: 400, 404, 409, 410, 412, 428. Success variants are return values in the service; failures are exceptions mapped at the edge.
 
