@@ -32,11 +32,13 @@ Source of truth for the oracles of the `idempotent-writes` and `api-design` eval
 
 **Replace** `PUT /{collection}/{id}` full replacement, body id must equal route (`400`), `If-Match` required (`428` when absent).
 - Let N be the hash of the intended representation. If current ETag == N, the change is already applied: `204` with ETag N (regardless of `If-Match`).
+- A no-op PUT (intended hash equals the current ETag) returns `204` with the unchanged ETag.
 - Else if `If-Match` == current ETag (or `*`): update, ETag becomes N, `204`. A concurrency conflict at write time (concurrent writer) is re-evaluated once, then `412`.
 - Else `412` with the current ETag header.
 - Immutable fields (parent link) differing from stored: `409`.
 
 **Delete** `DELETE /{collection}/{id}`, `If-Match` required (`428`).
+- `If-Match` must still be present for an unknown id (`428` otherwise).
 - Absent or already tombstoned: `204`, never `404`.
 - Live and `If-Match` != current ETag: `412`.
 - Else tombstone (compare-and-set on ETag) and tombstone dependants in the same transaction: `204`.
