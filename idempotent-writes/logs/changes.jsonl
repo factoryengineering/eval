@@ -1,0 +1,1 @@
+{"at":"2026-11-11T03:15:19.000Z","skillHash":null,"note":"Iteration A1: add dotnet/ApiConformance (Roslyn compile + TestServer host + HttpTrace + DomainDescriptor) and ApiConformance.Tests; infrastructure only, no skill yet"}
