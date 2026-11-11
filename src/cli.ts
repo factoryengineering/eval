@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { ApiRunner } from './api.js';
 import { checksOf, monitor, monitorReport, report, runBaseline, summarize } from './baseline.js';
 import { analysisReport, analyzeLines } from './analyze.js';
 import { loadCases } from './cases.js';
@@ -23,8 +24,13 @@ const home = config.home ?? '.';
 const allModels = config.models;
 config.models = allModels.filter((m) => !m.judgeOnly);
 const judgeId = () => flag('judge') ?? config.judge ?? 'sonnet-5.5';
-const skill = await readFile(config.skill, 'utf8').catch(() => '');
-const tagged = () => annotate(skill, JSON.parse(readFileSync(config.ids, 'utf8')) as Record<string, string>);
+const skillFile = await readFile(config.skill, 'utf8').catch(() => undefined);
+const needSkill = () => {
+  if (skillFile === undefined) throw new Error(`skill file ${config.skill} does not exist; only baseline (no-skill) runs work without it`);
+  return skillFile;
+};
+const tagged = () => annotate(needSkill(), JSON.parse(readFileSync(config.ids, 'utf8')) as Record<string, string>);
+const apiRunner = () => new ApiRunner(config.apiCli, config.domains, Math.min(Number(flag('concurrency') ?? 2), 4));
 
 switch (cmd) {
   case 'run': {
@@ -36,10 +42,11 @@ switch (cmd) {
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = await loadCases(config.cases);
     const runner = new ExecRunner();
+    const api = apiRunner();
     const judge = await NameJudge.open(config.judgeVerdicts ?? 'evals/name-verdicts.json', judgeSpec);
     const { summary, trials } = await runEval(config, tagged(), cases, undefined, (t) =>
-      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner, judge), Number(flag('concurrency') ?? 1))
-      .finally(async () => { runner.close(); await judge.save(); });
+      console.error(`${t.model} ${t.line} ${t.variant} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : 'FAIL'}`), makeGrader(runner, judge, api), Number(flag('concurrency') ?? 1))
+      .finally(async () => { runner.close(); api.close(); await judge.save(); });
     await saveRun(summary, trials, home);
     console.log(`\nrun ${summary.runId} skill ${summary.skillHash}\n${table(summary)}`);
     break;
@@ -50,9 +57,10 @@ switch (cmd) {
     if (flag('trials')) config.trials = Number(flag('trials'));
     const cases = await loadCases(config.cases);
     const runner = new ExecRunner();
-    const trials = await runBaseline(config, cases, makeGrader(runner), undefined, (t) =>
-      console.error(`${t.model} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : `FAIL ${t.failures.map((f) => f.slice(0, 60)).join(' | ')}`}`))
-      .finally(() => runner.close());
+    const api = apiRunner();
+    const trials = await runBaseline(config, cases, makeGrader(runner, undefined, api), undefined, (t) =>
+      console.error(`${t.model} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : `FAIL ${t.failures.slice(0, 3).map((f) => f.slice(0, 60)).join(' | ')}${t.failures.length > 3 ? ` (+${t.failures.length - 3} more)` : ''}`}`), Number(flag('concurrency') ?? 4))
+      .finally(() => { runner.close(); api.close(); });
     const at = new Date().toISOString();
     const runId = at.replace(/[:.]/g, '-');
     const cells = summarize(trials);
@@ -67,7 +75,7 @@ switch (cmd) {
   case 'analyze': {
     const { readdirSync } = await import('node:fs');
     const file = args.find((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--'))
-      ?? `${home}/runs/${readdirSync(`${home}/runs`).filter((f) => !f.startsWith('baseline') && !f.startsWith('trigger')).sort().at(-1)}`;
+      ?? `${home}/runs/${readdirSync(`${home}/runs`).filter((f) => f.endsWith('.json') && !f.startsWith('baseline') && !f.startsWith('trigger')).sort().at(-1)}`;
     const run = JSON.parse(await readFile(file, 'utf8')) as { trials: import('./types.js').Trial[] };
     console.log(`${file}\n${analysisReport(analyzeLines(run.trials), 0.05, config.minDelta)}`);
     break;
@@ -88,7 +96,7 @@ switch (cmd) {
     const spec = JSON.parse(await readFile(config.trigger ?? 'evals/trigger.json', 'utf8')) as TriggerSpec;
     const split = flag('split') as 'tune' | 'holdout' | undefined;
     const variantIds = flag('variants')?.split(',');
-    const description = descriptionOf(skill);
+    const description = descriptionOf(needSkill());
     if (split) {
       const problems = splitProblems(spec);
       if (problems.length) throw new Error(`trigger split is invalid: ${problems.join('; ')}`);
@@ -119,7 +127,7 @@ switch (cmd) {
   case 'change': {
     const note = args.filter((a, i) => !a.startsWith('--') && !args[i - 1]?.startsWith('--')).join(' ');
     if (!note) throw new Error('usage: change <note describing the skill edit>');
-    console.log(`logged change for skill ${await logChange(note, skill, home)}`);
+    console.log(`logged change for skill ${await logChange(note, needSkill(), home)}`);
     break;
   }
   case 'compare': {

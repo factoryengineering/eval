@@ -16,6 +16,8 @@ export interface Config {
   judge?: string;
   judgeVerdicts?: string;
   trigger?: string;
+  apiCli?: string;
+  domains?: string;
   models: ModelSpec[];
 }
 
@@ -49,6 +51,17 @@ export interface TestSpec {
   graded?: string[];
 }
 
+export interface ApiSpec {
+  domain: string;
+  level: 1 | 2 | 3;
+  graded?: string[];
+}
+
+export interface GradeNotes {
+  notes: string[];
+  bootstrapNote?: string;
+}
+
 export interface EvalCase {
   id: string;
   prompt: string;
@@ -56,6 +69,7 @@ export interface EvalCase {
   guard?: boolean;
   exec?: ExecSpec;
   tests?: TestSpec;
+  api?: ApiSpec;
   must: string[];
   mustNot?: string[];
 }
@@ -81,6 +95,8 @@ export interface Trial {
   outputTokens: number;
   estimated: boolean;
   output: string;
+  notes?: string[];
+  bootstrapNote?: string;
 }
 
 export interface LineResult {

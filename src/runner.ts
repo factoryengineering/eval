@@ -1,7 +1,8 @@
+import { withNotes } from './baseline.js';
 import { grade, verdict } from './grade.js';
 import { complete as realComplete } from './providers.js';
 import { hashSkill, parseSkill, renderSkill } from './skill.js';
-import type { Completion, Config, EvalCase, LineResult, ModelSpec, RunSummary, Trial } from './types.js';
+import type { Completion, Config, EvalCase, GradeNotes, LineResult, ModelSpec, RunSummary, Trial } from './types.js';
 
 type Complete = (spec: ModelSpec, system: string, prompt: string) => Promise<Completion>;
 
@@ -13,7 +14,7 @@ export async function runEval(
   cases: EvalCase[],
   complete: Complete = realComplete,
   onTrial: (t: Trial) => void = () => {},
-  gradeFn: (c: EvalCase, text: string) => Promise<string[]> = async (c, text) => grade(c, text),
+  gradeFn: (c: EvalCase, text: string, notes?: GradeNotes) => Promise<string[]> = async (c, text) => grade(c, text),
   concurrency = 1,
 ): Promise<{ summary: RunSummary; trials: Trial[] }> {
   const { lines } = parseSkill(skillSource);
@@ -62,10 +63,11 @@ export async function runEval(
         for (let n = 0; n < config.trials; n++) {
           for (const variant of ['without', 'with'] as const) {
             const r = await call(spec, c, variant === 'without' ? line.id : undefined, n);
-            const failures = await gradeFn(c, r.text);
+            const notes: GradeNotes = { notes: [] };
+            const failures = await gradeFn(c, r.text, notes);
             const t: Trial = {
               model: spec.id, line: line.id, variant, caseId: c.id, trial: n, pass: failures.length === 0, failures,
-              inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text,
+              inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text, ...(c.api ? withNotes(notes) : {}),
             };
             trials.push(t);
             onTrial(t);
@@ -82,10 +84,11 @@ export async function runEval(
         const mine: Trial[] = [];
         for (let n = 0; n < config.trials; n++) {
           const r = await call(spec, c, undefined, n);
-          const failures = await gradeFn(c, r.text);
+          const notes: GradeNotes = { notes: [] };
+          const failures = await gradeFn(c, r.text, notes);
           const t: Trial = {
             model: spec.id, line: '(guard)', variant: 'with', caseId: c.id, trial: n, pass: failures.length === 0, failures,
-            inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text,
+            inputTokens: r.inputTokens, outputTokens: r.outputTokens, estimated: r.estimated, output: r.text, ...(c.api ? withNotes(notes) : {}),
           };
           mine.push(t);
           trials.push(t);

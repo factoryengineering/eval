@@ -1,9 +1,11 @@
 import { spawn } from 'node:child_process';
 import type { ChildProcessWithoutNullStreams } from 'node:child_process';
 import { createInterface } from 'node:readline';
+import { apiFailures, sourcesOf } from './api.js';
+import type { ApiRunner } from './api.js';
 import { bucketOf } from './baseline.js';
 import { codeOf, grade } from './grade.js';
-import type { EvalCase, MutantSpec } from './types.js';
+import type { EvalCase, GradeNotes, MutantSpec } from './types.js';
 
 export interface ExecResult {
   id: string;
@@ -151,8 +153,13 @@ export interface NameChecker {
   bad(ids: string[]): Promise<string[]>;
 }
 
-export const makeGrader = (runner: ExecRunner, judge?: NameChecker) => async (c: EvalCase, text: string): Promise<string[]> => {
+export const makeGrader = (runner: ExecRunner, judge?: NameChecker, api?: ApiRunner) => async (c: EvalCase, text: string, notes?: GradeNotes): Promise<string[]> => {
   const failures = grade(c, text);
+  if (c.api) {
+    if (!api) throw new Error(`case ${c.id} needs an ApiRunner`);
+    failures.push(...apiFailures(c, await api.run(c.api.domain, sourcesOf(text)), notes));
+    return failures;
+  }
   if (c.tests) {
     failures.push(...testFailures(c, await runner.runTests(codeOf(text), c.tests.source!, c.tests.mutants)));
     return failures;

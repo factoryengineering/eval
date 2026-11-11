@@ -1,0 +1,51 @@
+{
+  "skill": ".devin/skills/api-design/SKILL.md",
+  "ids": "api-design/evals/skill-lines.json",
+  "cases": "api-design/evals/cases.json",
+  "home": "api-design",
+  "judge": "terra",
+  "judgeVerdicts": "api-design/evals/name-verdicts.json",
+  "trials": 7,
+  "minDelta": 0.3,
+  "apiCli": "dotnet/ApiConformance.Cli/bin/Release/net10.0/ApiConformance.Cli.dll",
+  "domains": "idempotent-writes/evals/domains",
+  "models": [
+    {
+      "id": "mock",
+      "provider": "mock",
+      "model": "mock"
+    },
+    {
+      "id": "haiku-5.5",
+      "provider": "devin-cli",
+      "model": "claude-haiku-5.5"
+    },
+    {
+      "id": "sonnet-5.5",
+      "provider": "devin-cli",
+      "model": "claude-sonnet-5.5"
+    },
+    {
+      "id": "gpt-6-luna",
+      "provider": "devin-cli",
+      "model": "gpt-6-luna-low"
+    },
+    {
+      "id": "swe-2",
+      "provider": "devin-cli",
+      "model": "swe-2-medium"
+    },
+    {
+      "id": "swe-2-flash",
+      "provider": "devin-cli",
+      "model": "swe-2-flash-medium"
+    },
+    {
+      "id": "terra",
+      "provider": "devin-cli",
+      "model": "gpt-6-1-terra-medium",
+      "judgeOnly": true
+    }
+  ],
+  "trigger": "api-design/evals/trigger.json"
+}

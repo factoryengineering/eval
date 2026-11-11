@@ -9,7 +9,7 @@
 
 ## Commands
 - .NET tests: `dotnet test dotnet/EfFixtures.Tests`
-- Build the eval runner (needed before the reference tests): `npm run build:runner`
+- Build the eval runner (needed before the reference tests): `npm run build:runner`; build the API conformance CLI (api cases and their reference tests): `npm run build:api`
 - TypeScript tests: `npm test`
 - ef-linq evals use `eval.config.json`; unit-testing evals use `unit-testing/eval.config.json`. Pass it with `--config`.
 - `node dist/src/cli.js <baseline|run|analyze|trigger|change>` after `npx tsc`. `run` accepts `--models`, `--lines`, `--trials`, `--concurrency`. `trigger` accepts `--split tune|holdout` and `--variants`.

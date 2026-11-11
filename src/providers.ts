@@ -3,6 +3,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
+import { API_PREAMBLE, mockApiAnswer } from './api.js';
 import type { Completion, ModelSpec } from './types.js';
 
 const run = promisify(execFile);
@@ -55,7 +56,11 @@ async function devinCli(model: string, system: string, prompt: string): Promise<
 }
 
 // Deterministic stand-in: "obeys" the skill by echoing every backticked code span it contains.
-function mock(system: string, prompt: string): Promise<Completion> {
+async function mock(system: string, prompt: string): Promise<Completion> {
+  if (prompt.startsWith(API_PREAMBLE)) {
+    const text = await mockApiAnswer(prompt);
+    return { text, inputTokens: estimate(system + prompt), outputTokens: estimate(text), estimated: true };
+  }
   const spans = [...system.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
   const text = `\`\`\`csharp\n${spans.join('\n')}\n\`\`\``;
   return Promise.resolve({
