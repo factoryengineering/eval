@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiConformance\ApiConformance.csproj" />
+    <ProjectReference Include="..\ApiConformance.Cli\ApiConformance.Cli.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
