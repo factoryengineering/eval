@@ -20,12 +20,18 @@ public static partial class ProtocolScenarios
         {
             var resource = await context.CreateResource();
             var before = await context.Get(resource.Id);
+            var parentBefore = field.OwnedByParent ? await context.ParentETag(resource.ParentId!.Value) : null;
 
             await context.Host.BumpServerOwned(field);
             var after = await context.Get(resource.Id);
 
             context.RequireStatus(after, 200, $"GET after bumping '{field.Field}'");
             context.Require(after.Header("ETag") == before.Header("ETag"), $"Bumping '{field.Field}' changed the ETag from {before.Header("ETag")} to {after.Header("ETag")}.");
+            if (field.OwnedByParent)
+            {
+                var parentAfter = await context.ParentETag(resource.ParentId!.Value);
+                context.Require(parentAfter == parentBefore, $"Bumping '{field.Field}' changed the parent ETag from {parentBefore} to {parentAfter}.");
+            }
         }
     }
 
@@ -51,6 +57,12 @@ public static partial class ProtocolScenarios
         var read = await context.Get(resource.Id);
         foreach (var field in context.Domain.ServerOwned!)
         {
+            if (field.OwnedByParent)
+            {
+                var parentRead = await context.Send(HttpMethod.Get, $"{context.Domain.Parent!.CollectionRoute}/{resource.ParentId}");
+                context.RequireNoServerOwnedField(parentRead, field.Field, "Parent GET response");
+                continue;
+            }
             context.RequireNoServerOwnedField(resource.Created, field.Field, "Create response");
             context.RequireNoServerOwnedField(read, field.Field, "GET response");
         }

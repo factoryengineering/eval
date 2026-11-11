@@ -44,11 +44,15 @@ public static class CanonicalHash
             case string text: AppendString(json, text); break;
             case bool flag: json.Append(flag ? "true" : "false"); break;
             case int or long: json.Append(Convert.ToString(value, CultureInfo.InvariantCulture)); break;
+            case decimal number: json.Append(Number(number)); break;
+            case JsonElement { ValueKind: JsonValueKind.Number } element: json.Append(Number(element.GetDecimal())); break;
             case JsonElement { ValueKind: JsonValueKind.String } element: AppendString(json, element.GetString()!); break;
             case JsonElement element: json.Append(element.GetRawText()); break;
             default: throw new ArgumentException($"Unsupported value type {value.GetType()}.");
         }
     }
+
+    public static string Number(decimal number) => (number / 1.000000000000000000000000000m).ToString(CultureInfo.InvariantCulture);
 
     private static void AppendString(StringBuilder json, string text)
     {

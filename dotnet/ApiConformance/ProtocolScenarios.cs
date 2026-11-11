@@ -73,7 +73,7 @@ public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
     }
 
     public string CreateRoute(Guid? parentId) =>
-        Domain.Parent is { } parent ? parent.ChildCollectionRoute.Replace("{parentId}", parentId.ToString()) : Domain.CollectionRoute;
+        Domain.Parent is { } parent ? Regex.Replace(parent.ChildCollectionRoute, @"\{[^}/]+\}", parentId.ToString()!) : Domain.CollectionRoute;
 
     public IReadOnlyList<JsonElement> Values(int sample) => Domain.WritableFields.Select(f => f.Samples[sample % f.Samples.Count]).ToList();
 
@@ -119,11 +119,19 @@ public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
         Require(root.ValueKind == JsonValueKind.Object, $"{what}: the body is not a JSON object.");
         foreach (var field in CanonicalHash.Fields(Domain, id, parentId, values))
         {
-            var expected = field.Value is Guid guid ? guid.ToString("D") : ((JsonElement)field.Value).GetRawText();
-            Require(root.TryGetProperty(field.Key, out var actual) && (field.Value is Guid ? actual.GetString() == expected : actual.GetRawText() == expected),
-                $"{what}: field '{field.Key}' should be {expected}.");
+            var expected = field.Value is Guid guid ? JsonSerializer.SerializeToElement(guid.ToString("D")) : (JsonElement)field.Value;
+            Require(root.TryGetProperty(field.Key, out var actual) && SameValue(expected, actual),
+                $"{what}: field '{field.Key}' should be {expected.GetRawText()}.");
         }
     }
+
+    private static bool SameValue(JsonElement expected, JsonElement actual) =>
+        expected.ValueKind == actual.ValueKind && expected.ValueKind switch
+        {
+            JsonValueKind.String => expected.GetString() == actual.GetString(),
+            JsonValueKind.Number => expected.GetDecimal() == actual.GetDecimal(),
+            _ => true
+        };
 
     public string RequireQuotedETag(HttpTrace trace, string what)
     {

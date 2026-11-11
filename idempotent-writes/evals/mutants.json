@@ -215,5 +215,38 @@
     "expectedFailures": [
       "child-create-under-tombstoned-parent-is-gone"
     ]
+  },
+  {
+    "name": "logistics-replay-409",
+    "domain": "logistics",
+    "file": "Service.cs",
+    "find": "if (existing.Consignment.CreationHash != hash) throw ProblemException.Conflict(\"A shipment with this id exists with different content.\");",
+    "replace": "throw ProblemException.Conflict(\"A shipment with this id already exists.\");",
+    "expectedFailures": [
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-replay-returns-same-success"
+    ]
+  },
+  {
+    "name": "logistics-put-stale-same-body-412",
+    "domain": "logistics",
+    "file": "Service.cs",
+    "find": "if (consignment.ETag == hash) return hash;\n",
+    "replace": "",
+    "expectedFailures": [
+      "replace-identical-body-with-stale-if-match-succeeds",
+      "replace-retry-with-stale-if-match-same-body-succeeds"
+    ]
+  },
+  {
+    "name": "logistics-delete-404-on-repeat",
+    "domain": "logistics",
+    "file": "Service.cs",
+    "find": "var consignment = await consignmentQuery.SingleOrDefaultAsync(cancellationToken);\n            if (consignment is null) return;",
+    "replace": "var consignment = await consignmentQuery.SingleOrDefaultAsync(cancellationToken);\n            if (consignment is null)\n            {\n                var tombstoned = await database.Consignments.IgnoreQueryFilters().AnyAsync(stored => stored.PublicId == id, cancellationToken);\n                if (tombstoned) throw ProblemException.NotFound(\"The shipment was already deleted.\");\n                return;\n            }",
+    "expectedFailures": [
+      "delete-retry-is-no-content"
+    ]
   }
 ]

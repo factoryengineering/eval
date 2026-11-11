@@ -1,13 +1,11 @@
 using System.Text.Json;
 using ApiConformance;
 
-public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures);
+public sealed record Mutant(string Name, string File, string Find, string Replace, string[] ExpectedFailures, string Domain = "blog");
 
 public static class Subject
 {
     public static readonly string EvalRoot = Path.Combine(FindRepositoryRoot(), "idempotent-writes", "evals");
-
-    private static string BlogDirectory => Path.Combine(EvalRoot, "subjects", "blog");
 
     private static string FindRepositoryRoot()
     {
@@ -18,8 +16,15 @@ public static class Subject
 
     public static DomainDescriptor Domain(string file) => DomainDescriptor.Load(Path.Combine(EvalRoot, "domains", file));
 
-    public static IReadOnlyDictionary<string, string> BlogSources() =>
-        Directory.GetFiles(BlogDirectory, "*.cs").ToDictionary(path => Path.GetFileName(path)!, File.ReadAllText);
+    public static IReadOnlyDictionary<string, string> Sources(string subject) =>
+        Directory.GetFiles(Path.Combine(EvalRoot, "subjects", subject), "*.cs").ToDictionary(path => Path.GetFileName(path)!, File.ReadAllText);
+
+    public static IReadOnlyDictionary<string, string> BlogSources() => Sources("blog");
+
+    public static string SubjectOf(string domainFile) => Path.GetFileNameWithoutExtension(domainFile).Replace("-root", "");
+
+    public static IEnumerable<string> DomainFiles() =>
+        Directory.GetFiles(Path.Combine(EvalRoot, "domains"), "*.json").Select(path => Path.GetFileName(path)!).Order();
 
     public static IReadOnlyList<Mutant> Mutants() =>
         JsonSerializer.Deserialize<List<Mutant>>(File.ReadAllText(Path.Combine(EvalRoot, "mutants.json")), new JsonSerializerOptions(JsonSerializerDefaults.Web))!;

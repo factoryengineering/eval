@@ -88,11 +88,19 @@ public sealed class ApiHost : IAsyncDisposable
             var entity = context.Model.GetEntityTypes().FirstOrDefault(e => e.ClrType.Name == field.EntityTypeName || e.Name == field.EntityTypeName);
             if (entity is null) continue;
             var table = entity.GetTableName() ?? throw new InvalidOperationException($"Entity '{field.EntityTypeName}' is not mapped to a table.");
-            var column = field.SqlColumn ?? entity.GetProperties().FirstOrDefault(p => string.Equals(p.Name, field.Field, StringComparison.OrdinalIgnoreCase))?.GetColumnName()
+            var property = entity.GetProperties().FirstOrDefault(p => string.Equals(p.Name, field.Field, StringComparison.OrdinalIgnoreCase));
+            var column = field.SqlColumn ?? property?.GetColumnName()
                 ?? throw new InvalidOperationException($"Entity '{field.EntityTypeName}' has no property '{field.Field}'.");
             if (!System.Text.RegularExpressions.Regex.IsMatch(table + column, "^[A-Za-z0-9_]+$")) throw new InvalidOperationException("Unexpected characters in table or column name.");
 #pragma warning disable EF1002
-            await context.Database.ExecuteSqlRawAsync($"UPDATE \"{table}\" SET \"{column}\" = \"{column}\" + 1");
+            if (field.IsTimestamp)
+            {
+                var clrType = Nullable.GetUnderlyingType(property?.ClrType ?? typeof(DateTime)) ?? property?.ClrType ?? typeof(DateTime);
+                object moment = clrType == typeof(DateTimeOffset) ? DateTimeOffset.UtcNow.AddDays(1) : DateTime.UtcNow.AddDays(1);
+                await context.Database.ExecuteSqlRawAsync($"UPDATE \"{table}\" SET \"{column}\" = {{0}}", moment);
+            }
+            else
+                await context.Database.ExecuteSqlRawAsync($"UPDATE \"{table}\" SET \"{column}\" = \"{column}\" + 1");
 #pragma warning restore EF1002
             return;
         }

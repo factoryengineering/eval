@@ -7,7 +7,11 @@ public sealed record FieldDescriptor(string Name, string JsonType, string ClrTyp
 
 public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField, IReadOnlyList<FieldDescriptor>? WritableFields = null);
 
-public sealed record ServerOwnedField(string Field, string EntityTypeName, string? SqlColumn = null);
+public sealed record ServerOwnedField(string Field, string EntityTypeName, string? SqlColumn = null, string Kind = "counter", string Owner = "resource")
+{
+    public bool IsTimestamp => Kind == "timestamp";
+    public bool OwnedByParent => Owner == "parent";
+}
 
 public sealed record DomainDescriptor(
     string Name,
@@ -44,8 +48,11 @@ public sealed record DomainDescriptor(
         foreach (var field in WritableFields)
         {
             var distinct = field.Samples.Select(s => s.GetRawText()).Distinct().Count();
-            if (distinct < MinimumSamples)
-                throw new JsonException($"Field '{field.Name}' of domain '{Name}' has {distinct} distinct samples; at least {MinimumSamples} are required.");
+            var required = field.JsonType == "boolean" ? 2 : MinimumSamples;
+            if (distinct < required)
+                throw new JsonException($"Field '{field.Name}' of domain '{Name}' has {distinct} distinct samples; at least {required} are required.");
         }
+        if (WritableFields.All(field => field.JsonType == "boolean"))
+            throw new JsonException($"Domain '{Name}' needs at least one writable field that is not boolean, so that scenarios can build different bodies.");
     }
 }

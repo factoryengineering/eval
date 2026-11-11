@@ -58,4 +58,35 @@ public class CanonicalHashTests
 
         Assert.Equal($$"""{"id":"{{Id}}"}""", json);
     }
+
+    [Fact]
+    public void GivenBoolIntAndStrings_WhenHashing_ThenMatchesIndependentVector()
+    {
+        var hash = CanonicalHash.Compute([Field("id", Guid.Parse(Id)), Field("subject", "printer"), Field("priority", 3), Field("escalated", false), Field("category", "hardware")]);
+
+        Assert.Equal("gAPINFBMbGHqJg_k8PPr4DJ17lwoyhAxG6dP4XuoqWQ", hash);
+    }
+
+    [Fact]
+    public void GivenTwoDecimalWeightAsJsonElement_WhenHashing_ThenTrailingZeroIsDroppedAndMatchesIndependentVector()
+    {
+        var weight = System.Text.Json.JsonDocument.Parse("12.50").RootElement;
+
+        var hash = CanonicalHash.Compute([Field("id", Guid.Parse(Id)), Field("warehouseId", Guid.Parse(ParentId)), Field("reference", "SHP-1"), Field("weightKg", weight), Field("fragile", true)]);
+
+        Assert.Equal("8ePTWBSJbE1BJ4_2KT4YLk8E5fQ2ekZCJBaSWrwoS3o", hash);
+    }
+
+    [Theory]
+    [InlineData("100", "AZrFGZWOF5sjvSVuMl862ajEUHPxg5UAMxEvVGnLvfg")]
+    [InlineData("100.00", "AZrFGZWOF5sjvSVuMl862ajEUHPxg5UAMxEvVGnLvfg")]
+    [InlineData("0.05", "23WiMzJcVY3PuVva4kXQTcE3zaCfqGfqFd1GOp9VLTM")]
+    public void GivenEquivalentNumberSpellings_WhenHashing_ThenMatchesIndependentVector(string spelling, string expected)
+    {
+        var number = System.Text.Json.JsonDocument.Parse(spelling).RootElement;
+
+        var hash = CanonicalHash.Compute([Field("id", Guid.Parse(Id)), Field("weightKg", number)]);
+
+        Assert.Equal(expected, hash);
+    }
 }

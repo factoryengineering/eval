@@ -1,0 +1,15 @@
+{
+  "name": "support-ticket",
+  "collectionRoute": "/api/support-tickets",
+  "writableFields": [
+    { "name": "subject", "jsonType": "string", "clrType": "System.String", "samples": ["Printer offline", "Invoice mismatch", "Locked out of account"] },
+    { "name": "priority", "jsonType": "number", "clrType": "System.Int32", "samples": [2, 4, 5] },
+    { "name": "escalated", "jsonType": "boolean", "clrType": "System.Boolean", "samples": [false, true] },
+    { "name": "category", "jsonType": "string", "clrType": "System.String", "samples": ["hardware", "billing", "access"] }
+  ],
+  "serverOwnedFields": ["viewCount", "lastViewedAt"],
+  "serverOwned": [
+    { "field": "viewCount", "entityTypeName": "Ticket" },
+    { "field": "lastViewedAt", "entityTypeName": "Ticket", "kind": "timestamp" }
+  ]
+}
