@@ -5,7 +5,7 @@ namespace ApiConformance;
 
 public sealed record FieldDescriptor(string Name, string JsonType, string ClrType, IReadOnlyList<JsonElement> Samples);
 
-public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField);
+public sealed record ParentDescriptor(string CollectionRoute, string ChildCollectionRoute, string ParentBodyField, IReadOnlyList<FieldDescriptor>? WritableFields = null);
 
 public sealed record DomainDescriptor(
     string Name,

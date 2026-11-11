@@ -1,0 +1,8 @@
+{
+  "name": "blog",
+  "collectionRoute": "/api/blogs",
+  "writableFields": [
+    { "name": "name", "jsonType": "string", "clrType": "System.String", "samples": ["Gardening", "Cooking", "Travel"] }
+  ],
+  "serverOwnedFields": []
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "name": "replay-409",
+    "file": "Service.cs",
+    "find": "if (existing.Post.CreationHash != hash) throw ProblemException.Conflict(\"A post with this id exists with different content.\");",
+    "replace": "throw ProblemException.Conflict(\"A post with this id already exists.\");",
+    "expectedFailures": [
+      "create-replay-returns-same-success",
+      "create-replay-after-put-returns-current-representation"
+    ]
+  },
+  {
+    "name": "replay-compares-current-state",
+    "file": "Service.cs",
+    "find": "existing.Post.CreationHash != hash",
+    "replace": "existing.Post.ETag != hash",
+    "expectedFailures": [
+      "create-replay-after-put-returns-current-representation"
+    ]
+  },
+  {
+    "name": "server-generates-id",
+    "file": "Service.cs",
+    "find": "new Post { PublicId = body.Id,",
+    "replace": "new Post { PublicId = Guid.NewGuid(),",
+    "expectedFailures": [
+      "child-create-same-id-different-parent-conflicts",
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-returns-same-success",
+      "create-same-id-different-body-conflicts",
+      "create-succeeds"
+    ]
+  },
+  {
+    "name": "no-parent-check-on-replay",
+    "file": "Service.cs",
+    "find": "existing.Post.CreationHash != hash",
+    "replace": "existing.Post.CreationHash != Representation.Hash(body.Id, existing.OwnerPublicId, body.Title)",
+    "expectedFailures": [
+      "child-create-same-id-different-parent-conflicts"
+    ]
+  },
+  {
+    "name": "wrong-etag",
+    "file": "Service.cs",
+    "find": "Title = body.Title, ETag = hash, CreationHash = hash };\n        database.Posts.Add",
+    "replace": "Title = body.Title, ETag = \"1\", CreationHash = hash };\n        database.Posts.Add",
+    "expectedFailures": [
+      "etag-is-canonical-hash"
+    ]
+  },
+  {
+    "name": "missing-id-accepted",
+    "file": "Service.cs",
+    "find": "if (body.Id == Guid.Empty) throw ProblemException.BadRequest(\"The id is required.\");\n        if (body.BlogId",
+    "replace": "if (body.BlogId",
+    "expectedFailures": [
+      "create-missing-id-is-bad-request"
+    ]
+  }
+]

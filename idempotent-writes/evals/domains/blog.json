@@ -1,0 +1,16 @@
+{
+  "name": "blog-post",
+  "collectionRoute": "/api/posts",
+  "parent": {
+    "collectionRoute": "/api/blogs",
+    "childCollectionRoute": "/api/blogs/{parentId}/posts",
+    "parentBodyField": "blogId",
+    "writableFields": [
+      { "name": "name", "jsonType": "string", "clrType": "System.String", "samples": ["Gardening", "Cooking", "Travel"] }
+    ]
+  },
+  "writableFields": [
+    { "name": "title", "jsonType": "string", "clrType": "System.String", "samples": ["Planting tulips", "Pruning roses", "Composting basics"] }
+  ],
+  "serverOwnedFields": ["views"]
+}

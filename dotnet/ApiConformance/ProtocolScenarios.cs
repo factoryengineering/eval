@@ -1,0 +1,263 @@
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+
+namespace ApiConformance;
+
+public sealed record ScenarioResult(string Name, bool Passed, string? Failure, string Group);
+
+public sealed record Scenario(string Name, string Group, Func<ScenarioContext, Task> Run);
+
+public sealed class ScenarioFailure(string message) : Exception(message);
+
+public sealed class ScenarioContext(ApiHost host, DomainDescriptor domain)
+{
+    private readonly StringBuilder transcript = new();
+
+    public DomainDescriptor Domain { get; } = domain;
+    public string Transcript => transcript.ToString();
+
+    public async Task<HttpTrace> Send(HttpMethod method, string uri, string? json = null, IDictionary<string, string>? headers = null)
+    {
+        var trace = await HttpTrace.Send(host.Client, method, uri, json, headers);
+        transcript.AppendLine(trace.ToString());
+        return trace;
+    }
+
+    public string CreateRoute(Guid? parentId) =>
+        Domain.Parent is { } parent ? parent.ChildCollectionRoute.Replace("{parentId}", parentId.ToString()) : Domain.CollectionRoute;
+
+    public IReadOnlyList<JsonElement> Values(int sample) => Domain.WritableFields.Select(f => f.Samples[sample % f.Samples.Count]).ToList();
+
+    public string Body(Guid? id, Guid? parentId, IReadOnlyList<JsonElement> values, string? omitField = null)
+    {
+        var fields = new List<KeyValuePair<string, object>>();
+        if (id is { } idValue) fields.Add(new("id", idValue));
+        if (Domain.Parent is { } parent && parentId is { } parentValue) fields.Add(new(parent.ParentBodyField, parentValue));
+        for (var index = 0; index < Domain.WritableFields.Count; index++)
+            if (Domain.WritableFields[index].Name != omitField)
+                fields.Add(new(Domain.WritableFields[index].Name, values[index]));
+        return JsonSerializer.Serialize(fields.ToDictionary(f => f.Key, f => f.Value is Guid guid ? guid.ToString("D") : f.Value is JsonElement element ? element : f.Value));
+    }
+
+    public string Hash(Guid id, Guid? parentId, IReadOnlyList<JsonElement> values) => CanonicalHash.Compute(Domain, id, parentId, values);
+
+    public async Task<Guid?> CreateParent()
+    {
+        if (Domain.Parent is not { } parent) return null;
+        var id = Guid.NewGuid();
+        var fields = parent.WritableFields ?? [];
+        var body = JsonSerializer.Serialize(fields.ToDictionary(f => f.Name, f => (object)f.Samples[0]).Append(new("id", id.ToString("D"))).ToDictionary());
+        var trace = await Send(HttpMethod.Post, parent.CollectionRoute, body);
+        Require(trace.StatusCode == 201, "Creating the parent resource should return 201.");
+        return id;
+    }
+
+    public void Require(bool condition, string message)
+    {
+        if (!condition) throw new ScenarioFailure(message);
+    }
+
+    public void RequireStatus(HttpTrace trace, int expected, string what) =>
+        Require(trace.StatusCode == expected, $"{what}: expected {expected} but got {trace.StatusCode}.");
+
+    public void RequireSuccess(HttpTrace trace, string what) =>
+        Require(trace.StatusCode is >= 200 and < 300, $"{what}: expected a 2xx status but got {trace.StatusCode}.");
+
+    public void RequireRepresentation(HttpTrace trace, Guid id, Guid? parentId, IReadOnlyList<JsonElement> values, string what)
+    {
+        using var document = JsonDocument.Parse(trace.ResponseBody.Length == 0 ? "null" : trace.ResponseBody);
+        var root = document.RootElement;
+        Require(root.ValueKind == JsonValueKind.Object, $"{what}: the body is not a JSON object.");
+        foreach (var field in CanonicalHash.Fields(Domain, id, parentId, values))
+        {
+            var expected = field.Value is Guid guid ? guid.ToString("D") : ((JsonElement)field.Value).GetRawText();
+            Require(root.TryGetProperty(field.Key, out var actual) && (field.Value is Guid ? actual.GetString() == expected : actual.GetRawText() == expected),
+                $"{what}: field '{field.Key}' should be {expected}.");
+        }
+    }
+
+    public string RequireQuotedETag(HttpTrace trace, string what)
+    {
+        var etag = trace.Header("ETag");
+        Require(etag is not null && Regex.IsMatch(etag, "^\"[^\"]+\"$"), $"{what}: the ETag header must be present and quoted, got {etag ?? "none"}.");
+        return etag!;
+    }
+}
+
+public static class ProtocolScenarios
+{
+    public const string CreateGroup = "create";
+
+    public static IReadOnlyList<Scenario> Create(DomainDescriptor domain)
+    {
+        var scenarios = new List<Scenario>
+        {
+            new("create-succeeds", CreateGroup, CreateSucceeds),
+            new("create-replay-returns-same-success", CreateGroup, CreateReplayReturnsSameSuccess),
+            new("create-replay-after-put-returns-current-representation", CreateGroup, CreateReplayAfterPutReturnsCurrent),
+            new("create-same-id-different-body-conflicts", CreateGroup, CreateSameIdDifferentBodyConflicts),
+            new("create-missing-id-is-bad-request", CreateGroup, CreateMissingIdIsBadRequest),
+            new("create-invalid-body-is-bad-request", CreateGroup, CreateInvalidBodyIsBadRequest),
+            new("etag-is-canonical-hash", CreateGroup, ETagIsCanonicalHash)
+        };
+        if (domain.Parent is not null)
+        {
+            scenarios.Add(new("child-create-body-parent-must-match-route", CreateGroup, ChildCreateParentMustMatchRoute));
+            scenarios.Add(new("child-create-missing-parent-is-not-found", CreateGroup, ChildCreateMissingParentIsNotFound));
+            scenarios.Add(new("child-create-same-id-different-parent-conflicts", CreateGroup, ChildCreateSameIdDifferentParentConflicts));
+        }
+        return scenarios;
+    }
+
+    public static async Task<IReadOnlyList<ScenarioResult>> Run(IEnumerable<Scenario> scenarios, Func<ApiHost> startHost, DomainDescriptor domain)
+    {
+        var results = new List<ScenarioResult>();
+        foreach (var scenario in scenarios)
+        {
+            await using var host = startHost();
+            var context = new ScenarioContext(host, domain);
+            try
+            {
+                await scenario.Run(context);
+                results.Add(new ScenarioResult(scenario.Name, true, null, scenario.Group));
+            }
+            catch (Exception failure)
+            {
+                var message = failure is ScenarioFailure ? failure.Message : failure.ToString();
+                results.Add(new ScenarioResult(scenario.Name, false, message + Environment.NewLine + context.Transcript, scenario.Group));
+            }
+        }
+        return results;
+    }
+
+    private static async Task CreateSucceeds(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var values = context.Values(0);
+
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(id, parentId, values));
+
+        context.RequireStatus(created, 201, "First create");
+        var location = created.Header("Location");
+        context.Require(!string.IsNullOrEmpty(location), "First create must return a Location header.");
+        var etag = context.RequireQuotedETag(created, "First create");
+        context.RequireRepresentation(created, id, parentId, values, "First create body");
+        var read = await context.Send(HttpMethod.Get, location!);
+        context.RequireStatus(read, 200, "GET of the Location");
+        context.Require(read.Header("ETag") == etag, "GET must return the same ETag as the create response.");
+    }
+
+    private static async Task CreateReplayReturnsSameSuccess(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var values = context.Values(0);
+        var body = context.Body(id, parentId, values);
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), body);
+        context.RequireStatus(created, 201, "First create");
+
+        var replay = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), body);
+
+        context.RequireSuccess(replay, "Replay of the same create");
+        context.RequireRepresentation(replay, id, parentId, values, "Replay body");
+        context.Require(replay.Header("ETag") == created.Header("ETag"), "Replay must return the same ETag.");
+    }
+
+    private static async Task CreateReplayAfterPutReturnsCurrent(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var body = context.Body(id, parentId, context.Values(0));
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), body);
+        context.RequireStatus(created, 201, "First create");
+        var changed = context.Values(1);
+        var put = await context.Send(HttpMethod.Put, created.Header("Location")!, context.Body(id, parentId, changed),
+            new Dictionary<string, string> { ["If-Match"] = created.Header("ETag")! });
+        context.RequireSuccess(put, "PUT with If-Match from the create response");
+
+        var replay = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), body);
+
+        context.RequireSuccess(replay, "Replay after PUT");
+        context.RequireRepresentation(replay, id, parentId, changed, "Replay-after-PUT body");
+        context.Require(replay.Header("ETag") == $"\"{context.Hash(id, parentId, changed)}\"", "Replay after PUT must return the current ETag.");
+    }
+
+    private static async Task CreateSameIdDifferentBodyConflicts(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(id, parentId, context.Values(0)));
+        context.RequireStatus(created, 201, "First create");
+
+        var conflict = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(id, parentId, context.Values(1)));
+
+        context.RequireStatus(conflict, 409, "Same id with a different body");
+    }
+
+    private static async Task CreateMissingIdIsBadRequest(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+
+        var trace = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(null, parentId, context.Values(0)));
+
+        context.RequireStatus(trace, 400, "Create without a client id");
+    }
+
+    private static async Task CreateInvalidBodyIsBadRequest(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var omitted = context.Domain.WritableFields[0].Name;
+
+        var trace = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(Guid.NewGuid(), parentId, context.Values(0), omitted));
+
+        context.RequireStatus(trace, 400, $"Create without writable field '{omitted}'");
+    }
+
+    private static async Task ETagIsCanonicalHash(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var values = context.Values(2);
+
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(id, parentId, values));
+
+        context.RequireStatus(created, 201, "First create");
+        var expected = $"\"{context.Hash(id, parentId, values)}\"";
+        context.Require(created.Header("ETag") == expected, $"ETag must be the canonical hash {expected}, got {created.Header("ETag")}.");
+    }
+
+    private static async Task ChildCreateParentMustMatchRoute(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var otherParentId = Guid.NewGuid();
+
+        var trace = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(Guid.NewGuid(), otherParentId, context.Values(0)));
+
+        context.RequireStatus(trace, 400, "Body parent id differing from the route");
+    }
+
+    private static async Task ChildCreateMissingParentIsNotFound(ScenarioContext context)
+    {
+        var missingParentId = Guid.NewGuid();
+
+        var trace = await context.Send(HttpMethod.Post, context.CreateRoute(missingParentId), context.Body(Guid.NewGuid(), missingParentId, context.Values(0)));
+
+        context.RequireStatus(trace, 404, "Create under a missing parent");
+    }
+
+    private static async Task ChildCreateSameIdDifferentParentConflicts(ScenarioContext context)
+    {
+        var parentId = await context.CreateParent();
+        var otherParentId = await context.CreateParent();
+        var id = Guid.NewGuid();
+        var values = context.Values(0);
+        var created = await context.Send(HttpMethod.Post, context.CreateRoute(parentId), context.Body(id, parentId, values));
+        context.RequireStatus(created, 201, "First create");
+
+        var conflict = await context.Send(HttpMethod.Post, context.CreateRoute(otherParentId), context.Body(id, otherParentId, values));
+
+        context.RequireStatus(conflict, 409, "Same id under a different parent");
+    }
+}
