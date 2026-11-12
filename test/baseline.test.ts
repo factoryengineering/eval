@@ -29,3 +29,13 @@ test('runBaseline sends no system prompt and summarizes pass rate and failure bu
   assert.deepEqual(cell!.buckets, { 'rule given-when-then': 0.5, 'mutant survived': 0.5 });
   assert.match(report([cell!]), /pass 0\.50 \(n=2\).*rule given-when-then 0\.50/);
 });
+
+test('runBaseline records a provider failure as its own bucket and keeps going', async () => {
+  let n = 0;
+  const complete = async () => { if (n++ === 0) throw new Error('Command failed: devin\nmore'); return answer('ok')(); };
+  const trials = await runBaseline(config, cases, async () => [], complete, undefined, 1);
+  assert.equal(trials.length, 2);
+  assert.deepEqual(trials[0]!.failures, ['provider error: Command failed: devin']);
+  assert.equal(bucketOf(trials[0]!.failures[0]!), 'provider error');
+  assert.equal(trials[1]!.pass, true);
+});

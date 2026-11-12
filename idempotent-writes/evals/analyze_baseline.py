@@ -43,11 +43,15 @@ def cell(f, n):
 
 def main(path, per_scenario=False):
     run = json.load(open(path))
-    trials = [info(t) for t in run["trials"]]
+    errors = [t for t in run["trials"] if t["failures"] and t["failures"][0].startswith("provider error")]
+    trials = [info(t) for t in run["trials"] if t not in errors]
     models = [m for m in MODELS if any(t["m"] == m for t in trials)]
     out = []
     n21, n14, n7 = 21, 14, 7
     out.append(f"Signal threshold (one-sided binomial vs {NOISE} noise, alpha {ALPHA}): n=21 -> {crit(21)} failing trials; n=14 -> {crit(14)}; n=7 -> {crit(7)}; n=3 -> {crit(3)}. `*` marks a signal. A trial counts once per bucket.")
+    ec = collections.Counter((t["model"], LEVELS[t["caseId"].rsplit("-", 1)[1]]) for t in errors)
+    out.append("")
+    out.append("Provider errors (excluded from every count below; the model call failed after 3 attempts, not a model answer): " + ("; ".join(f"{m} level {l}: {c}" for (m, l), c in sorted(ec.items())) or "none") + ".")
     out.append("")
     out.append("Per-model summary (n = trials per cell; compile = compiled and hosted; create-failed = `create-succeeds` failed among compiled trials; mean failing = mean number of failing buckets among compiled trials):")
     out.append("")
@@ -132,4 +136,32 @@ def run_buckets(path):
 
 
 if __name__ == "__main__":
-    print(main(sys.argv[1], "--scenarios" in sys.argv))
+    if "--matrix" not in sys.argv:
+        print(main(sys.argv[1], "--scenarios" in sys.argv))
+
+
+def matrix(path):
+    """Compact signal matrix: per bucket, which models signal at each level (H haiku, S sonnet, L luna, W swe-2, F swe-2-flash).
+    L3c = level 3 restricted to compiled trials whose create passed (n varies; threshold for that n)."""
+    run = json.load(open(path))
+    trials = [info(t) for t in run["trials"] if not (t["failures"] and t["failures"][0].startswith("provider error"))]
+    ini = {"haiku-5.5": "H", "sonnet-5.5": "S", "gpt-6-luna": "L", "swe-2": "W", "swe-2-flash": "F"}
+    buckets = sorted({b for t in trials for b in t["buckets"]} | set(run_buckets(path)))
+    rows = ["| check bucket | L1 | L2 | L3 | L3c | failing trials L1/L2/L3 (all models) |", "|---|---|---|---|---|---|"]
+    for b in buckets:
+        cols = []
+        for lvl, cond in ((1, False), (2, False), (3, False), (3, True)):
+            s = ""
+            for m in MODELS:
+                ts = [t for t in trials if t["m"] == m and t["lvl"] == lvl and (not cond or (t["compiled"] and not t["create_failed"]))]
+                f = sum(b in t["buckets"] for t in ts)
+                if ts and signal(f, len(ts)):
+                    s += ini[m]
+            cols.append(s or "-")
+        tot = [sum(b in t["buckets"] for t in trials if t["lvl"] == l) for l in (1, 2, 3)]
+        rows.append(f"| {b} | " + " | ".join(cols) + f" | {tot[0]}/{tot[1]}/{tot[2]} |")
+    return "\n".join(rows)
+
+
+if __name__ == "__main__" and "--matrix" in sys.argv:
+    print(matrix(sys.argv[1]))

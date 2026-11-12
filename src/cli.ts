@@ -60,7 +60,14 @@ switch (cmd) {
     const cases = await loadCases(config.cases);
     const runner = new ExecRunner();
     const api = apiRunner();
-    const cache = flag('cache') ? await cachedComplete(flag('cache')!, (spec, system, prompt) => realComplete(spec, system, prompt)) : undefined;
+    const cache = flag('cache') ? await cachedComplete(flag('cache')!, async (spec, system, prompt) => {
+      for (let attempt = 1; ; attempt++) {
+        try { return await realComplete(spec, system, prompt); } catch (e) {
+          if (attempt >= 3) throw e;
+          console.error(`${spec.id}: provider call failed (attempt ${attempt}), retrying`);
+        }
+      }
+    }) : undefined;
     const trials = await runBaseline(config, cases, makeGrader(runner, undefined, api), cache, (t) =>
       console.error(`${t.model} ${t.caseId}#${t.trial} ${t.pass ? 'pass' : `FAIL ${t.failures.slice(0, 3).map((f) => f.slice(0, 60)).join(' | ')}${t.failures.length > 3 ? ` (+${t.failures.length - 3} more)` : ''}`}`), Number(flag('concurrency') ?? 4))
       .finally(() => { runner.close(); api.close(); });

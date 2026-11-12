@@ -84,7 +84,13 @@ export async function runBaseline(
   const worker = async () => {
     for (let i = next++; i < jobs.length; i = next++) {
       const { spec, c, n } = jobs[i]!;
-      const r = await complete(spec, '', c.prompt, n);
+      const r = await complete(spec, '', c.prompt, n).catch((e: unknown) => e instanceof Error ? e : new Error(String(e)));
+      if (r instanceof Error) {
+        // A provider failure is recorded as its own bucket (not a model failure) so one timeout does not lose the whole run.
+        trials[i] = { model: spec.id, line: '(baseline)', variant: 'without', caseId: c.id, trial: n, pass: false, failures: [`provider error: ${r.message.split('\n')[0]!.slice(0, 200)}`], inputTokens: 0, outputTokens: 0, estimated: true, output: '' };
+        onTrial(trials[i]!);
+        continue;
+      }
       const notes: GradeNotes = { notes: [] };
       const failures = await gradeFn(c, r.text, notes);
       trials[i] = {

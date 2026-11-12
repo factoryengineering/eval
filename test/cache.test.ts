@@ -24,3 +24,15 @@ test('completion cache generates once per model, prompt and trial, and persists 
   assert.equal(b.hits(), 1);
   assert.equal((await readFile(file, 'utf8')).trim().split('\n').length, 3);
 });
+
+test('completion cache records a final failure and replays it instead of retrying', async () => {
+  const file = join(await mkdtemp(join(tmpdir(), 'cache-')), 'c.jsonl');
+  let calls = 0;
+  const inner = async (): Promise<never> => { calls++; throw new Error('boom'); };
+  const a = await cachedComplete(file, inner);
+  await assert.rejects(a(spec, '', 'p', 0), /boom/);
+  await new Promise((r) => setTimeout(r, 50));
+  const b = await cachedComplete(file, inner);
+  await assert.rejects(b(spec, '', 'p', 0), /boom/);
+  assert.equal(calls, 1);
+});
