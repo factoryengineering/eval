@@ -43,6 +43,7 @@ def cell(f, n):
 
 def main(path, per_scenario=False):
     run = json.load(open(path))
+    run["trials"] = [t for t in run["trials"] if t["caseId"].rsplit("-", 1)[-1] in LEVELS]  # targeted cases (iteration A12) are analysed per line, not per level
     errors = [t for t in run["trials"] if t["failures"] and t["failures"][0].startswith("provider error")]
     trials = [info(t) for t in run["trials"] if t not in errors]
     models = [m for m in MODELS if any(t["m"] == m for t in trials)]

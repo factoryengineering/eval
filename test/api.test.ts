@@ -105,11 +105,13 @@ test('mock answers: naive blog code below level 3, the reference subject at leve
 const GROUPS = ['create', 'read', 'replace', 'delete', 'server-owned', 'race', 'lost-response', 'canonical'];
 
 test('generated cases: 3 domains x 3 levels per home, same prompts, ids and graded as designed', async () => {
-  const [idem, design] = await Promise.all([loadCases('idempotent-writes/evals/cases.json'), loadCases('api-design/evals/cases.json')]);
+  const [idemAll, designAll] = await Promise.all([loadCases('idempotent-writes/evals/cases.json'), loadCases('api-design/evals/cases.json')]);
+  const [idem, design] = [idemAll, designAll].map((cases) => cases.filter((c) => c.targets.length === 0));
+  assert.ok(idem && design);
   for (const cases of [idem, design]) {
     assert.equal(cases.length, 9);
     assert.deepEqual(cases.map((c) => c.id), ['blog', 'support', 'logistics'].flatMap((d) => ['naked', 'mild', 'specified'].map((l) => `${d}-${l}`)));
-    assert.ok(cases.every((c) => c.api && c.targets.length === 0 && c.prompt.startsWith('Implement an HTTP API with ASP.NET Core controllers')));
+    assert.ok(cases.every((c) => c.api && c.prompt.startsWith('Implement an HTTP API with ASP.NET Core controllers')));
   }
   assert.deepEqual(idem.map((c) => c.prompt), design.map((c) => c.prompt));
   const forbidden = /idempoten|ETag|If-Match|retr|concurren|tombstone|409|412|428/i;

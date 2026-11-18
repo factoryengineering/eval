@@ -148,7 +148,32 @@ export class ApiRunner {
 const MOCK_DIR = 'idempotent-writes/evals';
 const mockDomains: [string, string][] = [['/api/support-tickets', 'support'], ['/api/shipments', 'logistics'], ['/api/posts', 'blog']];
 
+type Reference = { good: string; bad: Record<string, string> };
+
+let targetedMock: Promise<Map<string, string>> | undefined;
+
+// Targeted cases: the mock answers the first bad reference (the good subject with the opinion under test removed), so the mock baseline shows exactly the line's checks failing.
+// A prompt shared by several cases (e.g. a targeted case whose prompt equals the naked one) is ambiguous and falls back to the generic mock.
+const targetedAnswers = (): Promise<Map<string, string>> =>
+  (targetedMock ??= (async () => {
+    const seen = new Map<string, Set<string>>();
+    const answers = new Map<string, string>();
+    for (const home of ['idempotent-writes', 'api-design']) {
+      const cases = JSON.parse(await readFile(`${home}/evals/cases.json`, 'utf8').catch(() => '[]')) as EvalCase[];
+      const refs = JSON.parse(await readFile(`${home}/evals/references.json`, 'utf8').catch(() => '{}')) as Record<string, Reference>;
+      for (const c of cases) {
+        (seen.get(c.prompt) ?? seen.set(c.prompt, new Set()).get(c.prompt)!).add(c.targets.length ? c.id : '');
+        const first = c.targets.length ? Object.values(refs[c.id]?.bad ?? {})[0] : undefined;
+        if (first) answers.set(c.prompt, first);
+      }
+    }
+    for (const [prompt, ids] of seen) if (ids.size > 1) answers.delete(prompt);
+    return answers;
+  })());
+
 export async function mockApiAnswer(prompt: string): Promise<string> {
+  const targeted = (await targetedAnswers()).get(prompt);
+  if (targeted) return targeted;
   const domain = mockDomains.find(([route]) => prompt.includes(route))?.[1] ?? 'blog';
   const specified = prompt.includes('If-Match');
   const dir = specified ? `${MOCK_DIR}/subjects/${domain}` : `${MOCK_DIR}/mock/${domain}`;

@@ -1,0 +1,190 @@
+[
+  {
+    "id": "missing-if-match-428",
+    "text": "A missing If-Match is 428, not the automatic 400, and a 400 for an invalid body still comes first; the header is declared required.",
+    "owns": [
+      "scenario:replace-without-if-match-is-precondition-required",
+      "scenario:replace-without-if-match-on-unknown-id-is-precondition-required",
+      "scenario:delete-without-if-match-is-precondition-required",
+      "scenario:child-replace-different-parent-without-if-match-is-precondition-required",
+      "scenario:replace-malformed-json-without-if-match-is-bad-request",
+      "scenario:replace-body-id-differs-from-route-without-if-match-is-bad-request",
+      "scenario:replace-unknown-id-with-invalid-body-without-if-match-is-bad-request",
+      "lint:write-ops-require-if-match",
+      "lint:routes-cover-descriptor",
+      "static:if-match-required"
+    ],
+    "needs": [
+      "create-id",
+      "create-status",
+      "conditional"
+    ],
+    "withheld": "428|precondition required|required|missing|automatic",
+    "mutants": {
+      "blog": [
+        "put-without-if-match-allowed",
+        "delete-without-if-match-allowed",
+        "missing-if-match-checked-before-validation"
+      ],
+      "support": [
+        "support-put-without-if-match-allowed"
+      ],
+      "logistics": [
+        "logistics-put-without-if-match-allowed",
+        "logistics-missing-if-match-checked-before-validation"
+      ]
+    }
+  },
+  {
+    "id": "status-contract-documented",
+    "text": "Document every status an action returns with ProducesResponseType, errors as ProblemDetails with application/problem+json.",
+    "owns": [
+      "lint:put-declares-412-and-404",
+      "lint:put-and-delete-declare-no-conflicting-gaps",
+      "lint:create-declares-201-200-409",
+      "lint:read-declares-304-404-410",
+      "lint:write-ops-declare-428",
+      "spec:spec-declares-observed-statuses",
+      "spec:spec-response-bodies-match-schemas",
+      "static:problem-details-used"
+    ],
+    "monitors": [
+      "lint:error-responses-problem-json",
+      "lint:delete-no-404"
+    ],
+    "needs": [
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned",
+      "put-update",
+      "put-428",
+      "mech-428",
+      "put-already",
+      "put-race",
+      "put-race-identical",
+      "delete-core",
+      "delete-428",
+      "delete-idem",
+      "errors"
+    ],
+    "withheld": "ProducesResponseType|OpenAPI|annotate|swagger|document",
+    "mutants": {
+      "blog": [
+        "openapi-delete-no-428",
+        "openapi-put-no-404",
+        "spec-put-409-undeclared",
+        "spec-response-schema-wrong-type"
+      ],
+      "support": [
+        "support-spec-delete-204-undeclared",
+        "support-spec-response-has-undeclared-property"
+      ],
+      "logistics": [
+        "logistics-openapi-delete-no-428"
+      ]
+    }
+  },
+  {
+    "id": "etag-on-reads",
+    "text": "GET returns the ETag header and honours If-None-Match with 304; the ETag is a SHA-256 hash.",
+    "owns": [
+      "scenario:read-returns-representation-and-etag",
+      "scenario:read-matching-if-none-match-is-not-modified",
+      "scenario:read-non-matching-if-none-match-returns-representation",
+      "static:etag-header-set",
+      "static:sha256-used-for-etag"
+    ],
+    "needs": [
+      "create-id",
+      "create-status",
+      "read-basic",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned"
+    ],
+    "withheld": "If-None-Match|304|not modified",
+    "mutants": {
+      "blog": [
+        "get-ignores-if-none-match",
+        "etag-header-missing",
+        "md5-etag"
+      ],
+      "support": [
+        "support-get-ignores-if-none-match"
+      ],
+      "logistics": [
+        "logistics-get-ignores-if-none-match"
+      ]
+    }
+  },
+  {
+    "id": "cancellation-token-passed",
+    "text": "Controllers take a CancellationToken and pass it to every database call.",
+    "owns": [
+      "static:cancellation-token-passed"
+    ],
+    "needs": [],
+    "withheld": "CancellationToken|cancel",
+    "mutants": {
+      "blog": [
+        "no-cancellation-token"
+      ],
+      "support": [
+        "support-no-cancellation-token"
+      ],
+      "logistics": [
+        "logistics-no-cancellation-token"
+      ]
+    }
+  },
+  {
+    "id": "contract-without-entities",
+    "text": "Controllers never return EF entities; request and response schemas never contain server-owned fields.",
+    "owns": [
+      "static:no-entity-in-responses",
+      "lint:no-server-owned-fields-in-schemas"
+    ],
+    "monitors": [
+      "static:no-int-id-in-dtos"
+    ],
+    "needs": [],
+    "withheld": "never return|response types|DTO|OpenAPI|leak|expose|JSON schema",
+    "mutants": {
+      "blog": [
+        "entity-returned",
+        "openapi-server-owned-in-request-schema"
+      ],
+      "support": [
+        "support-openapi-server-owned-in-request-schema"
+      ],
+      "logistics": [
+        "logistics-openapi-server-owned-in-request-schema"
+      ]
+    }
+  },
+  {
+    "id": "request-bodies-required",
+    "text": "Request bodies of POST and PUT are declared required (a non-nullable body parameter).",
+    "owns": [
+      "lint:request-bodies-required"
+    ],
+    "needs": [],
+    "withheld": "required|empty body|FromBody",
+    "mutants": {
+      "blog": [
+        "openapi-request-body-optional"
+      ],
+      "support": [
+        "support-openapi-request-body-optional"
+      ],
+      "logistics": [
+        "logistics-openapi-request-body-optional"
+      ]
+    }
+  }
+]

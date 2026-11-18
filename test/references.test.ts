@@ -128,14 +128,14 @@ for (const home of ['idempotent-writes', 'api-design']) {
   test(`${home}: every case has a reference solution and at least 8 bad references with a named reason`, async () => {
     const cases = await loadCases(`${home}/evals/cases.json`);
     assert.deepEqual(Object.keys(refs).sort(), cases.map((c) => c.id).sort());
-    const bad = Object.values(refs).flatMap((r) => Object.keys(r.bad));
+    const bad = Object.entries(refs).filter(([id]) => !cases.find((c) => c.id === id)!.targets.length).flatMap(([, r]) => Object.keys(r.bad));
     assert.ok(bad.length >= 8, `${home} has ${bad.length} bad references`);
     assert.deepEqual(bad.filter((name) => !apiReasons[home]![name]), [], 'every bad reference needs a named reason');
     assert.deepEqual(Object.keys(apiReasons[home]!).filter((name) => !bad.includes(name)), [], 'every named reason needs a bad reference');
   });
 
   test(`${home}: graders accept the good reference and reject every bad one for its named reason`, { skip: !existsSync(apiDll) && 'build with: npm run build:api' }, async () => {
-    const cases = await loadCases(`${home}/evals/cases.json`);
+    const cases = (await loadCases(`${home}/evals/cases.json`)).filter((c) => c.targets.length === 0);
     const runner = new ApiRunner(apiDll, undefined, 4);
     const api = cached(runner);
     const grade = async (c: (typeof cases)[number], text: string) => apiFailures(c, await api.run(c.api!.domain, sourcesOf(text)));
@@ -149,6 +149,54 @@ for (const home of ['idempotent-writes', 'api-design']) {
           const got = failingIds(failures);
           assert.ok(want.ids.every((id) => got.includes(id)), `${c.id}: "${name}" should fail ${want.ids.join(', ')}, got ${got.join(', ')}`);
           if (want.exact) assert.deepEqual([...got].sort(), [...want.ids].sort(), `${c.id}: "${name}" should fail only its named checks`);
+        }));
+      }));
+    } finally {
+      runner.close();
+    }
+  });
+}
+
+interface LineSpec { id: string; owns: string[]; monitors?: string[]; mutants: Record<string, string[]> }
+interface MutantSpec { name: string; expectedFailures: string[]; staticExpectedFailures?: string[]; lintExpectedFailures?: string[]; specExpectedFailures?: string[] }
+const failingOf = (m: MutantSpec) => [
+  ...m.expectedFailures.map((i) => `scenario:${i}`), ...(m.staticExpectedFailures ?? []).map((i) => `static:${i}`),
+  ...(m.lintExpectedFailures ?? []).map((i) => `lint:${i}`), ...(m.specExpectedFailures ?? []).map((i) => `spec:${i}`),
+];
+
+for (const home of ['idempotent-writes', 'api-design']) {
+  const refs = JSON.parse(readFileSync(`${home}/evals/references.json`, 'utf8')) as Record<string, { good: string; bad: Record<string, string> }>;
+  const lines = JSON.parse(readFileSync(`${home}/evals/lines.json`, 'utf8')) as LineSpec[];
+  const mutants = new Map((JSON.parse(readFileSync('idempotent-writes/evals/mutants.json', 'utf8')) as MutantSpec[]).map((m) => [m.name, m]));
+
+  test(`${home}: every targeted case has a good reference and a bad one for each of its line's mutants, each failing the line's owned checks`, async () => {
+    const cases = (await loadCases(`${home}/evals/cases.json`)).filter((c) => c.targets.length > 0);
+    assert.equal(cases.length, lines.length * 3);
+    for (const c of cases) {
+      const line = lines.find((l) => l.id === c.targets[0])!;
+      assert.deepEqual(Object.keys(refs[c.id]!.bad), line.mutants[c.api!.domain], `${c.id}: bad references are the line's mutants of the domain`);
+      const owned = new Set([...line.owns, ...(line.monitors ?? [])]);
+      for (const name of Object.keys(refs[c.id]!.bad)) assert.ok(failingOf(mutants.get(name)!).some((id) => line.owns.includes(id)), `${c.id}: mutant ${name} must fail an owned check`);
+      assert.deepEqual(c.api!.graded, [...line.owns, ...(line.monitors ?? [])]);
+      assert.ok(owned.size > 0);
+    }
+  });
+
+  test(`${home}: targeted cases accept the good reference and every bad one fails exactly the owned checks it breaks`, { skip: !existsSync(apiDll) && 'build with: npm run build:api' }, async () => {
+    const cases = (await loadCases(`${home}/evals/cases.json`)).filter((c) => c.targets.length > 0);
+    const runner = new ApiRunner(apiDll, undefined, 4);
+    const api = cached(runner);
+    const grade = async (c: (typeof cases)[number], text: string) => apiFailures(c, await api.run(c.api!.domain, sourcesOf(text)));
+    try {
+      await Promise.all(cases.map(async (c) => {
+        const line = lines.find((l) => l.id === c.targets[0])!;
+        const owned = new Set([...line.owns, ...(line.monitors ?? [])]);
+        assert.deepEqual(await grade(c, refs[c.id]!.good), [], `${c.id}: good reference should pass`);
+        await Promise.all(Object.entries(refs[c.id]!.bad).map(async ([name, code]) => {
+          const want = failingOf(mutants.get(name)!).filter((id) => owned.has(id)).map((id) => id.split(':')[1]!).sort();
+          const got = [...failingIds(await grade(c, code))].sort();
+          assert.deepEqual(got, want, `${c.id}: "${name}" should fail exactly the owned checks it breaks`);
+          assert.ok(got.length > 0, `${c.id}: "${name}" must fail the line`);
         }));
       }));
     } finally {

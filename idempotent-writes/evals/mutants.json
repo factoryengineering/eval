@@ -1196,5 +1196,294 @@
       "replace-body-id-differs-from-route-without-if-match-is-bad-request",
       "replace-unknown-id-with-invalid-body-without-if-match-is-bad-request"
     ]
+  },
+  {
+    "name": "support-replay-409",
+    "file": "Service.cs",
+    "find": "if (existing.CreationHash != hash) throw ProblemException.Conflict(\"A ticket with this id exists with different content.\");",
+    "replace": "throw ProblemException.Conflict(\"A ticket with this id already exists.\");",
+    "domain": "support",
+    "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-uppercase-guids-same-etag-and-identity",
+      "canonical-whitespace-does-not-change-etag",
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-replay-returns-same-success",
+      "duplicate-delivery-create-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "race-create-same-id-same-body-both-succeed"
+    ]
+  },
+  {
+    "name": "support-no-unique-index",
+    "file": "Entities.cs",
+    "find": "ticket.HasAlternateKey(entity => entity.PublicId);",
+    "replace": "ticket.HasIndex(entity => entity.PublicId);",
+    "domain": "support",
+    "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds",
+      "canonical-property-order-does-not-change-etag",
+      "canonical-whitespace-does-not-change-etag",
+      "create-replay-after-put-returns-current-representation",
+      "create-replay-of-tombstoned-is-gone",
+      "create-same-id-different-body-conflicts",
+      "duplicate-delivery-create-succeeds-twice",
+      "lost-response-create-retry-succeeds",
+      "race-create-same-id-different-body-one-conflicts",
+      "race-create-same-id-same-body-both-succeed"
+    ],
+    "staticExpectedFailures": [
+      "public-id-unique-index"
+    ]
+  },
+  {
+    "name": "support-no-concurrency-token",
+    "file": "Entities.cs",
+    "find": "ticket.Property(entity => entity.ETag).IsConcurrencyToken();",
+    "replace": "",
+    "domain": "support",
+    "expectedFailures": [
+      "race-put-different-body-same-etag-one-precondition-failed",
+      "race-put-then-delete-same-etag-is-serializable"
+    ],
+    "staticExpectedFailures": [
+      "etag-concurrency-token"
+    ]
+  },
+  {
+    "name": "support-creation-hash-mutable",
+    "file": "Entities.cs",
+    "find": "            ticket.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);\n",
+    "replace": "",
+    "domain": "support",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "creation-hash-immutable"
+    ]
+  },
+  {
+    "name": "support-put-stale-same-body-412",
+    "file": "Service.cs",
+    "find": "if (ticket.ETag == hash) return hash;\n",
+    "replace": "",
+    "domain": "support",
+    "expectedFailures": [
+      "duplicate-delivery-put-succeeds-twice",
+      "lost-response-put-retry-succeeds",
+      "race-put-same-body-same-etag-both-succeed",
+      "replace-identical-body-with-stale-if-match-succeeds",
+      "replace-retry-with-stale-if-match-same-body-succeeds"
+    ]
+  },
+  {
+    "name": "support-delete-404-on-repeat",
+    "file": "Service.cs",
+    "find": "var ticket = await ticketQuery.SingleOrDefaultAsync(cancellationToken);\n            if (ticket is null) return;",
+    "replace": "var ticket = await ticketQuery.SingleOrDefaultAsync(cancellationToken);\n            if (ticket is null)\n            {\n                var tombstoned = await database.Tickets.IgnoreQueryFilters().AnyAsync(stored => stored.PublicId == id, cancellationToken);\n                if (tombstoned) throw ProblemException.NotFound(\"The ticket was already deleted.\");\n                return;\n            }",
+    "domain": "support",
+    "expectedFailures": [
+      "delete-retry-is-no-content",
+      "duplicate-delivery-delete-succeeds-twice",
+      "lost-response-delete-retry-succeeds",
+      "race-delete-same-if-match-both-succeed"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "deleted-at-not-concurrency-token",
+    "file": "Entities.cs",
+    "find": "            post.Property(entity => entity.DeletedAt).IsConcurrencyToken();\n",
+    "replace": "",
+    "expectedFailures": [
+      "race-delete-then-put-same-etag-is-serializable"
+    ]
+  },
+  {
+    "name": "support-deleted-at-not-concurrency-token",
+    "file": "Entities.cs",
+    "find": "            ticket.Property(entity => entity.DeletedAt).IsConcurrencyToken();\n",
+    "replace": "",
+    "domain": "support",
+    "expectedFailures": [
+      "race-delete-then-put-same-etag-is-serializable"
+    ]
+  },
+  {
+    "name": "logistics-deleted-at-not-concurrency-token",
+    "file": "Entities.cs",
+    "find": "            consignment.Property(entity => entity.DeletedAt).IsConcurrencyToken();\n",
+    "replace": "",
+    "domain": "logistics",
+    "expectedFailures": [
+      "race-delete-then-put-same-etag-is-serializable"
+    ]
+  },
+  {
+    "name": "logistics-creation-hash-mutable",
+    "file": "Entities.cs",
+    "find": "            consignment.Property(entity => entity.CreationHash).Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Throw);\n",
+    "replace": "",
+    "domain": "logistics",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "creation-hash-immutable"
+    ]
+  },
+  {
+    "name": "support-put-without-if-match-allowed",
+    "file": "Service.cs",
+    "find": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        var hash = Representation.Hash(body);",
+    "replace": "ifMatch ??= \"*\";\n        var hash = Representation.Hash(body);",
+    "domain": "support",
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "Replace(Guid id, TicketBody body, [FromHeader(Name = \"If-Match\"), Required] string? ifMatch",
+        "replace": "Replace(Guid id, TicketBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
+      }
+    ],
+    "expectedFailures": [
+      "replace-without-if-match-is-precondition-required",
+      "replace-without-if-match-on-unknown-id-is-precondition-required"
+    ],
+    "lintExpectedFailures": [
+      "write-ops-require-if-match"
+    ]
+  },
+  {
+    "name": "logistics-put-without-if-match-allowed",
+    "file": "Service.cs",
+    "find": "if (ifMatch is null) throw ProblemException.PreconditionRequired(\"The If-Match header is required.\");\n        var hash = Representation.Hash(body);\n        for (var attempt = 0; ; attempt++)\n        {\n            var (consignment, ownerId)",
+    "replace": "ifMatch ??= \"*\";\n        var hash = Representation.Hash(body);\n        for (var attempt = 0; ; attempt++)\n        {\n            var (consignment, ownerId)",
+    "domain": "logistics",
+    "extra": [
+      {
+        "file": "Controllers.cs",
+        "find": "Replace(Guid id, ConsignmentBody body, [FromHeader(Name = \"If-Match\"), Required] string? ifMatch",
+        "replace": "Replace(Guid id, ConsignmentBody body, [FromHeader(Name = \"If-Match\")] string? ifMatch"
+      }
+    ],
+    "expectedFailures": [
+      "child-replace-different-parent-without-if-match-is-precondition-required",
+      "replace-without-if-match-is-precondition-required",
+      "replace-without-if-match-on-unknown-id-is-precondition-required"
+    ],
+    "lintExpectedFailures": [
+      "write-ops-require-if-match"
+    ]
+  },
+  {
+    "name": "support-no-cancellation-token",
+    "file": "Controllers.cs",
+    "find": "await tickets.Delete(id, ifMatch, cancellationToken);",
+    "replace": "await tickets.Delete(id, ifMatch, CancellationToken.None);",
+    "domain": "support",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "cancellation-token-passed"
+    ]
+  },
+  {
+    "name": "logistics-no-cancellation-token",
+    "file": "Controllers.cs",
+    "find": "await consignments.Delete(id, ifMatch, cancellationToken);",
+    "replace": "await consignments.Delete(id, ifMatch, CancellationToken.None);",
+    "domain": "logistics",
+    "expectedFailures": [],
+    "staticExpectedFailures": [
+      "cancellation-token-passed"
+    ]
+  },
+  {
+    "name": "support-openapi-server-owned-in-request-schema",
+    "file": "Service.cs",
+    "find": "public record TicketBody(Guid Id, string Subject, int Priority, bool Escalated, string Category);",
+    "replace": "public record TicketBody(Guid Id, string Subject, int Priority, bool Escalated, string Category, int ViewCount = 0);",
+    "domain": "support",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "no-server-owned-fields-in-schemas"
+    ]
+  },
+  {
+    "name": "logistics-openapi-server-owned-in-request-schema",
+    "file": "Service.cs",
+    "find": "public record ConsignmentBody(Guid Id, Guid WarehouseId, string Reference, decimal WeightKg, bool Fragile);",
+    "replace": "public record ConsignmentBody(Guid Id, Guid WarehouseId, string Reference, decimal WeightKg, bool Fragile, int DownloadCount = 0);",
+    "domain": "logistics",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "no-server-owned-fields-in-schemas"
+    ]
+  },
+  {
+    "name": "support-openapi-request-body-optional",
+    "file": "Controllers.cs",
+    "find": "Create(TicketBody body, CancellationToken",
+    "replace": "Create([FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] TicketBody? body, CancellationToken",
+    "domain": "support",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "request-bodies-required"
+    ]
+  },
+  {
+    "name": "logistics-openapi-request-body-optional",
+    "file": "Controllers.cs",
+    "find": "Create(Guid warehouseId, ConsignmentBody body, CancellationToken",
+    "replace": "Create(Guid warehouseId, [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] ConsignmentBody? body, CancellationToken",
+    "domain": "logistics",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "request-bodies-required"
+    ]
+  },
+  {
+    "name": "support-get-ignores-if-none-match",
+    "file": "Controllers.cs",
+    "find": "if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n",
+    "replace": "",
+    "domain": "support",
+    "expectedFailures": [
+      "read-matching-if-none-match-is-not-modified"
+    ]
+  },
+  {
+    "name": "logistics-get-ignores-if-none-match",
+    "file": "Controllers.cs",
+    "find": "if (Representation.Unquote(Request.Headers.IfNoneMatch.ToString()) == stored.ETag) return StatusCode(304);\n",
+    "replace": "",
+    "domain": "logistics",
+    "expectedFailures": [
+      "read-matching-if-none-match-is-not-modified"
+    ]
+  },
+  {
+    "name": "logistics-openapi-delete-no-428",
+    "file": "Controllers.cs",
+    "find": "    [HttpDelete(\"api/shipments/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status428PreconditionRequired, \"application/problem+json\")]\n",
+    "replace": "    [HttpDelete(\"api/shipments/{id:guid}\")]\n    [ProducesResponseType(StatusCodes.Status204NoContent)]\n    [ProducesResponseType<ProblemDetails>(StatusCodes.Status412PreconditionFailed, \"application/problem+json\")]\n",
+    "domain": "logistics",
+    "expectedFailures": [],
+    "lintExpectedFailures": [
+      "write-ops-declare-428"
+    ],
+    "specExpectedFailures": [
+      "spec-declares-observed-statuses"
+    ]
+  },
+  {
+    "name": "logistics-etag-no-nfc",
+    "file": "Service.cs",
+    "find": "foreach (var character in text.Normalize(NormalizationForm.FormC))",
+    "replace": "foreach (var character in text)",
+    "domain": "logistics",
+    "expectedFailures": [
+      "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds"
+    ]
   }
 ]

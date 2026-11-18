@@ -1,0 +1,282 @@
+[
+  {
+    "id": "client-id-replay",
+    "text": "Create takes a client-chosen GUID id in the POST body; replaying the same create succeeds, only different content under the same id is a conflict.",
+    "owns": [
+      "scenario:create-succeeds",
+      "scenario:create-replay-returns-same-success",
+      "scenario:create-same-id-different-body-conflicts",
+      "scenario:create-missing-id-is-bad-request",
+      "scenario:lost-response-create-retry-succeeds",
+      "scenario:duplicate-delivery-create-succeeds-twice",
+      "scenario:lost-response-parent-create-retry-succeeds"
+    ],
+    "needs": [
+      "retry",
+      "create-status",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned"
+    ],
+    "withheld": "client[- ]chos|never generates|server never|replay|idempoten|409",
+    "mutants": {
+      "blog": [
+        "server-generates-id",
+        "replay-409"
+      ],
+      "support": [
+        "support-replay-409"
+      ],
+      "logistics": [
+        "logistics-replay-409"
+      ]
+    }
+  },
+  {
+    "id": "etag-content-hash",
+    "text": "The ETag is a canonical hash of the client-writable fields only; server-owned values never enter it and spellings of the same content hash alike.",
+    "owns": [
+      "scenario:server-owned-change-does-not-change-etag",
+      "scenario:server-owned-change-does-not-invalidate-if-match",
+      "scenario:server-owned-field-is-absent-from-representation",
+      "scenario:canonical-property-order-does-not-change-etag",
+      "scenario:canonical-whitespace-does-not-change-etag",
+      "scenario:canonical-uppercase-guids-same-etag-and-identity",
+      "scenario:canonical-different-ids-have-different-etags",
+      "scenario:canonical-changing-any-writable-field-changes-etag",
+      "scenario:canonical-number-spellings-same-etag",
+      "scenario:canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds"
+    ],
+    "monitors": [
+      "static:server-owned-not-concurrency-token"
+    ],
+    "needs": [
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-loose",
+      "put-update",
+      "put-428",
+      "put-already"
+    ],
+    "withheld": "canonical|normaliz|NFC|spelling|SHA-256|base64|unpadded|server-owned values|never part|writable|escape",
+    "mutants": {
+      "blog": [
+        "hash-includes-server-owned",
+        "etag-property-order-sensitive"
+      ],
+      "support": [
+        "support-etag-property-order-sensitive",
+        "support-server-owned-concurrency-token"
+      ],
+      "logistics": [
+        "logistics-etag-no-nfc"
+      ]
+    }
+  },
+  {
+    "id": "unique-id-insert-first",
+    "text": "A unique index on the public id; create by inserting and classifying the unique violation, never by checking first.",
+    "owns": [
+      "static:public-id-unique-index",
+      "static:no-check-then-insert",
+      "scenario:race-create-same-id-same-body-both-succeed",
+      "scenario:race-create-same-id-different-body-one-conflicts",
+      "scenario:race-child-create-same-id-different-parent-one-conflicts"
+    ],
+    "needs": [
+      "retry",
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned"
+    ],
+    "withheld": "unique|insert|check first|checking|constraint|alternate key|index",
+    "mutants": {
+      "blog": [
+        "no-unique-index",
+        "check-then-insert"
+      ],
+      "support": [
+        "support-no-unique-index"
+      ],
+      "logistics": [
+        "logistics-check-then-insert"
+      ]
+    }
+  },
+  {
+    "id": "etag-concurrency-token",
+    "text": "The ETag column is the EF concurrency token; a row version or sequence number is never the ETag.",
+    "owns": [
+      "static:etag-concurrency-token",
+      "static:no-rowversion-etag"
+    ],
+    "needs": [
+      "retry",
+      "ifmatch-etag-generic"
+    ],
+    "withheld": "concurrency token|rowversion|row version|IsConcurrencyToken|optimistic|hash|\\bSHA\\b|compare-and-set",
+    "mutants": {
+      "blog": [
+        "no-concurrency-token",
+        "rowversion-etag"
+      ],
+      "support": [
+        "support-no-concurrency-token"
+      ],
+      "logistics": [
+        "logistics-no-concurrency-token"
+      ]
+    }
+  },
+  {
+    "id": "creation-hash-immutable",
+    "text": "Store the hash of the create request in a non-null column that is never updated after insert, so a replay can be told from a conflict.",
+    "owns": [
+      "static:creation-hash-immutable"
+    ],
+    "needs": [
+      "create-id",
+      "create-status",
+      "create-replay",
+      "put-update"
+    ],
+    "withheld": "creation hash|immutab|AfterSaveBehavior|never updated|fingerprint|hash",
+    "mutants": {
+      "blog": [
+        "creation-hash-mutable"
+      ],
+      "support": [
+        "support-creation-hash-mutable"
+      ],
+      "logistics": [
+        "logistics-creation-hash-mutable"
+      ]
+    }
+  },
+  {
+    "id": "tombstone-compare-and-set",
+    "text": "Delete sets a tombstone behind a global query filter, and the tombstone counts as a state change for compare-and-set, so DELETE and PUT from the same ETag serialise.",
+    "owns": [
+      "static:tombstone-property",
+      "scenario:delete-with-current-if-match-tombstones",
+      "scenario:replace-tombstoned-is-gone",
+      "scenario:race-put-then-delete-same-etag-is-serializable",
+      "scenario:race-delete-then-put-same-etag-is-serializable",
+      "scenario:race-parent-delete-same-if-match-tombstones-children-once"
+    ],
+    "needs": [
+      "retry",
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned",
+      "put-update",
+      "put-428",
+      "put-already",
+      "put-race",
+      "delete-core",
+      "delete-428",
+      "delete-idem"
+    ],
+    "withheld": "tombstone|query filter|\\bsoft[- ]?delet|DeletedAt|global filter|compare-and-set|state change|concurrency token",
+    "mutants": {
+      "blog": [
+        "no-tombstone-filter",
+        "deleted-at-not-concurrency-token",
+        "tombstone-hard-deletes"
+      ],
+      "support": [
+        "support-deleted-at-not-concurrency-token"
+      ],
+      "logistics": [
+        "logistics-deleted-at-not-concurrency-token"
+      ]
+    }
+  },
+  {
+    "id": "put-replay-success",
+    "text": "A PUT whose change is already applied succeeds (204 with the ETag); 412 is only for a real conflict.",
+    "owns": [
+      "scenario:replace-retry-with-stale-if-match-same-body-succeeds",
+      "scenario:replace-identical-body-with-stale-if-match-succeeds",
+      "scenario:race-put-same-body-same-etag-both-succeed",
+      "scenario:lost-response-put-retry-succeeds",
+      "scenario:duplicate-delivery-put-succeeds-twice"
+    ],
+    "needs": [
+      "retry",
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned",
+      "put-update",
+      "put-428",
+      "put-race"
+    ],
+    "withheld": "already applied|identical|no-op|changes nothing|treated as|never 412",
+    "mutants": {
+      "blog": [
+        "put-stale-same-body-412"
+      ],
+      "support": [
+        "support-put-stale-same-body-412"
+      ],
+      "logistics": [
+        "logistics-put-stale-same-body-412"
+      ]
+    }
+  },
+  {
+    "id": "delete-idempotent",
+    "text": "DELETE of an unknown or already deleted item is 204, never 404.",
+    "owns": [
+      "scenario:delete-retry-is-no-content",
+      "scenario:delete-unknown-id-is-no-content",
+      "scenario:race-delete-same-if-match-both-succeed",
+      "scenario:lost-response-delete-retry-succeeds",
+      "scenario:duplicate-delivery-delete-succeeds-twice"
+    ],
+    "needs": [
+      "retry",
+      "create-id",
+      "create-status",
+      "create-replay",
+      "read-basic",
+      "read-etag",
+      "etag-format",
+      "etag-spellings",
+      "etag-server-owned",
+      "delete-core",
+      "delete-428"
+    ],
+    "withheld": "never 404|already deleted|idempoten|unknown or already",
+    "mutants": {
+      "blog": [
+        "delete-404-on-repeat"
+      ],
+      "support": [
+        "support-delete-404-on-repeat"
+      ],
+      "logistics": [
+        "logistics-delete-404-on-repeat"
+      ]
+    }
+  }
+]

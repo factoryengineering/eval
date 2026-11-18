@@ -65,6 +65,112 @@ BAD = {
     },
 }
 
+# Candidate skill lines (iteration A12). Each line owns checks (graded entries of its targeted cases), names the prerequisite blocks its prompt states
+# (see BLOCK_ORDER and blocks()), the keywords of the opinion the prompt must withhold (regex, tested), and the mutants proving the checks per domain.
+# `monitors` are owned checks that never failed in the baseline (kept in the graded set as regression monitors, not as reasons for a line).
+def S(*ids): return [f"scenario:{i}" for i in ids]
+def T(*ids): return [f"static:{i}" for i in ids]
+def L(*ids): return [f"lint:{i}" for i in ids]
+def P(*ids): return [f"spec:{i}" for i in ids]
+
+ETAG = ["etag-format", "etag-spellings", "etag-server-owned"]
+CORE = ["create-id", "create-status", "create-replay", "read-basic", "read-etag"]
+
+LINES = {
+    "idempotent-writes": [
+        {"id": "client-id-replay", "text": "Create takes a client-chosen GUID id in the POST body; replaying the same create succeeds, only different content under the same id is a conflict.",
+         "owns": S("create-succeeds", "create-replay-returns-same-success", "create-same-id-different-body-conflicts", "create-missing-id-is-bad-request", "lost-response-create-retry-succeeds",
+                   "duplicate-delivery-create-succeeds-twice", "lost-response-parent-create-retry-succeeds"),
+         "needs": ["retry", "create-status", "read-etag"] + ETAG,
+         "withheld": r"client[- ]chos|never generates|server never|replay|idempoten|409",
+         "mutants": {"blog": ["server-generates-id", "replay-409"], "support": ["support-replay-409"], "logistics": ["logistics-replay-409"]}},
+        {"id": "etag-content-hash", "text": "The ETag is a canonical hash of the client-writable fields only; server-owned values never enter it and spellings of the same content hash alike.",
+         "owns": S("server-owned-change-does-not-change-etag", "server-owned-change-does-not-invalidate-if-match", "server-owned-field-is-absent-from-representation",
+                   "canonical-property-order-does-not-change-etag", "canonical-whitespace-does-not-change-etag", "canonical-uppercase-guids-same-etag-and-identity",
+                   "canonical-different-ids-have-different-etags", "canonical-changing-any-writable-field-changes-etag", "canonical-number-spellings-same-etag",
+                   "canonical-nfd-strings-same-etag-as-nfc-and-replay-succeeds"),
+         "monitors": T("server-owned-not-concurrency-token"),
+         "needs": ["create-id", "create-status", "create-replay", "read-basic", "read-etag", "etag-loose", "put-update", "put-428", "put-already"],
+         "withheld": r"canonical|normaliz|NFC|spelling|SHA-256|base64|unpadded|server-owned values|never part|writable|escape",
+         "mutants": {"blog": ["hash-includes-server-owned", "etag-property-order-sensitive"], "support": ["support-etag-property-order-sensitive", "support-server-owned-concurrency-token"],
+                     "logistics": ["logistics-etag-no-nfc"]}},
+        {"id": "unique-id-insert-first", "text": "A unique index on the public id; create by inserting and classifying the unique violation, never by checking first.",
+         "owns": T("public-id-unique-index", "no-check-then-insert") + S("race-create-same-id-same-body-both-succeed", "race-create-same-id-different-body-one-conflicts",
+                                                                          "race-child-create-same-id-different-parent-one-conflicts"),
+         "needs": ["retry"] + CORE + ETAG,
+         "withheld": r"unique|insert|check first|checking|constraint|alternate key|index",
+         "mutants": {"blog": ["no-unique-index", "check-then-insert"], "support": ["support-no-unique-index"], "logistics": ["logistics-check-then-insert"]}},
+        {"id": "etag-concurrency-token", "text": "The ETag column is the EF concurrency token; a row version or sequence number is never the ETag.",
+         "owns": T("etag-concurrency-token", "no-rowversion-etag"),
+         "needs": ["retry", "ifmatch-etag-generic"],
+         "withheld": r"concurrency token|rowversion|row version|IsConcurrencyToken|optimistic|hash|\bSHA\b|compare-and-set",
+         "mutants": {"blog": ["no-concurrency-token", "rowversion-etag"], "support": ["support-no-concurrency-token"], "logistics": ["logistics-no-concurrency-token"]}},
+        {"id": "creation-hash-immutable", "text": "Store the hash of the create request in a non-null column that is never updated after insert, so a replay can be told from a conflict.",
+         "owns": T("creation-hash-immutable"),
+         "needs": ["create-id", "create-status", "create-replay", "put-update"],
+         "withheld": r"creation hash|immutab|AfterSaveBehavior|never updated|fingerprint|hash",
+         "mutants": {"blog": ["creation-hash-mutable"], "support": ["support-creation-hash-mutable"], "logistics": ["logistics-creation-hash-mutable"]}},
+        {"id": "tombstone-compare-and-set", "text": "Delete sets a tombstone behind a global query filter, and the tombstone counts as a state change for compare-and-set, so DELETE and PUT from the same ETag serialise.",
+         "owns": T("tombstone-property") + S("delete-with-current-if-match-tombstones", "replace-tombstoned-is-gone", "race-put-then-delete-same-etag-is-serializable",
+                                              "race-delete-then-put-same-etag-is-serializable", "race-parent-delete-same-if-match-tombstones-children-once"),
+         "needs": ["retry"] + CORE + ETAG + ["put-update", "put-428", "put-already", "put-race", "delete-core", "delete-428", "delete-idem"],
+         "withheld": r"tombstone|query filter|\bsoft[- ]?delet|DeletedAt|global filter|compare-and-set|state change|concurrency token",
+         "mutants": {"blog": ["no-tombstone-filter", "deleted-at-not-concurrency-token", "tombstone-hard-deletes"], "support": ["support-deleted-at-not-concurrency-token"],
+                     "logistics": ["logistics-deleted-at-not-concurrency-token"]}},
+        {"id": "put-replay-success", "text": "A PUT whose change is already applied succeeds (204 with the ETag); 412 is only for a real conflict.",
+         "owns": S("replace-retry-with-stale-if-match-same-body-succeeds", "replace-identical-body-with-stale-if-match-succeeds", "race-put-same-body-same-etag-both-succeed",
+                   "lost-response-put-retry-succeeds", "duplicate-delivery-put-succeeds-twice"),
+         "needs": ["retry"] + CORE + ETAG + ["put-update", "put-428", "put-race"],
+         "withheld": r"already applied|identical|no-op|changes nothing|treated as|never 412",
+         "mutants": {"blog": ["put-stale-same-body-412"], "support": ["support-put-stale-same-body-412"], "logistics": ["logistics-put-stale-same-body-412"]}},
+        {"id": "delete-idempotent", "text": "DELETE of an unknown or already deleted item is 204, never 404.",
+         "owns": S("delete-retry-is-no-content", "delete-unknown-id-is-no-content", "race-delete-same-if-match-both-succeed", "lost-response-delete-retry-succeeds",
+                   "duplicate-delivery-delete-succeeds-twice"),
+         "needs": ["retry"] + CORE + ETAG + ["delete-core", "delete-428"],
+         "withheld": r"never 404|already deleted|idempoten|unknown or already",
+         "mutants": {"blog": ["delete-404-on-repeat"], "support": ["support-delete-404-on-repeat"], "logistics": ["logistics-delete-404-on-repeat"]}},
+    ],
+    "api-design": [
+        {"id": "missing-if-match-428", "text": "A missing If-Match is 428, not the automatic 400, and a 400 for an invalid body still comes first; the header is declared required.",
+         "owns": S("replace-without-if-match-is-precondition-required", "replace-without-if-match-on-unknown-id-is-precondition-required", "delete-without-if-match-is-precondition-required",
+                   "child-replace-different-parent-without-if-match-is-precondition-required", "replace-malformed-json-without-if-match-is-bad-request",
+                   "replace-body-id-differs-from-route-without-if-match-is-bad-request", "replace-unknown-id-with-invalid-body-without-if-match-is-bad-request")
+                 + L("write-ops-require-if-match", "routes-cover-descriptor") + T("if-match-required"),
+         "needs": ["create-id", "create-status", "conditional"],
+         "withheld": r"428|precondition required|required|missing|automatic",
+         "mutants": {"blog": ["put-without-if-match-allowed", "delete-without-if-match-allowed", "missing-if-match-checked-before-validation"],
+                     "support": ["support-put-without-if-match-allowed"], "logistics": ["logistics-put-without-if-match-allowed", "logistics-missing-if-match-checked-before-validation"]}},
+        {"id": "status-contract-documented", "text": "Document every status an action returns with ProducesResponseType, errors as ProblemDetails with application/problem+json.",
+         "owns": L("put-declares-412-and-404", "put-and-delete-declare-no-conflicting-gaps", "create-declares-201-200-409", "read-declares-304-404-410", "write-ops-declare-428")
+                 + P("spec-declares-observed-statuses", "spec-response-bodies-match-schemas") + T("problem-details-used"),
+         "monitors": L("error-responses-problem-json", "delete-no-404"),
+         "needs": CORE + ETAG + ["put-update", "put-428", "mech-428", "put-already", "put-race", "put-race-identical", "delete-core", "delete-428", "delete-idem", "errors"],
+         "withheld": r"ProducesResponseType|OpenAPI|annotate|swagger|document",
+         "mutants": {"blog": ["openapi-delete-no-428", "openapi-put-no-404", "spec-put-409-undeclared", "spec-response-schema-wrong-type"],
+                     "support": ["support-spec-delete-204-undeclared", "support-spec-response-has-undeclared-property"], "logistics": ["logistics-openapi-delete-no-428"]}},
+        {"id": "etag-on-reads", "text": "GET returns the ETag header and honours If-None-Match with 304; the ETag is a SHA-256 hash.",
+         "owns": S("read-returns-representation-and-etag", "read-matching-if-none-match-is-not-modified", "read-non-matching-if-none-match-returns-representation")
+                 + T("etag-header-set", "sha256-used-for-etag"),
+         "needs": ["create-id", "create-status", "read-basic"] + ETAG,
+         "withheld": r"If-None-Match|304|not modified",
+         "mutants": {"blog": ["get-ignores-if-none-match", "etag-header-missing", "md5-etag"], "support": ["support-get-ignores-if-none-match"],
+                     "logistics": ["logistics-get-ignores-if-none-match"]}},
+        {"id": "cancellation-token-passed", "text": "Controllers take a CancellationToken and pass it to every database call.",
+         "owns": T("cancellation-token-passed"), "needs": [],
+         "withheld": r"CancellationToken|cancel",
+         "mutants": {"blog": ["no-cancellation-token"], "support": ["support-no-cancellation-token"], "logistics": ["logistics-no-cancellation-token"]}},
+        {"id": "contract-without-entities", "text": "Controllers never return EF entities; request and response schemas never contain server-owned fields.",
+         "owns": T("no-entity-in-responses") + L("no-server-owned-fields-in-schemas"), "monitors": T("no-int-id-in-dtos"), "needs": [],
+         "withheld": r"never return|response types|DTO|OpenAPI|leak|expose|JSON schema",
+         "mutants": {"blog": ["entity-returned", "openapi-server-owned-in-request-schema"], "support": ["support-openapi-server-owned-in-request-schema"],
+                     "logistics": ["logistics-openapi-server-owned-in-request-schema"]}},
+        {"id": "request-bodies-required", "text": "Request bodies of POST and PUT are declared required (a non-nullable body parameter).",
+         "owns": L("request-bodies-required"), "needs": [],
+         "withheld": r"required|empty body|FromBody",
+         "mutants": {"blog": ["openapi-request-body-optional"], "support": ["support-openapi-request-body-optional"], "logistics": ["logistics-openapi-request-body-optional"]}},
+    ],
+}
+
 CLR = {"System.String": "string", "System.Int32": "int", "System.Decimal": "decimal", "System.Boolean": "bool"}
 
 
@@ -166,6 +272,66 @@ def prompt(name, level):
     return "\n".join(body)
 
 
+
+BLOCK_ORDER = ["retry", "create-id", "create-status", "create-replay", "read-basic", "read-etag", "etag-format", "etag-spellings", "etag-server-owned", "etag-loose",
+               "ifmatch-etag-generic", "conditional", "put-update", "put-428", "mech-428", "put-already", "put-race", "put-race-identical", "delete-core", "delete-428",
+               "delete-idem", "errors"]
+
+
+def blocks(name, d):
+    """Prerequisite conventions of the targeted cases: plain prose clauses, each stating one convention (worded as in the level 3 requirements)."""
+    meta = DOMAINS[name]
+    n, p = meta["noun"], d.get("parent")
+    create_child = (
+        f" The body's {d['parent']['parentBodyField']} must equal the {meta['parent']} in the route (otherwise 400); a missing {meta['parent']} is 404 and a deleted one is 410; "
+        f"the same id under a different {meta['parent']} is 409."
+        if p else ""
+    )
+    delete_child = f" Deleting a {meta['parent']} also deletes its {meta['plural']} in the same transaction." if p else ""
+    immutable = f" Moving a {n} to another {meta['parent']} through PUT is 409." if p else ""
+    return {
+        "retry": RETRY,
+        "create-id": "Create: the client chooses the GUID `id` and sends it in the POST body; the server never generates public ids.",
+        "create-status": "The first successful create returns 201 with a `Location` header and an `ETag` header, and the body is the representation.",
+        "create-replay": "Repeating a create with the same id and the same content succeeds (200 with the current representation and ETag), a replay is never an error. "
+                         f"The same id with different content is 409; a missing id or an invalid body is 400; an id that belongs to a deleted item is 410.{create_child}",
+        "read-basic": "Read: GET returns 200 with the representation; an unknown id is 404 and a deleted item is 410.",
+        "read-etag": "GET also returns the `ETag` header; a matching `If-None-Match` returns 304.",
+        "etag-format": "ETag: the quoted unpadded base64url SHA-256 of the canonical JSON of the representation, which is the id, the parent id where there is one, and the client-writable fields in declared order; "
+                       "compact JSON, lowercase GUIDs, NFC-normalized strings, numbers without trailing zeros; in strings only the quote, the backslash and control characters are escaped "
+                       "(`\\b \\f \\n \\r \\t` where they exist, otherwise lowercase `\\u00xx`), everything else is written literally.",
+        "etag-spellings": "Two spellings of the same content give the same ETag.",
+        "etag-server-owned": "Server-owned values (counters, timestamps and other values the server maintains) are never part of the representation or the hash and changing them never changes the ETag or invalidates an If-Match.",
+        "etag-loose": "The `ETag` header of an item is a quoted hash of the item's content.",
+        "ifmatch-etag-generic": "Every representation the API returns for an item carries an `ETag` header, a quoted string chosen by the server; PUT and DELETE are conditional on it through the `If-Match` header, and a stale value is 412.",
+        "conditional": "PUT replaces the whole item and DELETE removes it; both are conditional on the item's current ETag through the `If-Match` header (`*` matches any) and a stale value is 412 with the current ETag. "
+                       "A PUT body whose id differs from the route id, or that is invalid or malformed JSON, is 400; an unknown id is 404 for PUT and 204 for DELETE and a deleted item is 410 for PUT.",
+        "put-update": "Update: PUT replaces the whole item; the body id must equal the route id (otherwise 400). A matching `If-Match` (or `*`) updates the item and returns 204 with the new ETag header; "
+                      f"a stale one is 412 with the current ETag. Unknown id is 404, deleted is 410.{immutable}",
+        "put-428": "The `If-Match` header is required on PUT and a missing one is 428, but validation comes first: an invalid or malformed body, or a body id that differs from the route id, is 400 even when `If-Match` is missing.",
+        "mech-428": "Take care that the automatic 400 that ASP.NET Core produces for a missing required header does not pre-empt the 428.",
+        "put-already": "If the current ETag already equals the hash of the PUT body the change is already applied: the answer is 204 with that ETag in the `ETag` header, whatever `If-Match` says; so a PUT that changes nothing is 204 and carries the unchanged ETag.",
+        "put-race": "Two writers racing from the same ETag never get a 5xx. If their bodies differ, one wins and the other gets 412.",
+        "put-race-identical": "If the two PUTs are identical, both succeed with 204 and the same ETag: the second is treated as already applied, never 412.",
+        "delete-core": f"Delete: a live item with a stale `If-Match` is 412 with the current ETag. Otherwise the item is deleted and later reads of it are 410.{delete_child}",
+        "delete-428": "`If-Match` is required on DELETE (428, even for an unknown id).",
+        "delete-idem": "An unknown or already deleted item answers 204, never 404.",
+        "errors": "Errors are `application/problem+json` for 400, 404, 409, 410, 412 and 428.",
+    }
+
+
+def targeted_prompt(name, needs):
+    d = descriptor(name)
+    parts = blocks(name, d)
+    text = prompt(name, 1)
+    if "retry" in needs:
+        text += "\n\n" + RETRY
+    rest = [b for b in BLOCK_ORDER if b in needs and b != "retry"]
+    if rest:
+        text += "\n\nConventions:\n" + "\n".join("- " + parts[b] for b in rest)
+    return text
+
+
 def read_subject(subject):
     return {f.split("/")[-1]: open(f).read() for f in sorted(glob.glob(f"{EVALS}/subjects/{subject}/*.cs"))}
 
@@ -208,6 +374,24 @@ def catalog():
         f.write("export const CATALOG = " + json.dumps({"scenarios": scenarios, **layers}, indent=2) + " as const;\n")
 
 
+def targeted(home, mutants):
+    """Targeted cases (3 domains per line) and their references: good = the domain subject, bad = the line's mutants of that domain."""
+    cases, references = [], {}
+    for line in LINES[home]:
+        for domain in DOMAINS:
+            cid = f"{line['id']}-{domain}"
+            cases.append({"id": cid, "prompt": targeted_prompt(domain, line["needs"]), "targets": [line["id"]],
+                          "api": {"domain": domain, "level": 1, "graded": line["owns"] + line.get("monitors", [])}, "must": [], "mustNot": []})
+            subject = read_subject(DOMAINS[domain]["subject"])
+            bad = {}
+            for name in line["mutants"][domain]:
+                if mutants[name].get("domain", "blog") != domain:
+                    raise SystemExit(f"mutant {name} is for {mutants[name].get('domain', 'blog')}, not {domain}")
+                bad[name] = response(mutate(subject, mutants[name]))
+            references[cid] = {"good": response(subject), "bad": bad}
+    return cases, references
+
+
 def main():
     mutants = {m["name"]: m for m in json.load(open(f"{EVALS}/mutants.json"))}
     for home, graded in HOMES.items():
@@ -216,7 +400,11 @@ def main():
             subject = read_subject(DOMAINS[domain]["subject"])
             for level in LEVELS:
                 cid = case_id(domain, level)
-                cases.append({"id": cid, "prompt": prompt(domain, level), "targets": [], "api": {"domain": domain, "level": level, "graded": graded}, "must": [], "mustNot": []})
+                case = {"id": cid, "prompt": prompt(domain, level), "targets": [], "api": {"domain": domain, "level": level, "graded": graded}, "must": [], "mustNot": []}
+                if level == 3:
+                    case = {**{k: v for k, v in case.items() if k != "api"}, "guard": True, "api": case["api"], **{}}
+                    case = {k: case[k] for k in ["id", "prompt", "targets", "guard", "api", "must", "mustNot"]}
+                cases.append(case)
                 bad = {}
                 if level == 3:
                     for name in BAD[home][domain]:
@@ -225,8 +413,10 @@ def main():
                             raise SystemExit(f"mutant {name} is for {mutant.get('domain', 'blog')}, not {domain}")
                         bad[name] = response(mutate(subject, mutant))
                 references[cid] = {"good": response(subject), "bad": bad}
-        write(f"{home}/evals/cases.json", cases)
-        write(f"{home}/evals/references.json", references)
+        extra_cases, extra_refs = targeted(home, mutants)
+        write(f"{home}/evals/cases.json", cases + extra_cases)
+        write(f"{home}/evals/references.json", {**references, **extra_refs})
+        write(f"{home}/evals/lines.json", [{k: v for k, v in line.items()} for line in LINES[home]])
     if "--catalog" in sys.argv:
         catalog()
 
