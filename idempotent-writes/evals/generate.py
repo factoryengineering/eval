@@ -67,6 +67,7 @@ BAD = {
 
 # Candidate skill lines (iteration A12). Each line owns checks (graded entries of its targeted cases), names the prerequisite blocks its prompt states
 # (see BLOCK_ORDER and blocks()), the keywords of the opinion the prompt must withhold (regex, tested), and the mutants proving the checks per domain.
+# `provisional` marks a line whose own checks have no independent no-skill signal yet (cascade-masked, or the level 3 baseline is stale after A11); it is flagged in PROGRESS.
 # `monitors` are owned checks that never failed in the baseline (kept in the graded set as regression monitors, not as reasons for a line).
 def S(*ids): return [f"scenario:{i}" for i in ids]
 def T(*ids): return [f"static:{i}" for i in ids]
@@ -84,7 +85,7 @@ LINES = {
          "needs": ["retry", "create-status", "read-etag"] + ETAG,
          "withheld": r"client[- ]chos|never generates|server never|replay|idempoten|409",
          "mutants": {"blog": ["server-generates-id", "replay-409"], "support": ["support-replay-409"], "logistics": ["logistics-replay-409"]}},
-        {"id": "etag-content-hash", "text": "The ETag is a canonical hash of the client-writable fields only; server-owned values never enter it and spellings of the same content hash alike.",
+        {"id": "etag-content-hash", "provisional": True, "text": "The ETag is a canonical hash of the client-writable fields only; server-owned values never enter it and spellings of the same content hash alike.",
          "owns": S("server-owned-change-does-not-change-etag", "server-owned-change-does-not-invalidate-if-match", "server-owned-field-is-absent-from-representation",
                    "canonical-property-order-does-not-change-etag", "canonical-whitespace-does-not-change-etag", "canonical-uppercase-guids-same-etag-and-identity",
                    "canonical-different-ids-have-different-etags", "canonical-changing-any-writable-field-changes-etag", "canonical-number-spellings-same-etag",
@@ -117,13 +118,13 @@ LINES = {
          "withheld": r"tombstone|query filter|\bsoft[- ]?delet|DeletedAt|global filter|compare-and-set|state change|concurrency token",
          "mutants": {"blog": ["no-tombstone-filter", "deleted-at-not-concurrency-token", "tombstone-hard-deletes"], "support": ["support-deleted-at-not-concurrency-token"],
                      "logistics": ["logistics-deleted-at-not-concurrency-token"]}},
-        {"id": "put-replay-success", "text": "A PUT whose change is already applied succeeds (204 with the ETag); 412 is only for a real conflict.",
+        {"id": "put-replay-success", "provisional": True, "text": "A PUT whose change is already applied succeeds (204 with the ETag); 412 is only for a real conflict.",
          "owns": S("replace-retry-with-stale-if-match-same-body-succeeds", "replace-identical-body-with-stale-if-match-succeeds", "race-put-same-body-same-etag-both-succeed",
                    "lost-response-put-retry-succeeds", "duplicate-delivery-put-succeeds-twice"),
          "needs": ["retry"] + CORE + ETAG + ["put-update", "put-428", "put-race"],
          "withheld": r"already applied|identical|no-op|changes nothing|treated as|never 412",
          "mutants": {"blog": ["put-stale-same-body-412"], "support": ["support-put-stale-same-body-412"], "logistics": ["logistics-put-stale-same-body-412"]}},
-        {"id": "delete-idempotent", "text": "DELETE of an unknown or already deleted item is 204, never 404.",
+        {"id": "delete-idempotent", "provisional": True, "text": "DELETE of an unknown or already deleted item is 204, never 404.",
          "owns": S("delete-retry-is-no-content", "delete-unknown-id-is-no-content", "race-delete-same-if-match-both-succeed", "lost-response-delete-retry-succeeds",
                    "duplicate-delivery-delete-succeeds-twice"),
          "needs": ["retry"] + CORE + ETAG + ["delete-core", "delete-428"],

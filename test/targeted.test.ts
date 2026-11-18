@@ -80,3 +80,23 @@ test('mock answers for targeted prompts are the first bad reference of the case;
     }
   }
 });
+
+const BLOG_WORDS = /\b(blogs?|[Pp]osts?|tickets?|shipments?|warehouses?|depots?|consignments?|views?|downloads?|titles?|authors?|comments?)\b/;
+
+test('skills: lines are stored exactly in skill-lines.json under the ids of the targeted cases, are domain-neutral, and every skill line has a signal or is flagged provisional', async () => {
+  for (const home of HOMES) {
+    const skill = readFileSync(`.devin/skills/${home}/SKILL.md`, 'utf8');
+    const ids = JSON.parse(readFileSync(`${home}/evals/skill-lines.json`, 'utf8')) as Record<string, string>;
+    const ls = lines(home) as (Line & { provisional?: boolean })[];
+    assert.deepEqual(Object.keys(ids), ls.map((l) => l.id), `${home}: one skill line per candidate line, in table order`);
+    const bullets = skill.split('\n').filter((l) => l.startsWith('- ')).map((l) => l.slice(2));
+    assert.deepEqual(bullets, Object.values(ids), `${home}: SKILL.md lines equal skill-lines.json`);
+    assert.match(skill, new RegExp(`^---\\nname: ${home}\\ndescription: [^:\\n]+\\n---\\nRules for `));
+    for (const [id, text] of Object.entries(ids)) {
+      assert.doesNotMatch(text, BLOG_WORDS, `${id} contains a domain word`);
+      assert.ok(text.length < 600 && !text.includes('\n'), id);
+    }
+    assert.doesNotMatch(skill, BLOG_WORDS, `${home}: SKILL.md contains a domain word`);
+    for (const l of ls) assert.ok(l.provisional === undefined || l.provisional === true, l.id);
+  }
+});

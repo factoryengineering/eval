@@ -35,6 +35,7 @@
   },
   {
     "id": "etag-content-hash",
+    "provisional": true,
     "text": "The ETag is a canonical hash of the client-writable fields only; server-owned values never enter it and spellings of the same content hash alike.",
     "owns": [
       "scenario:server-owned-change-does-not-change-etag",
@@ -208,6 +209,7 @@
   },
   {
     "id": "put-replay-success",
+    "provisional": true,
     "text": "A PUT whose change is already applied succeeds (204 with the ETag); 412 is only for a real conflict.",
     "owns": [
       "scenario:replace-retry-with-stale-if-match-same-body-succeeds",
@@ -245,6 +247,7 @@
   },
   {
     "id": "delete-idempotent",
+    "provisional": true,
     "text": "DELETE of an unknown or already deleted item is 204, never 404.",
     "owns": [
       "scenario:delete-retry-is-no-content",

@@ -5,7 +5,7 @@ import { loadCases } from '../src/cases.js';
 import { annotate, parseSkill, renderSkill } from '../src/skill.js';
 import type { Config } from '../src/types.js';
 
-for (const file of ['eval.config.json', 'unit-testing/eval.config.json']) {
+for (const file of ['eval.config.json', 'unit-testing/eval.config.json', 'idempotent-writes/eval.config.json', 'api-design/eval.config.json']) {
   const config = JSON.parse(readFileSync(file, 'utf8')) as Config;
 
   test(`${file}: the shipped skill renders byte-identically from its tagged form`, () => {
