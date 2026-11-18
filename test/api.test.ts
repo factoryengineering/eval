@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -134,4 +135,20 @@ test('check-to-home mapping: every check is graded in a home; the only overlaps 
   assert.equal(overlap.length, 10);
   assert.ok(overlap.every((n) => /precondition|conflict/.test(n)), overlap.join(', '));
   for (const layer of ['static', 'lint', 'spec']) assert.deepEqual([...idem].filter((b) => b.startsWith(`api ${layer} `) && design.has(b)), []);
+});
+
+const FROZEN = {
+  'blog-naked': 'f58b018c4d4c641b', 'blog-mild': 'eb18de256e97f870', 'support-naked': 'a64558fc75736a1c', 'support-mild': '69b547aab1b5437f',
+  'logistics-naked': 'fe037858f4ad6882', 'logistics-mild': 'ed4cec0c36089cb7',
+} as const;
+
+test('iteration A11: level 1 and 2 prompts are byte-identical to the baseline; level 3 states identical racing PUTs and the ETag on a no-op PUT', async () => {
+  for (const home of ['idempotent-writes', 'api-design']) {
+    const cases = await loadCases(`${home}/evals/cases.json`);
+    for (const [id, hash] of Object.entries(FROZEN)) assert.equal(createHash('sha256').update(cases.find((c) => c.id === id)!.prompt).digest('hex').slice(0, 16), hash, `${home} ${id} changed`);
+    for (const c of cases.filter((x) => x.id.endsWith('-specified'))) {
+      assert.match(c.prompt, /If the two PUTs are identical, both succeed with 204 and the same ETag: the second is treated as already applied, never 412/);
+      assert.match(c.prompt, /a PUT that changes nothing is 204 and carries the unchanged ETag/);
+    }
+  }
 });
